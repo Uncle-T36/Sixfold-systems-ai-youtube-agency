@@ -1,0 +1,77 @@
+{
+  "channels": {
+    "channel_1": {
+      "name": "Tech Reviews & Tips",
+      "niche": "technology",
+      "target_age_group": "18-35",
+      "content_style": "educational",
+      "video_length_minutes": 12,
+      "upload_schedule": "daily",
+      "keywords": ["tech review", "smartphone", "gadgets", "technology tips", "latest tech"],
+      "channel_id": "",
+      "monetization_strategy": "affiliate_links_ads"
+    },
+    "channel_2": {
+      "name": "Kids Learning Fun",
+      "niche": "education_kids",
+      "target_age_group": "3-12",
+      "content_style": "animated_educational",
+      "video_length_minutes": 8,
+      "upload_schedule": "daily",
+      "keywords": ["kids learning", "alphabet", "numbers", "animals", "colors"],
+      "channel_id": "",
+      "monetization_strategy": "ads_merchandise"
+    },
+    "channel_3": {
+      "name": "Life Hacks & DIY",
+      "niche": "lifestyle",
+      "target_age_group": "25-50",
+      "content_style": "tutorial",
+      "video_length_minutes": 15,
+      "upload_schedule": "daily",
+      "keywords": ["life hacks", "DIY", "home improvement", "organization", "productivity"],
+      "channel_id": "",
+      "monetization_strategy": "affiliate_links_sponsorships"
+    },
+    "channel_4": {
+      "name": "Gaming Universe",
+      "niche": "gaming",
+      "target_age_group": "13-30",
+      "content_style": "entertainment",
+      "video_length_minutes": 20,
+      "upload_schedule": "daily",
+      "keywords": ["gaming", "game review", "gameplay", "gaming tips", "new games"],
+      "channel_id": "",
+      "monetization_strategy": "ads_memberships_donations"
+    },
+    "channel_5": {
+      "name": "Health & Wellness",
+      "niche": "health",
+      "target_age_group": "25-60",
+      "content_style": "informational",
+      "video_length_minutes": 18,
+      "upload_schedule": "daily",
+      "keywords": ["health tips", "wellness", "fitness", "nutrition", "mental health"],
+      "channel_id": "",
+      "monetization_strategy": "affiliate_links_courses"
+    },
+    "channel_6": {
+      "name": "Motivational Stories",
+      "niche": "motivation",
+      "target_age_group": "16-65",
+      "content_style": "inspirational",
+      "video_length_minutes": 25,
+      "upload_schedule": "daily",
+      "keywords": ["motivation", "success stories", "inspiration", "personal development", "mindset"],
+      "channel_id": "",
+      "monetization_strategy": "ads_books_courses"
+    }
+  },
+  "global_settings": {
+    "max_daily_uploads_per_channel": 3,
+    "minimum_video_quality": "1080p",
+    "trending_check_frequency_hours": 6,
+    "auto_optimization": true,
+    "revenue_tracking": true
+  }
+}

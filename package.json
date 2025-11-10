@@ -1,0 +1,56 @@
+{
+  "name": "ai-youtube-agency",
+  "version": "1.0.0",
+  "description": "AI-powered YouTube automation system for 6 channels with monetization optimization",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node --max-old-space-size=4096 node_modules/next/dist/bin/next dev",
+    "build": "node --max-old-space-size=4096 node_modules/next/dist/bin/next build",
+    "start": "node --max-old-space-size=4096 node_modules/next/dist/bin/next start",
+    "lint": "next lint",
+    "generate-content": "node --max-old-space-size=2048 scripts/generate-daily-content.js",
+    "analyze-trends": "node --max-old-space-size=1024 scripts/analyze-trends.js",
+    "upload-videos": "node --max-old-space-size=2048 scripts/upload-videos.js"
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.7.17",
+    "@heroicons/react": "^2.0.18",
+    "@prisma/client": "^5.5.0",
+    "@stripe/stripe-js": "^2.1.0",
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.19",
+    "@types/jsonwebtoken": "^9.0.0",
+    "@types/uuid": "^9.0.0",
+    "@vercel/analytics": "^1.0.0",
+    "autoprefixer": "^10.4.0",
+    "axios": "^1.5.0",
+    "bcryptjs": "^2.4.3",
+    "date-fns": "^2.30.0",
+    "framer-motion": "^10.16.0",
+    "googleapis": "^128.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "next": "^14.0.0",
+    "node-cron": "^3.0.3",
+    "openai": "^4.20.0",
+    "postcss": "^8.4.0",
+    "prisma": "^5.5.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "recharts": "^2.8.0",
+    "stripe": "^14.0.0",
+    "tailwindcss": "^3.3.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "^14.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
