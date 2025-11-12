@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import AppNavigation from '../components/AppNavigation';
+import { analyzeChannelDescription } from '../lib/channelAnalyzer';
 
 interface ConnectedChannel {
   id: string;
   name: string;
   thumbnailUrl: string;
   subscriberCount: number;
+  description?: string;
 }
 
 export default function EasyChannelConnection() {
@@ -15,14 +17,29 @@ export default function EasyChannelConnection() {
     const existing = JSON.parse(localStorage.getItem('youtube_channels') || '[]');
     setConnectedChannels(existing);
   }, []);
+
+  // Disconnect channel
+  const disconnectChannel = (channelId: string, channelName: string) => {
+    if (!confirm(`Are you sure you want to disconnect "${channelName}"?`)) {
+      return;
+    }
+
+    const existing = JSON.parse(localStorage.getItem('youtube_channels') || '[]');
+    const updated = existing.filter((ch: ConnectedChannel) => ch.id !== channelId);
+    localStorage.setItem('youtube_channels', JSON.stringify(updated));
+    setConnectedChannels(updated);
+    setSuccess(`✅ Channel "${channelName}" disconnected successfully!`);
+  };
   const [connecting, setConnecting] = useState(false);
   const [channelUrl, setChannelUrl] = useState('');
   const [channelName, setChannelName] = useState('');
   const [channelNiche, setChannelNiche] = useState('');
+  const [channelDescription, setChannelDescription] = useState('');
   const [connectedChannels, setConnectedChannels] = useState<ConnectedChannel[]>([]);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [showHelp, setShowHelp] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
 
   // Extract channel ID from various YouTube URL formats
   const extractChannelId = (url: string): string | null => {
@@ -77,25 +94,50 @@ export default function EasyChannelConnection() {
         return;
       }
 
-      // Save channel to local storage (simple approach)
+      // Check for duplicates
+      const existing = JSON.parse(localStorage.getItem('youtube_channels') || '[]');
+      const isDuplicate = existing.some((ch: ConnectedChannel) => ch.id === channelId);
+      
+      if (isDuplicate) {
+        setError('⚠️ This channel is already connected! Check your dashboard.');
+        setConnecting(false);
+        return;
+      }
+
+      // Save channel to local storage
       const newChannel: ConnectedChannel = {
         id: channelId,
         name: channelName.trim(),
+        description: channelDescription.trim(),
         thumbnailUrl: `https://via.placeholder.com/100x100/667eea/ffffff?text=${channelName.charAt(0)}`,
         subscriberCount: 0
       };
 
-      const existing = JSON.parse(localStorage.getItem('youtube_channels') || '[]');
       const updated = [...existing, newChannel];
       localStorage.setItem('youtube_channels', JSON.stringify(updated));
       
       setConnectedChannels(updated);
       setSuccess(`✅ Channel "${channelName}" connected successfully!`);
       
+      // Analyze channel description in background
+      if (channelDescription.trim()) {
+        setAnalyzing(true);
+        analyzeChannelDescription(channelName.trim(), channelId, channelDescription.trim())
+          .then(() => {
+            setAnalyzing(false);
+            console.log('✅ Channel analyzed - check notifications for suggestions!');
+          })
+          .catch(err => {
+            setAnalyzing(false);
+            console.error('Analysis error:', err);
+          });
+      }
+      
       // Clear form
       setChannelUrl('');
       setChannelName('');
       setChannelNiche('');
+      setChannelDescription('');
     } catch (err) {
       setError('Failed to connect channel. Please try again.');
     } finally {
@@ -222,19 +264,36 @@ export default function EasyChannelConnection() {
                 </select>
               </div>
 
+              {/* Channel Description */}
+              <div>
+                <label className="block text-slate-300 mb-3 font-semibold text-sm sm:text-base">
+                  4️⃣ Channel Description <span className="text-wealth-400 text-xs">💰 Get Money-Making Tips!</span>
+                </label>
+                <textarea
+                  value={channelDescription}
+                  onChange={(e) => setChannelDescription(e.target.value)}
+                  placeholder="Paste your channel description here. Our AI will analyze it and give you suggestions to make more money and get more subscribers!"
+                  rows={4}
+                  className="w-full bg-slate-800 text-white px-4 sm:px-5 py-3 sm:py-4 rounded-xl border-2 border-slate-700 focus:border-wealth-500 focus:outline-none transition-colors text-sm sm:text-base resize-none"
+                />
+                <p className="text-slate-400 text-xs sm:text-sm mt-2">
+                  💡 <strong className="text-wealth-400">AI will analyze this</strong> and show you in notifications how to improve it for maximum revenue & growth!
+                </p>
+              </div>
+
               {/* Connect Button */}
               <button
                 onClick={connectChannel}
-                disabled={connecting || !channelUrl.trim() || !channelName.trim()}
+                disabled={connecting || analyzing || !channelUrl.trim() || !channelName.trim()}
                 className="w-full bg-gradient-to-r from-luxury-600 to-primary-600 hover:from-luxury-700 hover:to-primary-700 text-white font-bold px-6 py-4 sm:py-5 rounded-xl text-base sm:text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
-                {connecting ? (
+                {connecting || analyzing ? (
                   <span className="flex items-center justify-center">
                     <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
                     </svg>
-                    Connecting...
+                    {analyzing ? 'Analyzing with AI...' : 'Connecting...'}
                   </span>
                 ) : (
                   '✅ Connect Channel'
@@ -290,23 +349,38 @@ export default function EasyChannelConnection() {
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {connectedChannels.map((channel) => (
-                <div
+                <motion.div
                   key={channel.id}
-                  className="bg-gray-800 p-4 rounded-xl flex items-center space-x-4"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="bg-gradient-to-br from-slate-900 to-slate-800 p-4 rounded-xl border border-slate-700 hover:border-luxury-500/50 transition-all duration-200 shadow-lg"
                 >
-                  <img
-                    src={channel.thumbnailUrl}
-                    alt={channel.name}
-                    className="w-16 h-16 rounded-full"
-                  />
-                  <div>
-                    <h4 className="text-white font-bold">{channel.name}</h4>
-                    <p className="text-gray-400">
-                      {channel.subscriberCount.toLocaleString()} subscribers
-                    </p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <img
+                        src={channel.thumbnailUrl}
+                        alt={channel.name}
+                        className="w-16 h-16 rounded-full border-2 border-luxury-500/30"
+                      />
+                      <div>
+                        <h4 className="text-white font-bold text-lg">{channel.name}</h4>
+                        <p className="text-slate-400 text-sm">
+                          {channel.subscriberCount.toLocaleString()} subscribers
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <button
+                      onClick={() => disconnectChannel(channel.id, channel.name)}
+                      className="flex items-center justify-center w-10 h-10 rounded-lg bg-error-500/20 hover:bg-error-500/30 border border-error-500/50 hover:border-error-500 transition-all duration-200 group"
+                      title="Disconnect channel"
+                    >
+                      <svg className="w-5 h-5 text-error-400 group-hover:text-error-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
                   </div>
-                  <div className="ml-auto text-2xl">✅</div>
-                </div>
+                </motion.div>
               ))}
             </div>
 

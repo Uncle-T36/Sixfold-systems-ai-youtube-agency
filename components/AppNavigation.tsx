@@ -1,6 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import SmartNotifications from './SmartNotifications';
 
 interface AppNavigationProps {
   title: string;
@@ -67,6 +68,9 @@ export default function AppNavigation({ title, showBack = true, currentPage }: A
 
             {/* Right: Quick Actions */}
             <div className="flex items-center space-x-2 sm:space-x-3">
+              {/* Smart Notifications */}
+              <SmartNotifications />
+              
               <button
                 onClick={() => window.location.reload()}
                 className="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-success-500/50 transition-all duration-200 hover:scale-105 active:scale-95"
