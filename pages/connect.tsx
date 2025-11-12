@@ -146,7 +146,7 @@ export default function EasyChannelConnection() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+    <div className="min-h-screen bg-gradient-to-br from-dark-bg via-dark-card to-dark-bg">
       <AppNavigation title="Connect Channels" currentPage="Add your YouTube channels" />
       
       <div className="sm:ml-20 lg:ml-64 p-4 sm:p-6 lg:p-8">

@@ -9,15 +9,15 @@
 }
 
 @layer components {
-  /* Premium Button Styles */
+  /* Premium Button Styles - Unique Teal & Pink Theme */
   .btn-primary {
-    @apply bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 
+    @apply bg-gradient-to-r from-accent-teal to-primary-600 hover:from-primary-700 hover:to-accent-teal 
            text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl 
            transform hover:-translate-y-0.5 transition-all duration-200 ease-in-out;
   }
   
   .btn-luxury {
-    @apply bg-gradient-to-r from-luxury-600 to-luxury-700 hover:from-luxury-700 hover:to-luxury-800 
+    @apply bg-gradient-to-r from-accent-pink to-luxury-600 hover:from-luxury-600 hover:to-accent-pink 
            text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl 
            transform hover:-translate-y-0.5 transition-all duration-200 ease-in-out;
   }
@@ -45,8 +45,8 @@
   }
   
   .card-premium {
-    @apply bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-2xl shadow-2xl 
-           border border-luxury-500/20 p-6 hover:border-luxury-500/40 transition-all duration-300;
+    @apply bg-gradient-to-br from-dark-bg via-dark-card to-dark-bg rounded-2xl shadow-2xl 
+           border border-accent-teal/20 p-6 hover:border-accent-teal/40 transition-all duration-300;
   }
   
   /* Status Badges */
@@ -78,17 +78,17 @@
            hover:scale-[1.02] active:scale-[0.98];
   }
   
-  /* Wealth-Focused Gradients */
+  /* Wealth-Focused Gradients - Unique Theme */
   .gradient-wealth {
-    @apply bg-gradient-to-br from-wealth-500 via-wealth-600 to-luxury-600;
+    @apply bg-gradient-to-br from-accent-gold via-wealth-600 to-accent-teal;
   }
   
   .gradient-premium {
-    @apply bg-gradient-to-br from-luxury-600 via-primary-600 to-luxury-700;
+    @apply bg-gradient-to-br from-accent-pink via-accent-teal to-primary-600;
   }
   
   .gradient-dark {
-    @apply bg-gradient-to-br from-slate-900 via-slate-850 to-slate-950;
+    @apply bg-gradient-to-br from-dark-bg via-dark-card to-dark-bg;
   }
   
   /* Glass Morphism */

@@ -8,7 +8,7 @@ export default function Home() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+    <div className="min-h-screen bg-gradient-to-br from-dark-bg via-dark-card to-dark-bg">
       <AppNavigation title="AI YouTube Agency" showBack={false} />
       <div className="sm:ml-20 lg:ml-64 flex items-center justify-center min-h-[calc(100vh-5rem)] p-4 sm:p-6 lg:p-8">
         <div className="max-w-7xl w-full animate-fade-in">
@@ -127,6 +127,26 @@ export default function Home() {
             <div className="w-2 h-2 sm:w-3 sm:h-3 bg-success-400 rounded-full animate-pulse shadow-lg shadow-success-500/50"></div>
             <span className="font-semibold text-sm sm:text-base tracking-wide">Production System Active</span>
           </div>
+        </div>
+
+        {/* Support Footer */}
+        <div className="mt-12 pt-8 border-t border-slate-700/50 text-center">
+          <p className="text-slate-400 text-sm mb-4">Need help? We're here for you 24/7</p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+            <a href="mailto:tchafuruka@gmail.com" className="flex items-center gap-2 text-accent-teal hover:text-accent-pink transition-colors">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              <span className="text-sm font-medium">tchafuruka@gmail.com</span>
+            </a>
+            <a href="tel:+27749415020" className="flex items-center gap-2 text-accent-teal hover:text-accent-pink transition-colors">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+              <span className="text-sm font-medium">+27 74 941 5020</span>
+            </a>
+          </div>
+          <p className="text-slate-500 text-xs mt-4">© 2025 SixFold Systems. All rights reserved. Your data is encrypted and secure.</p>
         </div>
         </div>
       </div>
