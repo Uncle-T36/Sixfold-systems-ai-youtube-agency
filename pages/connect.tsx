@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import AppNavigation from '../components/AppNavigation';
+import VoiceSelector from '../components/VoiceSelector';
 import { analyzeChannelDescription } from '../lib/channelAnalyzer';
+import { getVoiceById } from '../lib/voiceLibrary';
 
 interface ConnectedChannel {
   id: string;
   name: string;
   thumbnailUrl: string;
   subscriberCount: number;
+  voiceId?: string;
   description?: string;
 }
 
@@ -35,11 +38,13 @@ export default function EasyChannelConnection() {
   const [channelName, setChannelName] = useState('');
   const [channelNiche, setChannelNiche] = useState('');
   const [channelDescription, setChannelDescription] = useState('');
+  const [selectedVoice, setSelectedVoice] = useState('dark-narrator-male'); // Default to DarkWhisper style
   const [connectedChannels, setConnectedChannels] = useState<ConnectedChannel[]>([]);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [showHelp, setShowHelp] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
+  const [showVoiceSelector, setShowVoiceSelector] = useState(false);
 
   // Extract channel ID from various YouTube URL formats
   const extractChannelId = (url: string): string | null => {
@@ -109,6 +114,7 @@ export default function EasyChannelConnection() {
         id: channelId,
         name: channelName.trim(),
         description: channelDescription.trim(),
+        voiceId: selectedVoice,
         thumbnailUrl: `https://via.placeholder.com/100x100/667eea/ffffff?text=${channelName.charAt(0)}`,
         subscriberCount: 0
       };
@@ -281,6 +287,18 @@ export default function EasyChannelConnection() {
                 </p>
               </div>
 
+              {/* Voice Selection */}
+              <div>
+                <label className="block text-white font-semibold mb-3 text-sm sm:text-base">
+                  🎙️ Select Voice <span className="text-accent-pink text-xs">DarkWhisper Style Available!</span>
+                </label>
+                <VoiceSelector 
+                  selectedVoice={selectedVoice}
+                  onSelect={setSelectedVoice}
+                  channelNiche={channelNiche}
+                />
+              </div>
+
               {/* Connect Button */}
               <button
                 onClick={connectChannel}
@@ -367,6 +385,14 @@ export default function EasyChannelConnection() {
                         <p className="text-slate-400 text-sm">
                           {channel.subscriberCount.toLocaleString()} subscribers
                         </p>
+                        {channel.voiceId && (
+                          <div className="flex items-center space-x-1 mt-1">
+                            <span className="text-xs">🎙️</span>
+                            <span className="text-accent-pink text-xs font-medium">
+                              {getVoiceById(channel.voiceId)?.name || 'Voice Selected'}
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </div>
                     
