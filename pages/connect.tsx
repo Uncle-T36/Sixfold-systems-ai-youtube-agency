@@ -10,41 +10,52 @@ interface ConnectedChannel {
 
 export default function EasyChannelConnection() {
   const [connecting, setConnecting] = useState(false);
-  const [step, setStep] = useState<'choose' | 'manual' | 'oauth'>('choose');
-  const [apiKey, setApiKey] = useState('');
+  const [channelUrl, setChannelUrl] = useState('');
+  const [channelName, setChannelName] = useState('');
+  const [channelNiche, setChannelNiche] = useState('');
   const [connectedChannels, setConnectedChannels] = useState<ConnectedChannel[]>([]);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [showHelp, setShowHelp] = useState(false);
 
-  // Method 1: One-Click OAuth (Easiest)
-  const connectWithOAuth = async () => {
-    setConnecting(true);
-    setError('');
+  // Extract channel ID from various YouTube URL formats
+  const extractChannelId = (url: string): string | null => {
+    // Remove whitespace
+    url = url.trim();
     
-    try {
-      const response = await fetch('/api/connect-youtube');
-      const data = await response.json();
-      
-      if (data.authUrl) {
-        // Open OAuth window
-        window.location.href = data.authUrl;
-      } else {
-        // OAuth not configured, switch to manual
-        setStep('manual');
-        setSuccess('OAuth not configured. Use manual connection below.');
-      }
-    } catch (err) {
-      setError('Failed to initiate connection. Try manual method.');
-      setStep('manual');
-    } finally {
-      setConnecting(false);
+    // If it's already just an ID (starts with UC)
+    if (url.startsWith('UC') && url.length === 24) {
+      return url;
     }
+    
+    // Extract from different URL formats
+    const patterns = [
+      /youtube\.com\/channel\/(UC[\w-]{22})/,           // /channel/UCxxxxx
+      /youtube\.com\/@([\w-]+)/,                          // /@username
+      /youtube\.com\/c\/([\w-]+)/,                        // /c/username
+      /youtube\.com\/user\/([\w-]+)/,                     // /user/username
+      /youtu\.be\/(UC[\w-]{22})/,                         // youtu.be/UCxxxxx
+    ];
+    
+    for (const pattern of patterns) {
+      const match = url.match(pattern);
+      if (match) {
+        return match[1];
+      }
+    }
+    
+    return null;
   };
 
-  // Method 2: Manual API Key (Still Easy)
-  const connectWithApiKey = async () => {
-    if (!apiKey.trim()) {
-      setError('Please enter your YouTube API key');
+  // Simple connection with just channel URL
+  const connectChannel = async () => {
+    if (!channelUrl.trim()) {
+      setError('Please paste your YouTube channel URL');
+      return;
+    }
+
+    if (!channelName.trim()) {
+      setError('Please enter a name for this channel');
       return;
     }
 
@@ -52,23 +63,35 @@ export default function EasyChannelConnection() {
     setError('');
     
     try {
-      const response = await fetch('/api/connect-youtube', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ apiKey: apiKey.trim() })
-      });
-
-      const data = await response.json();
+      const channelId = extractChannelId(channelUrl);
       
-      if (data.success) {
-        setConnectedChannels(data.channels || []);
-        setSuccess(`✅ Connected ${data.channels?.length || 0} channel(s) successfully!`);
-        setApiKey(''); // Clear for security
-      } else {
-        setError(data.message || 'Failed to connect channels');
+      if (!channelId) {
+        setError('Invalid YouTube URL. Please copy the full URL from your browser address bar.');
+        setConnecting(false);
+        return;
       }
+
+      // Save channel to local storage (simple approach)
+      const newChannel: ConnectedChannel = {
+        id: channelId,
+        name: channelName.trim(),
+        thumbnailUrl: `https://via.placeholder.com/100x100/667eea/ffffff?text=${channelName.charAt(0)}`,
+        subscriberCount: 0
+      };
+
+      const existing = JSON.parse(localStorage.getItem('youtube_channels') || '[]');
+      const updated = [...existing, newChannel];
+      localStorage.setItem('youtube_channels', JSON.stringify(updated));
+      
+      setConnectedChannels(updated);
+      setSuccess(`✅ Channel "${channelName}" connected successfully!`);
+      
+      // Clear form
+      setChannelUrl('');
+      setChannelName('');
+      setChannelNiche('');
     } catch (err) {
-      setError('Connection failed. Check your API key and try again.');
+      setError('Failed to connect channel. Please try again.');
     } finally {
       setConnecting(false);
     }
@@ -95,144 +118,135 @@ export default function EasyChannelConnection() {
           </p>
         </motion.div>
 
-        {/* Step Selection */}
-        {step === 'choose' && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="space-y-6"
-          >
-            {/* Method 1: One-Click OAuth */}
-            <div className="bg-gradient-to-r from-green-500 to-blue-500 p-1 rounded-2xl">
-              <div className="bg-gray-900 p-8 rounded-2xl">
-                <div className="flex items-start space-x-4">
-                  <div className="text-4xl">✨</div>
-                  <div className="flex-1">
-                    <h2 className="text-2xl font-bold text-white mb-2">
-                      Option 1: One-Click Connection (Easiest!)
-                    </h2>
-                    <p className="text-gray-300 mb-4">
-                      Click a button, sign in to Google, and your channels are connected automatically.
-                      <strong className="text-green-400"> Recommended!</strong>
+        {/* Simple Connection Form */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6 sm:p-8 lg:p-10 rounded-2xl border border-luxury-500/20 shadow-2xl"
+        >
+          <div className="max-w-2xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6 text-center">
+              📺 Add Your YouTube Channel
+            </h2>
+
+            <div className="space-y-6">
+              {/* Channel URL Input */}
+              <div>
+                <label className="block text-slate-300 mb-3 font-semibold text-sm sm:text-base">
+                  1️⃣ Paste Your YouTube Channel URL
+                </label>
+                <input
+                  type="text"
+                  value={channelUrl}
+                  onChange={(e) => setChannelUrl(e.target.value)}
+                  placeholder="https://www.youtube.com/@YourChannelName"
+                  className="w-full bg-slate-800 text-white px-4 sm:px-5 py-3 sm:py-4 rounded-xl border-2 border-slate-700 focus:border-luxury-500 focus:outline-none transition-colors text-sm sm:text-base"
+                />
+                <button
+                  onClick={() => setShowHelp(!showHelp)}
+                  className="text-primary-400 hover:text-primary-300 text-xs sm:text-sm mt-2 underline"
+                >
+                  {showHelp ? '▲ Hide' : '▼ Show'} me where to find this
+                </button>
+                
+                {showHelp && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    className="mt-4 bg-slate-800/50 backdrop-blur-sm p-4 rounded-xl border border-slate-700"
+                  >
+                    <p className="text-slate-300 mb-3 text-sm">
+                      <strong className="text-white">How to find your channel URL:</strong>
                     </p>
-                    <button
-                      onClick={connectWithOAuth}
-                      disabled={connecting}
-                      className="bg-gradient-to-r from-green-500 to-blue-500 text-white px-8 py-4 rounded-xl font-bold text-lg hover:scale-105 transition-transform disabled:opacity-50"
-                    >
-                      {connecting ? '⏳ Connecting...' : '✨ Connect Instantly'}
-                    </button>
+                    <ol className="space-y-2 text-slate-400 text-xs sm:text-sm">
+                      <li>1. Go to <span className="text-primary-400">YouTube.com</span> and sign in</li>
+                      <li>2. Click your profile picture (top right)</li>
+                      <li>3. Click "<span className="text-primary-400">View your channel</span>"</li>
+                      <li>4. Copy the URL from your browser address bar</li>
+                      <li>5. Paste it above ✅</li>
+                    </ol>
+                    <p className="text-slate-400 mt-3 text-xs">
+                      Examples: <span className="text-slate-300">youtube.com/@MrBeast</span> or <span className="text-slate-300">youtube.com/channel/UCxxxxxxxxx</span>
+                    </p>
+                  </motion.div>
+                )}
+              </div>
+
+              {/* Channel Name Input */}
+              <div>
+                <label className="block text-slate-300 mb-3 font-semibold text-sm sm:text-base">
+                  2️⃣ Give Your Channel a Name
+                </label>
+                <input
+                  type="text"
+                  value={channelName}
+                  onChange={(e) => setChannelName(e.target.value)}
+                  placeholder="My Gaming Channel"
+                  className="w-full bg-slate-800 text-white px-4 sm:px-5 py-3 sm:py-4 rounded-xl border-2 border-slate-700 focus:border-luxury-500 focus:outline-none transition-colors text-sm sm:text-base"
+                />
+                <p className="text-slate-400 text-xs sm:text-sm mt-2">
+                  This is just for you to identify it in the dashboard
+                </p>
+              </div>
+
+              {/* Channel Niche (Optional) */}
+              <div>
+                <label className="block text-slate-300 mb-3 font-semibold text-sm sm:text-base">
+                  3️⃣ Channel Niche <span className="text-slate-500 text-xs">(Optional)</span>
+                </label>
+                <select
+                  value={channelNiche}
+                  onChange={(e) => setChannelNiche(e.target.value)}
+                  className="w-full bg-slate-800 text-white px-4 sm:px-5 py-3 sm:py-4 rounded-xl border-2 border-slate-700 focus:border-luxury-500 focus:outline-none transition-colors text-sm sm:text-base"
+                >
+                  <option value="">Choose a niche...</option>
+                  <option value="gaming">🎮 Gaming</option>
+                  <option value="tech">💻 Technology</option>
+                  <option value="education">📚 Education</option>
+                  <option value="lifestyle">🏠 Lifestyle</option>
+                  <option value="fitness">💪 Health & Fitness</option>
+                  <option value="motivation">🎯 Motivation</option>
+                  <option value="kids">👶 Kids Content</option>
+                  <option value="entertainment">🎬 Entertainment</option>
+                  <option value="finance">💰 Finance</option>
+                  <option value="other">🌟 Other</option>
+                </select>
+              </div>
+
+              {/* Connect Button */}
+              <button
+                onClick={connectChannel}
+                disabled={connecting || !channelUrl.trim() || !channelName.trim()}
+                className="w-full bg-gradient-to-r from-luxury-600 to-primary-600 hover:from-luxury-700 hover:to-primary-700 text-white font-bold px-6 py-4 sm:py-5 rounded-xl text-base sm:text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              >
+                {connecting ? (
+                  <span className="flex items-center justify-center">
+                    <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                    </svg>
+                    Connecting...
+                  </span>
+                ) : (
+                  '✅ Connect Channel'
+                )}
+              </button>
+
+              {/* Info Box */}
+              <div className="bg-primary-500/10 border border-primary-500/30 rounded-xl p-4">
+                <div className="flex items-start space-x-3">
+                  <span className="text-2xl">💡</span>
+                  <div>
+                    <p className="text-slate-300 text-xs sm:text-sm">
+                      <strong className="text-white">No technical setup required!</strong><br/>
+                      Just paste your channel URL and click connect. Your channel will appear in the dashboard immediately.
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
-
-            {/* Method 2: API Key */}
-            <div className="bg-gray-800 p-8 rounded-2xl">
-              <div className="flex items-start space-x-4">
-                <div className="text-4xl">🔑</div>
-                <div className="flex-1">
-                  <h2 className="text-2xl font-bold text-white mb-2">
-                    Option 2: Use API Key (Also Easy!)
-                  </h2>
-                  <p className="text-gray-300 mb-4">
-                    Already have a YouTube API key? Just paste it below and connect all your channels at once.
-                  </p>
-                  <button
-                    onClick={() => setStep('manual')}
-                    className="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-700 transition-colors"
-                  >
-                    🔑 Use API Key
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Help Section */}
-            <div className="bg-gray-800 p-6 rounded-xl">
-              <h3 className="text-lg font-bold text-white mb-2">🤔 Need Help?</h3>
-              <p className="text-gray-300">
-                Don't have an API key yet?{' '}
-                <a
-                  href="https://console.cloud.google.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-400 hover:text-blue-300 underline"
-                >
-                  Get one here in 5 minutes
-                </a>
-                {' '}(completely free!)
-              </p>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Manual API Key Entry */}
-        {step === 'manual' && (
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="bg-gray-900 p-8 rounded-2xl"
-          >
-            <button
-              onClick={() => setStep('choose')}
-              className="text-blue-400 hover:text-blue-300 mb-6 flex items-center"
-            >
-              ← Back to options
-            </button>
-
-            <h2 className="text-3xl font-bold text-white mb-6">
-              📝 Enter Your YouTube API Key
-            </h2>
-
-            <div className="space-y-4 mb-6">
-              <div>
-                <label className="block text-gray-300 mb-2 font-medium">
-                  YouTube Data API Key
-                </label>
-                <input
-                  type="text"
-                  value={apiKey}
-                  onChange={(e) => setApiKey(e.target.value)}
-                  placeholder="AIzaSy..."
-                  className="w-full bg-gray-800 text-white px-4 py-3 rounded-lg border border-gray-700 focus:border-blue-500 focus:outline-none"
-                />
-                <p className="text-gray-400 text-sm mt-2">
-                  Get your API key from{' '}
-                  <a
-                    href="https://console.cloud.google.com/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-400 hover:underline"
-                  >
-                    Google Cloud Console
-                  </a>
-                </p>
-              </div>
-
-              <button
-                onClick={connectWithApiKey}
-                disabled={connecting || !apiKey.trim()}
-                className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white px-6 py-4 rounded-xl font-bold text-lg hover:scale-105 transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {connecting ? '⏳ Connecting Channels...' : '✅ Connect All Channels'}
-              </button>
-            </div>
-
-            {/* Quick Guide */}
-            <div className="bg-gray-800 p-6 rounded-xl">
-              <h3 className="text-lg font-bold text-white mb-3">📋 Quick Setup Guide (5 min)</h3>
-              <ol className="space-y-2 text-gray-300">
-                <li>1. Go to <a href="https://console.cloud.google.com/" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">Google Cloud Console</a></li>
-                <li>2. Create a new project (name it anything, e.g., "YouTube Agency")</li>
-                <li>3. Enable "YouTube Data API v3"</li>
-                <li>4. Go to Credentials → Create Credentials → API Key</li>
-                <li>5. Copy the key and paste it above</li>
-                <li>6. Click "Connect All Channels" ✅</li>
-              </ol>
-            </div>
-          </motion.div>
-        )}
+          </div>
+        </motion.div>
 
         {/* Success/Error Messages */}
         {error && (

@@ -44,6 +44,7 @@ export default function InteractiveDashboard() {
 
   const fetchDashboardData = async () => {
     try {
+      // Try API first
       const [channelsRes, statsRes] = await Promise.all([
         fetch('/api/channels'),
         fetch('/api/dashboard-stats')
@@ -52,15 +53,75 @@ export default function InteractiveDashboard() {
       if (channelsRes.ok) {
         const channelsData = await channelsRes.json();
         setChannels(channelsData.channels || []);
+      } else {
+        // Fallback to localStorage
+        const localChannels = JSON.parse(localStorage.getItem('youtube_channels') || '[]');
+        if (localChannels.length > 0) {
+          // Transform to dashboard format
+          const formattedChannels = localChannels.map((ch: any) => ({
+            id: ch.id,
+            name: ch.name,
+            niche: 'general',
+            subscribers: ch.subscriberCount || 0,
+            watchHours: 0,
+            videosUploaded: 0,
+            isMonetized: false,
+            monthlyRevenue: 0,
+            status: 'active',
+            lastVideoDate: new Date().toISOString(),
+            thumbnailUrl: ch.thumbnailUrl
+          }));
+          setChannels(formattedChannels);
+        }
       }
       
       if (statsRes.ok) {
         const statsData = await statsRes.json();
         setStats(statsData.stats);
+      } else {
+        // Calculate from local channels
+        const localChannels = JSON.parse(localStorage.getItem('youtube_channels') || '[]');
+        setStats({
+          totalChannels: localChannels.length,
+          totalSubscribers: 0,
+          totalWatchHours: 0,
+          totalRevenue: 0,
+          videosGenerated: 0,
+          monetizedChannels: 0
+        });
       }
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error);
-      addNotification('error', 'Failed to load dashboard data');
+      // Load from localStorage as fallback
+      try {
+        const localChannels = JSON.parse(localStorage.getItem('youtube_channels') || '[]');
+        if (localChannels.length > 0) {
+          const formattedChannels = localChannels.map((ch: any) => ({
+            id: ch.id,
+            name: ch.name,
+            niche: 'general',
+            subscribers: ch.subscriberCount || 0,
+            watchHours: 0,
+            videosUploaded: 0,
+            isMonetized: false,
+            monthlyRevenue: 0,
+            status: 'active',
+            lastVideoDate: new Date().toISOString(),
+            thumbnailUrl: ch.thumbnailUrl
+          }));
+          setChannels(formattedChannels);
+          setStats({
+            totalChannels: localChannels.length,
+            totalSubscribers: 0,
+            totalWatchHours: 0,
+            totalRevenue: 0,
+            videosGenerated: 0,
+            monetizedChannels: 0
+          });
+        }
+      } catch (localError) {
+        addNotification('error', 'Failed to load channels');
+      }
     } finally {
       setLoading(false);
     }
