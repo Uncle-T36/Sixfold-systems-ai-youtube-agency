@@ -9,35 +9,94 @@
 }
 
 @layer components {
+  /* Premium Button Styles */
   .btn-primary {
-    @apply bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+    @apply bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 
+           text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl 
+           transform hover:-translate-y-0.5 transition-all duration-200 ease-in-out;
+  }
+  
+  .btn-luxury {
+    @apply bg-gradient-to-r from-luxury-600 to-luxury-700 hover:from-luxury-700 hover:to-luxury-800 
+           text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl 
+           transform hover:-translate-y-0.5 transition-all duration-200 ease-in-out;
   }
   
   .btn-secondary {
-    @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+    @apply bg-slate-800 hover:bg-slate-700 text-white font-medium py-3 px-6 rounded-xl 
+           shadow-md hover:shadow-lg transition-all duration-200 border border-slate-700;
   }
   
+  .btn-wealth {
+    @apply bg-gradient-to-r from-wealth-500 to-wealth-600 hover:from-wealth-600 hover:to-wealth-700 
+           text-slate-900 font-bold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl 
+           transform hover:-translate-y-0.5 transition-all duration-200;
+  }
+  
+  /* Premium Card Styles */
   .card {
-    @apply bg-white rounded-xl shadow-sm border border-gray-200 p-6;
+    @apply bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/50 p-6 
+           hover:shadow-2xl transition-all duration-300;
   }
   
+  .card-dark {
+    @apply bg-slate-900/95 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-700/50 p-6 
+           hover:shadow-2xl transition-all duration-300;
+  }
+  
+  .card-premium {
+    @apply bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-2xl shadow-2xl 
+           border border-luxury-500/20 p-6 hover:border-luxury-500/40 transition-all duration-300;
+  }
+  
+  /* Status Badges */
   .status-badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold 
+           shadow-sm transition-all duration-200;
   }
   
   .status-success {
-    @apply status-badge bg-success-50 text-success-600;
+    @apply status-badge bg-success-100 text-success-700 border border-success-200;
   }
   
   .status-warning {
-    @apply status-badge bg-warning-50 text-warning-600;
+    @apply status-badge bg-warning-100 text-warning-700 border border-warning-200;
   }
   
   .status-error {
-    @apply status-badge bg-error-50 text-error-600;
+    @apply status-badge bg-error-100 text-error-700 border border-error-200;
   }
   
+  .status-premium {
+    @apply status-badge bg-gradient-to-r from-luxury-100 to-luxury-200 text-luxury-800 
+           border border-luxury-300;
+  }
+  
+  /* Metric Cards */
   .metric-card {
-    @apply card hover:shadow-md transition-shadow duration-200;
+    @apply card hover:shadow-2xl transition-all duration-300 cursor-pointer 
+           hover:scale-[1.02] active:scale-[0.98];
+  }
+  
+  /* Wealth-Focused Gradients */
+  .gradient-wealth {
+    @apply bg-gradient-to-br from-wealth-500 via-wealth-600 to-luxury-600;
+  }
+  
+  .gradient-premium {
+    @apply bg-gradient-to-br from-luxury-600 via-primary-600 to-luxury-700;
+  }
+  
+  .gradient-dark {
+    @apply bg-gradient-to-br from-slate-900 via-slate-850 to-slate-950;
+  }
+  
+  /* Glass Morphism */
+  .glass {
+    @apply bg-white/10 backdrop-blur-lg border border-white/20 shadow-xl;
+  }
+  
+  .glass-dark {
+    @apply bg-slate-900/30 backdrop-blur-lg border border-slate-700/30 shadow-2xl;
   }
 }

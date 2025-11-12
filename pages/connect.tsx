@@ -75,19 +75,23 @@ export default function EasyChannelConnection() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-black p-6">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-4 sm:p-6 lg:p-8">
+      <div className="max-w-5xl mx-auto">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          className="text-center mb-8 sm:mb-12"
         >
-          <h1 className="text-5xl font-bold text-white mb-4">
-            🚀 Connect Your YouTube Channels
+          <div className="inline-flex items-center justify-center space-x-2 mb-4 bg-gradient-to-r from-primary-500/20 to-luxury-500/20 backdrop-blur-sm border border-primary-500/30 rounded-full px-4 py-2">
+            <div className="w-2 h-2 bg-success-400 rounded-full animate-pulse"></div>
+            <span className="text-xs sm:text-sm font-semibold text-primary-300">Secure Connection</span>
+          </div>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-luxury-200 to-primary-300 mb-3 sm:mb-4">
+            Connect Your YouTube Channels
           </h1>
-          <p className="text-xl text-gray-300">
-            Super easy - takes less than 2 minutes!
+          <p className="text-base sm:text-lg lg:text-xl text-slate-400">
+            Enterprise-grade integration • Less than 2 minutes
           </p>
         </motion.div>
 
