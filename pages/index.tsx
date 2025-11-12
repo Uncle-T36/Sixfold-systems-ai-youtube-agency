@@ -2,13 +2,16 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import AppNavigation from '../components/AppNavigation';
 
 export default function Home() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center p-4 sm:p-6 lg:p-8">
-      <div className="max-w-7xl w-full animate-fade-in">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+      <AppNavigation title="AI YouTube Agency" showBack={false} />
+      <div className="sm:ml-20 lg:ml-64 flex items-center justify-center min-h-[calc(100vh-5rem)] p-4 sm:p-6 lg:p-8">
+        <div className="max-w-7xl w-full animate-fade-in">
         {/* Hero Section */}
         <div className="text-center mb-12 sm:mb-16">
           <div className="inline-flex items-center justify-center space-x-3 mb-6 bg-gradient-to-r from-luxury-500/20 to-primary-500/20 backdrop-blur-sm border border-luxury-500/30 rounded-full px-6 py-2">
@@ -124,6 +127,7 @@ export default function Home() {
             <div className="w-2 h-2 sm:w-3 sm:h-3 bg-success-400 rounded-full animate-pulse shadow-lg shadow-success-500/50"></div>
             <span className="font-semibold text-sm sm:text-base tracking-wide">Production System Active</span>
           </div>
+        </div>
         </div>
       </div>
     </div>

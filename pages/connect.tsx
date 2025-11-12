@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import AppNavigation from '../components/AppNavigation';
 
 interface ConnectedChannel {
   id: string;
@@ -9,6 +10,11 @@ interface ConnectedChannel {
 }
 
 export default function EasyChannelConnection() {
+  // Load existing channels from localStorage
+  useEffect(() => {
+    const existing = JSON.parse(localStorage.getItem('youtube_channels') || '[]');
+    setConnectedChannels(existing);
+  }, []);
   const [connecting, setConnecting] = useState(false);
   const [channelUrl, setChannelUrl] = useState('');
   const [channelName, setChannelName] = useState('');
@@ -98,8 +104,11 @@ export default function EasyChannelConnection() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-4 sm:p-6 lg:p-8">
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+      <AppNavigation title="Connect Channels" currentPage="Add your YouTube channels" />
+      
+      <div className="sm:ml-20 lg:ml-64 p-4 sm:p-6 lg:p-8">
+        <div className="max-w-5xl mx-auto">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -309,6 +318,7 @@ export default function EasyChannelConnection() {
             </button>
           </motion.div>
         )}
+        </div>
       </div>
     </div>
   );
