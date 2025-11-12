@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import AppNavigation from '../components/AppNavigation';
 import VoiceSelector from '../components/VoiceSelector';
 import { analyzeChannelDescription } from '../lib/channelAnalyzer';
-import { getVoiceById } from '../lib/voiceLibrary';
+import { getVoiceById, selectPerfectVoice, getVoiceSelectionReason } from '../lib/voiceLibrary';
 
 interface ConnectedChannel {
   id: string;
@@ -39,12 +39,33 @@ export default function EasyChannelConnection() {
   const [channelNiche, setChannelNiche] = useState('');
   const [channelDescription, setChannelDescription] = useState('');
   const [selectedVoice, setSelectedVoice] = useState('dark-narrator-male'); // Default to DarkWhisper style
+  const [autoSelectedVoice, setAutoSelectedVoice] = useState<string>('');
+  const [voiceReason, setVoiceReason] = useState<string>('');
   const [connectedChannels, setConnectedChannels] = useState<ConnectedChannel[]>([]);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [showHelp, setShowHelp] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [showVoiceSelector, setShowVoiceSelector] = useState(false);
+
+  // Auto-select perfect voice when niche or description changes
+  useEffect(() => {
+    if (channelNiche || channelDescription) {
+      const perfectVoice = selectPerfectVoice({
+        niche: channelNiche,
+        description: channelDescription,
+        targetAudience: 'General',
+        targetCountry: 'US'
+      });
+      
+      setAutoSelectedVoice(perfectVoice.id);
+      setSelectedVoice(perfectVoice.id);
+      setVoiceReason(getVoiceSelectionReason({
+        niche: channelNiche,
+        description: channelDescription
+      }));
+    }
+  }, [channelNiche, channelDescription]);
 
   // Extract channel ID from various YouTube URL formats
   const extractChannelId = (url: string): string | null => {
@@ -287,17 +308,58 @@ export default function EasyChannelConnection() {
                 </p>
               </div>
 
-              {/* Voice Selection */}
-              <div>
-                <label className="block text-white font-semibold mb-3 text-sm sm:text-base">
-                  🎙️ Select Voice <span className="text-accent-pink text-xs">DarkWhisper Style Available!</span>
-                </label>
-                <VoiceSelector 
-                  selectedVoice={selectedVoice}
-                  onSelect={setSelectedVoice}
-                  channelNiche={channelNiche}
-                />
-              </div>
+              {/* AI Voice Auto-Selection Notice */}
+              {autoSelectedVoice && voiceReason && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-gradient-to-r from-accent-teal/20 to-accent-pink/20 rounded-xl p-4 border border-accent-teal/30"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="text-3xl">🤖</div>
+                    <div className="flex-1">
+                      <h4 className="text-white font-bold mb-2 flex items-center gap-2">
+                        AI Selected Perfect Voice
+                        <span className="text-xs bg-success-500 text-white px-2 py-1 rounded-full">
+                          AUTOMATIC
+                        </span>
+                      </h4>
+                      <p className="text-slate-300 text-sm mb-2">
+                        <strong className="text-accent-teal">{getVoiceById(autoSelectedVoice)?.name}</strong>
+                      </p>
+                      <p className="text-slate-400 text-xs">
+                        {voiceReason}
+                      </p>
+                      <button
+                        onClick={() => setShowVoiceSelector(!showVoiceSelector)}
+                        className="mt-3 text-accent-pink hover:text-accent-pink/80 text-xs font-semibold underline"
+                      >
+                        {showVoiceSelector ? '▲ Hide other voices' : '▼ Change voice (optional)'}
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Voice Selection (Optional Override) */}
+              {showVoiceSelector && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                >
+                  <div>
+                    <label className="block text-white font-semibold mb-3 text-sm sm:text-base">
+                      🎙️ Override Voice Selection <span className="text-slate-400 text-xs">(Optional)</span>
+                    </label>
+                    <VoiceSelector 
+                      selectedVoice={selectedVoice}
+                      onSelect={setSelectedVoice}
+                      channelNiche={channelNiche}
+                    />
+                  </div>
+                </motion.div>
+              )}
 
               {/* Connect Button */}
               <button
