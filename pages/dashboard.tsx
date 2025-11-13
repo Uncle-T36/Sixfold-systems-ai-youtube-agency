@@ -9,6 +9,7 @@ import TycoonIntelligence from '../components/TycoonIntelligence';
 import LiveMoneyCounter from '../components/LiveMoneyCounter';
 import AutopilotMode from '../components/AutopilotMode';
 import ViralPredictor from '../components/ViralPredictor';
+import InfrastructureStatus from '../components/InfrastructureStatus';
 import { generateFirstVideoForAllChannels } from '../lib/firstVideoGenerator';
 import { autoUpdate, getVersionInfo, CURRENT_VERSION } from '../lib/versionManager';
 
@@ -159,6 +160,11 @@ export default function Dashboard() {
           {/* Viral Predictor */}
           <div className="mb-6">
             <ViralPredictor />
+          </div>
+
+          {/* Netflix-Level Infrastructure Status */}
+          <div className="mb-8">
+            <InfrastructureStatus />
           </div>
 
           {/* AI Business Tycoon Intelligence - What AI is doing 24/7 */}
