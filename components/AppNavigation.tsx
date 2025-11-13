@@ -21,9 +21,11 @@ export default function AppNavigation({ title, showBack = true, currentPage }: A
     { name: 'Dashboard', path: '/dashboard', icon: '📊' },
     { name: 'Series Creator', path: '/series', icon: '📺' },
     { name: 'Video Creator', path: '/video-creator', icon: '🎬' },
-    { name: 'Connect', path: '/connect', icon: '�' },
-    { name: 'Payment', path: '/payment-setup', icon: '�' },
+    { name: 'Connect', path: '/connect', icon: '🔌' },
+    { name: 'Payment', path: '/payment-setup', icon: '💳' },
     { name: 'Revenue', path: '/revenue', icon: '📈' },
+    { name: 'About', path: '/about', icon: 'ℹ️' },
+    { name: 'Support', path: '/support', icon: '🆘' },
   ];
 
   return (
@@ -52,12 +54,12 @@ export default function AppNavigation({ title, showBack = true, currentPage }: A
               )}
               
               <div className="flex items-center space-x-3">
-                <div className="hidden sm:flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-luxury-600 to-primary-600 shadow-lg">
-                  <span className="text-2xl">🚀</span>
+                <div className="hidden sm:flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-green-600 to-yellow-600 shadow-lg">
+                  <span className="text-2xl">🎬</span>
                 </div>
                 <div>
-                  <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-300 tracking-tight">
-                    {title}
+                  <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-yellow-500 tracking-tight">
+                    {title === 'AI YouTube Agency' ? 'SixFold Studios' : title}
                   </h1>
                   {currentPage && (
                     <p className="text-xs sm:text-sm text-slate-500 hidden sm:block">

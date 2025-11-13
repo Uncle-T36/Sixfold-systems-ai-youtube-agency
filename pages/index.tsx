@@ -9,17 +9,20 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-dark-bg via-dark-card to-dark-bg">
-      <AppNavigation title="AI YouTube Agency" showBack={false} />
+      <AppNavigation title="SixFold Studios" showBack={false} />
       <div className="sm:ml-20 lg:ml-64 flex items-center justify-center min-h-[calc(100vh-5rem)] p-4 sm:p-6 lg:p-8">
         <div className="max-w-7xl w-full animate-fade-in">
         {/* Hero Section */}
         <div className="text-center mb-12 sm:mb-16">
+          <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-green-500 to-yellow-500 rounded-3xl flex items-center justify-center shadow-2xl">
+            <span className="text-5xl">🎬</span>
+          </div>
           <div className="inline-flex items-center justify-center space-x-3 mb-6 bg-gradient-to-r from-green-500/20 to-yellow-500/20 backdrop-blur-sm border border-green-500/30 rounded-full px-6 py-2 animate-pulse-soft">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span className="text-sm sm:text-base font-semibold bg-gradient-to-r from-green-300 to-yellow-300 bg-clip-text text-transparent">Enterprise AI System - Netflix-Level Infrastructure</span>
+            <span className="text-sm sm:text-base font-semibold bg-gradient-to-r from-green-300 to-yellow-300 bg-clip-text text-transparent">Enterprise AI System - Professional Grade</span>
           </div>
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-yellow-500 mb-6 tracking-tight">
-            AI YouTube Agency
+            SixFold Studios
           </h1>
           <p className="text-xl sm:text-2xl lg:text-3xl bg-gradient-to-r from-green-300 to-yellow-300 bg-clip-text text-transparent mb-4 font-light">
             Wealth Generation Through Content Automation
