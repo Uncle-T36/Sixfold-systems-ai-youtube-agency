@@ -14,14 +14,14 @@ export default function Home() {
         <div className="max-w-7xl w-full animate-fade-in">
         {/* Hero Section */}
         <div className="text-center mb-12 sm:mb-16">
-          <div className="inline-flex items-center justify-center space-x-3 mb-6 bg-gradient-to-r from-teal-500/20 to-pink-500/20 backdrop-blur-sm border border-teal-500/30 rounded-full px-6 py-2 animate-pulse-soft">
-            <div className="w-2 h-2 bg-teal-400 rounded-full animate-pulse"></div>
-            <span className="text-sm sm:text-base font-semibold bg-gradient-to-r from-teal-300 to-pink-300 bg-clip-text text-transparent">Enterprise AI System - Netflix-Level Infrastructure</span>
+          <div className="inline-flex items-center justify-center space-x-3 mb-6 bg-gradient-to-r from-green-500/20 to-yellow-500/20 backdrop-blur-sm border border-green-500/30 rounded-full px-6 py-2 animate-pulse-soft">
+            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            <span className="text-sm sm:text-base font-semibold bg-gradient-to-r from-green-300 to-yellow-300 bg-clip-text text-transparent">Enterprise AI System - Netflix-Level Infrastructure</span>
           </div>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-cyan-400 to-pink-500 mb-6 tracking-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-yellow-500 mb-6 tracking-tight">
             AI YouTube Agency
           </h1>
-          <p className="text-xl sm:text-2xl lg:text-3xl bg-gradient-to-r from-teal-300 to-pink-300 bg-clip-text text-transparent mb-4 font-light">
+          <p className="text-xl sm:text-2xl lg:text-3xl bg-gradient-to-r from-green-300 to-yellow-300 bg-clip-text text-transparent mb-4 font-light">
             Wealth Generation Through Content Automation
           </p>
           <p className="text-base sm:text-lg lg:text-xl text-slate-300 mb-8 max-w-3xl mx-auto">

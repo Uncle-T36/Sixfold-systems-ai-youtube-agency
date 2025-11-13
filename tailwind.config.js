@@ -8,30 +8,30 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Unique professional money-making palette - NOT the typical AI purple
+        // Green and Gold money-making palette
         primary: {
-          50: '#f0fdfa',
-          100: '#ccfbf1',
-          200: '#99f6e4',
-          300: '#5eead4',
-          400: '#2dd4bf',
-          500: '#14b8a6', // Teal - professional, unique
-          600: '#0d9488',
-          700: '#0f766e',
-          800: '#115e59',
-          900: '#134e4a',
+          50: '#f0fdf4',
+          100: '#dcfce7',
+          200: '#bbf7d0',
+          300: '#86efac',
+          400: '#4ade80',
+          500: '#22c55e', // Vibrant Green - money, growth, success
+          600: '#16a34a',
+          700: '#15803d',
+          800: '#166534',
+          900: '#14532d',
         },
         luxury: {
-          50: '#fef7ff',
-          100: '#fce7ff',
-          200: '#f9cfff',
-          300: '#f5a7ff',
-          400: '#ee6fff',
-          500: '#e637ff', // Magenta/Hot Pink - stands out
-          600: '#c717d9',
-          700: '#a015b3',
-          800: '#7d148c',
-          900: '#5c1266',
+          50: '#fefce8',
+          100: '#fef9c3',
+          200: '#fef08a',
+          300: '#fde047',
+          400: '#facc15',
+          500: '#eab308', // Gold/Yellow - wealth, premium, luxury
+          600: '#ca8a04',
+          700: '#a16207',
+          800: '#854d0e',
+          900: '#713f12',
         },
         wealth: {
           50: '#fefce8',
@@ -77,9 +77,9 @@ module.exports = {
           border: '#1f2937',  // Borders
         },
         accent: {
-          teal: '#14b8a6',    // Main accent
-          pink: '#e637ff',    // Secondary accent
-          gold: '#fbbf24',    // Premium gold
+          green: '#22c55e',   // Main accent - vibrant green
+          gold: '#eab308',    // Secondary accent - rich gold
+          emerald: '#10b981', // Premium emerald
         },
       },
       animation: {
