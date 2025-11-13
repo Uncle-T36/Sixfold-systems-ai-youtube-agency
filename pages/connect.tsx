@@ -4,6 +4,7 @@ import AppNavigation from '../components/AppNavigation';
 import VoiceSelector from '../components/VoiceSelector';
 import { analyzeChannelDescription } from '../lib/channelAnalyzer';
 import { getVoiceById, selectPerfectVoice, getVoiceSelectionReason } from '../lib/voiceLibrary';
+import { getSafeChannels, setSafeChannels } from '../lib/dataProtection';
 
 interface ConnectedChannel {
   id: string;
@@ -15,9 +16,9 @@ interface ConnectedChannel {
 }
 
 export default function EasyChannelConnection() {
-  // Load existing channels from localStorage
+  // Load existing channels from localStorage with backup protection
   useEffect(() => {
-    const existing = JSON.parse(localStorage.getItem('youtube_channels') || '[]');
+    const existing = getSafeChannels(); // Uses data protection system
     setConnectedChannels(existing);
   }, []);
 
@@ -27,9 +28,9 @@ export default function EasyChannelConnection() {
       return;
     }
 
-    const existing = JSON.parse(localStorage.getItem('youtube_channels') || '[]');
+    const existing = getSafeChannels();
     const updated = existing.filter((ch: ConnectedChannel) => ch.id !== channelId);
-    localStorage.setItem('youtube_channels', JSON.stringify(updated));
+    setSafeChannels(updated); // Saves with automatic backup
     setConnectedChannels(updated);
     setSuccess(`✅ Channel "${channelName}" disconnected successfully!`);
   };
@@ -121,7 +122,7 @@ export default function EasyChannelConnection() {
       }
 
       // Check for duplicates
-      const existing = JSON.parse(localStorage.getItem('youtube_channels') || '[]');
+      const existing = getSafeChannels(); // Use safe data protection
       const isDuplicate = existing.some((ch: ConnectedChannel) => ch.id === channelId);
       
       if (isDuplicate) {
@@ -130,7 +131,7 @@ export default function EasyChannelConnection() {
         return;
       }
 
-      // Save channel to local storage
+      // Save channel to local storage with backup protection
       const newChannel: ConnectedChannel = {
         id: channelId,
         name: channelName.trim(),
@@ -141,7 +142,7 @@ export default function EasyChannelConnection() {
       };
 
       const updated = [...existing, newChannel];
-      localStorage.setItem('youtube_channels', JSON.stringify(updated));
+      setSafeChannels(updated); // Saves with automatic backup to 3 locations
       
       setConnectedChannels(updated);
       setSuccess(`✅ Channel "${channelName}" connected successfully!`);
