@@ -251,7 +251,18 @@ export default function SupportPage() {
                   <span className="text-2xl">📧</span>
                   <div>
                     <div className="text-white font-semibold">Email</div>
-                    <div className="text-slate-400 text-sm">support@sixfold.studio</div>
+                    <a href="mailto:tchafuruka@gmail.com" className="text-green-400 hover:text-green-300 text-sm transition-colors">
+                      tchafuruka@gmail.com
+                    </a>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">�</span>
+                  <div>
+                    <div className="text-white font-semibold">Phone/WhatsApp</div>
+                    <a href="tel:+27749415020" className="text-green-400 hover:text-green-300 text-sm transition-colors">
+                      +27 74 941 5020
+                    </a>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -259,13 +270,6 @@ export default function SupportPage() {
                   <div>
                     <div className="text-white font-semibold">Live Chat</div>
                     <div className="text-slate-400 text-sm">Available 24/7</div>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">🌐</span>
-                  <div>
-                    <div className="text-white font-semibold">Community</div>
-                    <div className="text-slate-400 text-sm">Discord & Forums</div>
                   </div>
                 </div>
               </div>

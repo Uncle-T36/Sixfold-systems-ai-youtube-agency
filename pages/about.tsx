@@ -169,15 +169,23 @@ export default function AboutPage() {
           className="text-center"
         >
           <h2 className="text-2xl font-bold text-white mb-4">SixFold Systems LLC</h2>
-          <p className="text-slate-400 mb-6">
+          <p className="text-slate-400 mb-4">
             A technology company dedicated to empowering creators with AI-powered tools
           </p>
-          <div className="flex items-center justify-center gap-6 text-slate-400">
-            <span>🌍 Global</span>
-            <span>•</span>
-            <span>📧 Available 24/7</span>
-            <span>•</span>
-            <span>🚀 Constantly Innovating</span>
+          <div className="text-slate-400 mb-6">
+            Founded by <span className="text-white font-semibold">Uncle-T36</span>
+          </div>
+          <div className="flex flex-col items-center justify-center gap-3 text-slate-400">
+            <div className="flex items-center gap-6">
+              <span>🌍 Global</span>
+              <span>•</span>
+              <span>📧 <a href="mailto:tchafuruka@gmail.com" className="text-green-400 hover:text-green-300 transition-colors">tchafuruka@gmail.com</a></span>
+              <span>•</span>
+              <span>� <a href="tel:+27749415020" className="text-green-400 hover:text-green-300 transition-colors">+27 74 941 5020</a></span>
+            </div>
+            <div>
+              <span>�🚀 Constantly Innovating</span>
+            </div>
           </div>
         </motion.div>
       </div>
