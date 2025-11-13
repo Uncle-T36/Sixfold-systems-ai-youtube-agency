@@ -10,6 +10,13 @@ import LiveMoneyCounter from '../components/LiveMoneyCounter';
 import AutopilotMode from '../components/AutopilotMode';
 import ViralPredictor from '../components/ViralPredictor';
 import InfrastructureStatus from '../components/InfrastructureStatus';
+import AISuggestionsDashboard from '../components/AISuggestionsDashboard';
+import QuickActionsPanel from '../components/QuickActionsPanel';
+import SystemHealthOverview from '../components/SystemHealthOverview';
+import RevenueOptimizationEngine from '../components/RevenueOptimizationEngine';
+import CompetitorSpyEngine from '../components/CompetitorSpyEngine';
+import AICommandCenter from '../components/AICommandCenter';
+import RevenueAnalyticsIntelligence from '../components/RevenueAnalyticsIntelligence';
 import { generateFirstVideoForAllChannels } from '../lib/firstVideoGenerator';
 import { autoUpdate, getVersionInfo, CURRENT_VERSION } from '../lib/versionManager';
 
@@ -147,9 +154,34 @@ export default function Dashboard() {
             )}
           </AnimatePresence>
 
+          {/* AI Command Center - Ask questions, give instructions */}
+          <div className="mb-6">
+            <AICommandCenter />
+          </div>
+
+          {/* System Health Overview - Complete status at a glance */}
+          <div className="mb-6">
+            <SystemHealthOverview />
+          </div>
+
+          {/* Quick Actions - What needs attention NOW */}
+          <div className="mb-6">
+            <QuickActionsPanel />
+          </div>
+
           {/* Live Money Counter - Most important! */}
           <div className="mb-6">
             <LiveMoneyCounter />
+          </div>
+
+          {/* Revenue Analytics & Intelligence - What's making money + regional opportunities */}
+          <div className="mb-8">
+            <RevenueAnalyticsIntelligence />
+          </div>
+
+          {/* AI Suggestions Dashboard - Shows ALL recommendations */}
+          <div className="mb-6">
+            <AISuggestionsDashboard />
           </div>
 
           {/* AI Autopilot Mode */}
@@ -165,6 +197,16 @@ export default function Dashboard() {
           {/* Netflix-Level Infrastructure Status */}
           <div className="mb-8">
             <InfrastructureStatus />
+          </div>
+
+          {/* Revenue Optimization Engine - Money-making opportunities */}
+          <div className="mb-8">
+            <RevenueOptimizationEngine />
+          </div>
+
+          {/* Competitor Spy Engine - Steal winning strategies */}
+          <div className="mb-8">
+            <CompetitorSpyEngine />
           </div>
 
           {/* AI Business Tycoon Intelligence - What AI is doing 24/7 */}

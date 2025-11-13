@@ -197,6 +197,23 @@ export default function EasyChannelConnection() {
           </p>
         </motion.div>
 
+        {/* Friendly Welcome Message */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-gradient-to-r from-teal-500/10 to-pink-500/10 backdrop-blur-sm border border-teal-500/20 rounded-2xl p-6 mb-6"
+        >
+          <div className="flex items-start space-x-4">
+            <span className="text-4xl">👋</span>
+            <div className="flex-1">
+              <h3 className="text-xl font-bold text-white mb-2">Welcome! Let's Get Started</h3>
+              <p className="text-slate-300 leading-relaxed">
+                Connect your YouTube channel in just 30 seconds. No technical setup required - just paste your channel URL and you're ready to go!
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
         {/* Simple Connection Form */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -204,22 +221,33 @@ export default function EasyChannelConnection() {
           className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6 sm:p-8 lg:p-10 rounded-2xl border border-luxury-500/20 shadow-2xl"
         >
           <div className="max-w-2xl mx-auto">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6 text-center">
-              📺 Add Your YouTube Channel
-            </h2>
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-teal-500 to-pink-500 rounded-2xl mb-4">
+                <span className="text-3xl">📺</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+                Add Your YouTube Channel
+              </h2>
+              <p className="text-slate-400">Follow these simple steps to get started</p>
+            </div>
 
-            <div className="space-y-6">
+            <div className="space-y-8">
               {/* Channel URL Input */}
-              <div>
-                <label className="block text-slate-300 mb-3 font-semibold text-sm sm:text-base">
-                  1️⃣ Paste Your YouTube Channel URL
-                </label>
+              <div className="bg-slate-800/30 rounded-2xl p-6 border border-slate-700/50">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-xl">
+                    <span className="text-xl font-bold text-white">1</span>
+                  </div>
+                  <label className="text-white font-bold text-lg">
+                    Paste Your YouTube Channel URL
+                  </label>
+                </div>
                 <input
                   type="text"
                   value={channelUrl}
                   onChange={(e) => setChannelUrl(e.target.value)}
                   placeholder="https://www.youtube.com/@YourChannelName"
-                  className="w-full bg-slate-800 text-white px-4 sm:px-5 py-3 sm:py-4 rounded-xl border-2 border-slate-700 focus:border-luxury-500 focus:outline-none transition-colors text-sm sm:text-base"
+                  className="w-full bg-slate-900 text-white px-5 py-4 rounded-xl border-2 border-slate-700 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 transition-all text-base shadow-inner"
                 />
                 <button
                   onClick={() => setShowHelp(!showHelp)}
@@ -252,31 +280,45 @@ export default function EasyChannelConnection() {
               </div>
 
               {/* Channel Name Input */}
-              <div>
-                <label className="block text-slate-300 mb-3 font-semibold text-sm sm:text-base">
-                  2️⃣ Give Your Channel a Name
-                </label>
+              <div className="bg-slate-800/30 rounded-2xl p-6 border border-slate-700/50">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-pink-500 to-purple-500 rounded-xl">
+                    <span className="text-xl font-bold text-white">2</span>
+                  </div>
+                  <label className="text-white font-bold text-lg">
+                    Give Your Channel a Name
+                  </label>
+                </div>
                 <input
                   type="text"
                   value={channelName}
                   onChange={(e) => setChannelName(e.target.value)}
                   placeholder="My Gaming Channel"
-                  className="w-full bg-slate-800 text-white px-4 sm:px-5 py-3 sm:py-4 rounded-xl border-2 border-slate-700 focus:border-luxury-500 focus:outline-none transition-colors text-sm sm:text-base"
+                  className="w-full bg-slate-900 text-white px-5 py-4 rounded-xl border-2 border-slate-700 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500/20 transition-all text-base shadow-inner"
                 />
-                <p className="text-slate-400 text-xs sm:text-sm mt-2">
-                  This is just for you to identify it in the dashboard
+                <p className="text-slate-400 text-sm mt-3 flex items-start space-x-2">
+                  <span>💡</span>
+                  <span>This is just for you to identify it in the dashboard</span>
                 </p>
               </div>
 
               {/* Channel Niche (Optional) */}
-              <div>
-                <label className="block text-slate-300 mb-3 font-semibold text-sm sm:text-base">
-                  3️⃣ Channel Niche <span className="text-slate-500 text-xs">(Optional)</span>
-                </label>
+              <div className="bg-slate-800/30 rounded-2xl p-6 border border-slate-700/50">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl">
+                      <span className="text-xl font-bold text-white">3</span>
+                    </div>
+                    <label className="text-white font-bold text-lg">
+                      Channel Niche
+                    </label>
+                  </div>
+                  <span className="text-xs text-slate-500 bg-slate-700/50 px-3 py-1 rounded-full">Optional</span>
+                </div>
                 <select
                   value={channelNiche}
                   onChange={(e) => setChannelNiche(e.target.value)}
-                  className="w-full bg-slate-800 text-white px-4 sm:px-5 py-3 sm:py-4 rounded-xl border-2 border-slate-700 focus:border-luxury-500 focus:outline-none transition-colors text-sm sm:text-base"
+                  className="w-full bg-slate-900 text-white px-5 py-4 rounded-xl border-2 border-slate-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all text-base shadow-inner cursor-pointer"
                 >
                   <option value="">Choose a niche...</option>
                   <option value="gaming">🎮 Gaming</option>
@@ -293,20 +335,34 @@ export default function EasyChannelConnection() {
               </div>
 
               {/* Channel Description */}
-              <div>
-                <label className="block text-slate-300 mb-3 font-semibold text-sm sm:text-base">
-                  4️⃣ Channel Description <span className="text-wealth-400 text-xs">💰 Get Money-Making Tips!</span>
-                </label>
+              <div className="bg-slate-800/30 rounded-2xl p-6 border border-slate-700/50">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-green-500 to-teal-500 rounded-xl">
+                      <span className="text-xl font-bold text-white">4</span>
+                    </div>
+                    <label className="text-white font-bold text-lg">
+                      Channel Description
+                    </label>
+                  </div>
+                  <span className="text-xs text-green-400 bg-green-500/20 px-3 py-1 rounded-full flex items-center space-x-1">
+                    <span>🤖</span>
+                    <span>AI Analysis</span>
+                  </span>
+                </div>
                 <textarea
                   value={channelDescription}
                   onChange={(e) => setChannelDescription(e.target.value)}
                   placeholder="Paste your channel description here. Our AI will analyze it and give you suggestions to make more money and get more subscribers!"
                   rows={4}
-                  className="w-full bg-slate-800 text-white px-4 sm:px-5 py-3 sm:py-4 rounded-xl border-2 border-slate-700 focus:border-wealth-500 focus:outline-none transition-colors text-sm sm:text-base resize-none"
+                  className="w-full bg-slate-900 text-white px-5 py-4 rounded-xl border-2 border-slate-700 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20 transition-all text-base resize-none shadow-inner"
                 />
-                <p className="text-slate-400 text-xs sm:text-sm mt-2">
-                  💡 <strong className="text-wealth-400">AI will analyze this</strong> and show you in notifications how to improve it for maximum revenue & growth!
-                </p>
+                <div className="mt-3 bg-teal-500/10 border border-teal-500/30 rounded-lg p-3">
+                  <p className="text-teal-300 text-sm flex items-start space-x-2">
+                    <span className="text-lg">💰</span>
+                    <span><strong>AI will analyze this</strong> and show you in notifications how to improve it for maximum revenue & growth!</span>
+                  </p>
+                </div>
               </div>
 
               {/* AI Voice Auto-Selection Notice */}
@@ -362,33 +418,46 @@ export default function EasyChannelConnection() {
                 </motion.div>
               )}
 
-              {/* Connect Button */}
-              <button
-                onClick={connectChannel}
-                disabled={connecting || analyzing || !channelUrl.trim() || !channelName.trim()}
-                className="w-full bg-gradient-to-r from-luxury-600 to-primary-600 hover:from-luxury-700 hover:to-primary-700 text-white font-bold px-6 py-4 sm:py-5 rounded-xl text-base sm:text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-              >
-                {connecting || analyzing ? (
-                  <span className="flex items-center justify-center">
-                    <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
-                    </svg>
-                    {analyzing ? 'Analyzing with AI...' : 'Connecting...'}
-                  </span>
-                ) : (
-                  '✅ Connect Channel'
-                )}
-              </button>
+              {/* Connect Button - BIG AND PROMINENT */}
+              <div className="pt-4">
+                <button
+                  onClick={connectChannel}
+                  disabled={connecting || analyzing || !channelUrl.trim() || !channelName.trim()}
+                  className="group relative w-full overflow-hidden bg-gradient-to-r from-teal-500 via-cyan-500 to-pink-500 hover:from-teal-600 hover:via-cyan-600 hover:to-pink-600 text-white font-bold px-8 py-6 rounded-2xl text-xl shadow-2xl hover:shadow-teal-500/50 transform hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
+                >
+                  {/* Animated background effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                  
+                  <div className="relative flex items-center justify-center space-x-3">
+                    {connecting || analyzing ? (
+                      <>
+                        <svg className="animate-spin h-6 w-6" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                        </svg>
+                        <span>{analyzing ? '🤖 Analyzing with AI...' : '⚡ Connecting...'}</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-2xl">🚀</span>
+                        <span>Connect My Channel</span>
+                        <span className="text-2xl">✨</span>
+                      </>
+                    )}
+                  </div>
+                </button>
+              </div>
 
               {/* Info Box */}
-              <div className="bg-primary-500/10 border border-primary-500/30 rounded-xl p-4">
-                <div className="flex items-start space-x-3">
-                  <span className="text-2xl">💡</span>
+              <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/30 rounded-2xl p-5 shadow-lg">
+                <div className="flex items-start space-x-4">
+                  <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex-shrink-0">
+                    <span className="text-2xl">⚡</span>
+                  </div>
                   <div>
-                    <p className="text-slate-300 text-xs sm:text-sm">
-                      <strong className="text-white">No technical setup required!</strong><br/>
-                      Just paste your channel URL and click connect. Your channel will appear in the dashboard immediately.
+                    <h4 className="text-white font-bold text-base mb-1">Super Easy Setup!</h4>
+                    <p className="text-slate-300 text-sm leading-relaxed">
+                      No technical setup required! Just paste your channel URL and click connect. Your channel will appear in the dashboard immediately and start generating content.
                     </p>
                   </div>
                 </div>
@@ -423,27 +492,41 @@ export default function EasyChannelConnection() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-8"
+            className="mt-12"
           >
-            <h3 className="text-2xl font-bold text-white mb-4">
-              ✅ Connected Channels ({connectedChannels.length})
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-gradient-to-r from-green-500/10 to-teal-500/10 border border-green-500/30 rounded-2xl p-6 mb-6">
+              <div className="flex items-center space-x-3">
+                <div className="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-green-500 to-teal-500 rounded-2xl">
+                  <span className="text-2xl">✅</span>
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-white">
+                    Your Connected Channels
+                  </h3>
+                  <p className="text-slate-300 text-sm">
+                    {connectedChannels.length} {connectedChannels.length === 1 ? 'channel' : 'channels'} ready to generate videos
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {connectedChannels.map((channel) => (
                 <motion.div
                   key={channel.id}
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="bg-gradient-to-br from-slate-900 to-slate-800 p-4 rounded-xl border border-slate-700 hover:border-luxury-500/50 transition-all duration-200 shadow-lg"
+                  whileHover={{ scale: 1.02 }}
+                  className="bg-gradient-to-br from-slate-900 to-slate-800 p-6 rounded-2xl border-2 border-slate-700 hover:border-teal-500/50 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-teal-500/20"
                 >
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-4 flex-1">
                       <img
                         src={channel.thumbnailUrl}
                         alt={channel.name}
                         className="w-16 h-16 rounded-full border-2 border-luxury-500/30"
                       />
-                      <div>
+                      <div className="flex-1">
                         <h4 className="text-white font-bold text-lg">{channel.name}</h4>
                         <p className="text-slate-400 text-sm">
                           {channel.subscriberCount.toLocaleString()} subscribers
@@ -459,26 +542,37 @@ export default function EasyChannelConnection() {
                       </div>
                     </div>
                     
+                    {/* BIG DISCONNECT BUTTON */}
                     <button
                       onClick={() => disconnectChannel(channel.id, channel.name)}
-                      className="flex items-center justify-center w-10 h-10 rounded-lg bg-error-500/20 hover:bg-error-500/30 border border-error-500/50 hover:border-error-500 transition-all duration-200 group"
+                      className="flex items-center space-x-2 px-4 py-3 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 border-2 border-red-500 hover:border-red-400 transition-all duration-200 shadow-lg hover:shadow-red-500/50 group"
                       title="Disconnect channel"
                     >
-                      <svg className="w-5 h-5 text-error-400 group-hover:text-error-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                       </svg>
+                      <span className="text-white font-bold text-sm">Disconnect</span>
                     </button>
                   </div>
                 </motion.div>
               ))}
             </div>
 
-            <button
+            <motion.button
               onClick={() => window.location.href = '/dashboard'}
-              className="w-full mt-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-4 rounded-xl font-bold text-lg hover:scale-105 transition-transform"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="group relative w-full mt-8 overflow-hidden bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 hover:from-purple-700 hover:via-pink-700 hover:to-red-700 text-white px-8 py-6 rounded-2xl font-bold text-xl shadow-2xl hover:shadow-purple-500/50 transition-all duration-300"
             >
-              🚀 Go to Dashboard & Start Generating Videos!
-            </button>
+              {/* Animated shimmer effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 transform translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+              
+              <div className="relative flex items-center justify-center space-x-3">
+                <span className="text-2xl">🚀</span>
+                <span>Go to Dashboard & Start Creating!</span>
+                <span className="text-2xl">💰</span>
+              </div>
+            </motion.button>
           </motion.div>
         )}
         </div>
