@@ -238,14 +238,16 @@ export default function InteractiveDashboard() {
         >
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-luxury-400 via-primary-400 to-luxury-300 mb-2">
-                AI YouTube Empire
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-cyan-400 to-pink-500 mb-2">
+                🎬 Your YouTube Channels
               </h1>
-              <p className="text-slate-400 text-sm sm:text-base">Multi-Channel Command Center</p>
+              <p className="text-slate-300 text-sm sm:text-base font-medium">
+                {channels.length > 0 ? `${channels.length} Connected Channel${channels.length !== 1 ? 's' : ''}` : 'No Channels Connected Yet'}
+              </p>
             </div>
             <a 
               href="/connect"
-              className="btn-luxury text-sm sm:text-base whitespace-nowrap"
+              className="px-6 py-3 bg-gradient-to-r from-teal-500 to-pink-500 hover:from-teal-600 hover:to-pink-600 rounded-xl text-white font-semibold shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5"
             >
               + Add Channel
             </a>
@@ -310,14 +312,63 @@ export default function InteractiveDashboard() {
           </motion.div>
         )}
 
+        {/* Empty State - No Channels */}
+        {channels.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center py-16 px-4"
+          >
+            <div className="max-w-2xl mx-auto">
+              <div className="w-32 h-32 mx-auto mb-6 bg-gradient-to-br from-teal-500/20 to-pink-500/20 rounded-full flex items-center justify-center border-4 border-teal-500/30">
+                <span className="text-6xl">🎬</span>
+              </div>
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-teal-400 to-pink-500 bg-clip-text text-transparent mb-4">
+                No Channels Connected Yet
+              </h2>
+              <p className="text-slate-300 text-lg mb-8">
+                Connect your YouTube channels to start generating content with AI!
+              </p>
+              
+              {/* Features Preview */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                <div className="bg-gradient-to-br from-teal-500/10 to-cyan-500/10 border border-teal-500/20 rounded-xl p-4">
+                  <div className="text-3xl mb-2">🤖</div>
+                  <h3 className="text-white font-semibold mb-1">AI Video Scripts</h3>
+                  <p className="text-slate-400 text-sm">Auto-generate professional scripts</p>
+                </div>
+                <div className="bg-gradient-to-br from-pink-500/10 to-purple-500/10 border border-pink-500/20 rounded-xl p-4">
+                  <div className="text-3xl mb-2">🎙️</div>
+                  <h3 className="text-white font-semibold mb-1">Perfect Voices</h3>
+                  <p className="text-slate-400 text-sm">AI selects ideal voice per niche</p>
+                </div>
+                <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 rounded-xl p-4">
+                  <div className="text-3xl mb-2">💰</div>
+                  <h3 className="text-white font-semibold mb-1">Autopilot Mode</h3>
+                  <p className="text-slate-400 text-sm">24/7 wealth generation</p>
+                </div>
+              </div>
+
+              <a
+                href="/connect"
+                className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-teal-500 to-pink-500 hover:from-teal-600 hover:to-pink-600 rounded-xl text-white font-bold text-lg shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all"
+              >
+                <span className="text-2xl">+</span>
+                Connect Your First Channel
+              </a>
+            </div>
+          </motion.div>
+        )}
+
         {/* Channels Grid */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-          {channels.map((channel, index) => (
+        {channels.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            {channels.map((channel, index) => (
             <motion.div
               key={channel.id}
               initial={{ opacity: 0, y: 50 }}
@@ -430,7 +481,8 @@ export default function InteractiveDashboard() {
               </div>
             </motion.div>
           ))}
-        </motion.div>
+          </motion.div>
+        )}
 
         {/* Add New Channel Button */}
         <motion.div

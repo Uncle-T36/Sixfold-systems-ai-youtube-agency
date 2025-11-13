@@ -20,6 +20,7 @@ export default function AppNavigation({ title, showBack = true, currentPage }: A
     { name: 'Home', path: '/', icon: '🏠' },
     { name: 'Dashboard', path: '/dashboard', icon: '📊' },
     { name: 'Connect', path: '/connect', icon: '🔌' },
+    { name: 'Payment', path: '/payment-setup', icon: '💳' },
     { name: 'Pricing', path: '/pricing', icon: '💰' },
     { name: 'Revenue', path: '/revenue', icon: '📈' },
   ];
