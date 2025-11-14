@@ -8,18 +8,18 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Green and Gold money-making palette
+        // Imperial Green, Azure, Lavender, Yellow & Black palette
         primary: {
           50: '#f0fdf4',
-          100: '#dcfce7',
-          200: '#bbf7d0',
-          300: '#86efac',
-          400: '#4ade80',
-          500: '#22c55e', // Vibrant Green - money, growth, success
-          600: '#16a34a',
-          700: '#15803d',
-          800: '#166534',
-          900: '#14532d',
+          100: '#d1fae5',
+          200: '#a7f3d0',
+          300: '#6ee7b7',
+          400: '#34d399',
+          500: '#00563F', // Imperial Green - luxury, growth, wealth
+          600: '#004d38',
+          700: '#003d2c',
+          800: '#002d21',
+          900: '#001d16',
         },
         luxury: {
           50: '#fefce8',
@@ -27,37 +27,49 @@ module.exports = {
           200: '#fef08a',
           300: '#fde047',
           400: '#facc15',
-          500: '#eab308', // Gold/Yellow - wealth, premium, luxury
-          600: '#ca8a04',
-          700: '#a16207',
-          800: '#854d0e',
-          900: '#713f12',
+          500: '#FFD700', // Gold/Yellow - wealth, premium, luxury
+          600: '#d4af37',
+          700: '#b8941f',
+          800: '#9c7a0f',
+          900: '#806000',
         },
-        wealth: {
-          50: '#fefce8',
-          100: '#fef9c3',
-          200: '#fef08a',
-          300: '#fde047',
-          400: '#facc15',
-          500: '#eab308',
-          600: '#ca8a04',
-          700: '#a16207',
-          800: '#854d0e',
-          900: '#713f12',
+        azure: {
+          50: '#f0f9ff',
+          100: '#e0f2fe',
+          200: '#bae6fd',
+          300: '#7dd3fc',
+          400: '#38bdf8',
+          500: '#007FFF', // Azure Blue - trust, clarity, professionalism
+          600: '#0066cc',
+          700: '#004d99',
+          800: '#003366',
+          900: '#001a33',
+        },
+        lavender: {
+          50: '#faf5ff',
+          100: '#f3e8ff',
+          200: '#e9d5ff',
+          300: '#d8b4fe',
+          400: '#c084fc',
+          500: '#967BB6', // Lavender - elegance, creativity, premium
+          600: '#7a6396',
+          700: '#5e4b76',
+          800: '#423356',
+          900: '#261b36',
         },
         success: {
           50: '#f0fdf4',
-          100: '#dcfce7',
-          500: '#22c55e',
-          600: '#16a34a',
-          700: '#15803d',
+          100: '#d1fae5',
+          500: '#00563F',
+          600: '#004d38',
+          700: '#003d2c',
         },
         warning: {
           50: '#fffbeb',
           100: '#fef3c7',
-          500: '#f59e0b',
-          600: '#d97706',
-          700: '#b45309',
+          500: '#FFD700',
+          600: '#d4af37',
+          700: '#b8941f',
         },
         error: {
           50: '#fef2f2',
@@ -68,20 +80,31 @@ module.exports = {
         },
         slate: {
           850: '#1a202e',
-          950: '#0f1419',
+          950: '#000000', // Pure Black
         },
-        // Unique dark theme colors
         dark: {
-          bg: '#0a0e14',      // Deep blue-black
-          card: '#151b24',    // Card background
-          border: '#1f2937',  // Borders
+          bg: '#000000',      // Pure Black
+          card: '#1a1a1a',    // Very dark gray
+          border: '#2a2a2a',  // Dark gray borders
         },
         accent: {
-          green: '#22c55e',   // Main accent - vibrant green
-          gold: '#eab308',    // Secondary accent - rich gold
-          emerald: '#10b981', // Premium emerald
-          pink: '#ec4899',    // Magenta/Pink accent
-          teal: '#14b8a6',    // Teal accent
+          imperial: '#00563F',   // Imperial Green
+          azure: '#007FFF',      // Azure Blue
+          lavender: '#967BB6',   // Lavender
+          gold: '#FFD700',       // Gold Yellow
+          black: '#000000',      // Pure Black
+        },
+        wealth: {
+          50: '#fefce8',
+          100: '#fef9c3',
+          200: '#fef08a',
+          300: '#fde047',
+          400: '#facc15',
+          500: '#FFD700',
+          600: '#d4af37',
+          700: '#b8941f',
+          800: '#9c7a0f',
+          900: '#806000',
         },
       },
       animation: {
@@ -102,8 +125,9 @@ module.exports = {
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-wealth': 'linear-gradient(135deg, #22c55e 0%, #10b981 100%)',  // Green to emerald
-        'gradient-premium': 'linear-gradient(135deg, #10b981 0%, #14b8a6 100%)', // Emerald to teal
+        'gradient-wealth': 'linear-gradient(135deg, #00563F 0%, #FFD700 100%)',  // Imperial Green to Gold
+        'gradient-premium': 'linear-gradient(135deg, #007FFF 0%, #967BB6 100%)', // Azure to Lavender
+        'gradient-imperial': 'linear-gradient(135deg, #00563F 0%, #007FFF 100%)', // Imperial Green to Azure
       },
     },
   },
