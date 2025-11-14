@@ -19,6 +19,7 @@ export default function AppNavigation({ title, showBack = true, currentPage }: A
   const navItems = [
     { name: 'Home', path: '/', icon: '🏠' },
     { name: 'Dashboard', path: '/dashboard', icon: '📊' },
+    { name: 'Strategy', path: '/strategy', icon: '🧠' },
     { name: 'Series Creator', path: '/series', icon: '📺' },
     { name: 'Video Creator', path: '/video-creator', icon: '🎬' },
     { name: 'Connect', path: '/connect', icon: '🔌' },

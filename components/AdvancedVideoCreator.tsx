@@ -7,6 +7,16 @@ import {
   VideoStyle,
   AnimationConfig
 } from '../lib/advancedVideoGenerator';
+import {
+  createProfessionalVideo,
+  assignVoicesToCharacters,
+  QUALITY_PRESETS,
+  SUBTITLE_STYLES,
+  VOICE_LIBRARY,
+  type VideoQualitySettings,
+  type SubtitleConfig,
+  type CharacterVoiceMapping
+} from '../lib/professionalVideoProduction';
 
 export default function AdvancedVideoCreator() {
   const [selectedStyle, setSelectedStyle] = useState<VideoStyle | null>(null);
@@ -17,6 +27,12 @@ export default function AdvancedVideoCreator() {
     niche: 'general',
     duration: 60
   });
+  const [qualityPreset, setQualityPreset] = useState<string>('youtube_premium');
+  const [subtitleStyle, setSubtitleStyle] = useState<string>('youtube');
+  const [enableSubtitles, setEnableSubtitles] = useState(true);
+  const [enableSpatialAudio, setEnableSpatialAudio] = useState(true);
+  const [voiceMappings, setVoiceMappings] = useState<CharacterVoiceMapping[]>([]);
+  const [showVoiceConfig, setShowVoiceConfig] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedConfig, setGeneratedConfig] = useState<AnimationConfig | null>(null);
   const [showPreview, setShowPreview] = useState(false);
@@ -36,38 +52,129 @@ export default function AdvancedVideoCreator() {
     setIsGenerating(true);
 
     try {
-      // Generate video configuration
+      // Extract characters from script (basic parsing)
+      const characters = extractCharactersFromScript(formData.script);
+      
+      // Generate scenes from script
+      const scenes = generateScenesFromScript(formData.script, formData.duration);
+      
+      // Create professional video with HD quality and voice mapping
+      const renderJob = await createProfessionalVideo({
+        title: formData.title,
+        script: formData.script,
+        characters,
+        scenes,
+        quality: qualityPreset === 'cinema_quality' ? 'ultra-hd' : 
+                qualityPreset === 'youtube_premium' ? 'hd' : 'standard',
+        enableSubtitles,
+        enableSpatialAudio
+      });
+      
+      setVoiceMappings(renderJob.voiceMappings);
+      setShowVoiceConfig(true);
+
+      // Also generate with old system for compatibility
       const config = await generateAdvancedVideo(formData, selectedStyle.id);
       setGeneratedConfig(config);
-      setShowPreview(true);
 
       // Queue for rendering
       const jobId = await queueVideoRender(config, 'current-channel');
       
-      // Save to localStorage
+      // Save to localStorage with professional settings
       const videos = JSON.parse(localStorage.getItem('generated_videos') || '[]');
       videos.push({
         id: jobId,
         channelId: 'current-channel',
         title: formData.title,
         style: selectedStyle.name,
+        quality: QUALITY_PRESETS[qualityPreset as keyof typeof QUALITY_PRESETS],
+        voiceMappings: renderJob.voiceMappings,
+        subtitles: {
+          enabled: enableSubtitles,
+          style: subtitleStyle,
+          ...SUBTITLE_STYLES[subtitleStyle as keyof typeof SUBTITLE_STYLES]
+        },
+        spatialAudio: enableSpatialAudio,
         status: 'rendering',
         createdAt: new Date().toISOString(),
+        estimatedRenderTime: renderJob.estimatedRenderTime,
         config
       });
       localStorage.setItem('generated_videos', JSON.stringify(videos));
 
-      alert(`✨ Video queued for rendering! Job ID: ${jobId}\n\nStyle: ${selectedStyle.name}\nEstimated time: ${selectedStyle.processingTime}`);
+      const qualityName = QUALITY_PRESETS[qualityPreset as keyof typeof QUALITY_PRESETS].name;
+      alert(`✨ Professional HD video queued!\n\nQuality: ${qualityName}\nVoices: ${renderJob.voiceMappings.length} unique character voices\nSubtitles: ${enableSubtitles ? 'Enabled with speaker labels' : 'Disabled'}\nSpatial Audio: ${enableSpatialAudio ? 'Enabled' : 'Disabled'}\nEstimated render time: ${renderJob.estimatedRenderTime} minutes\n\nJob ID: ${jobId}`);
       
-      // Reset form
-      setFormData({ title: '', script: '', niche: 'general', duration: 60 });
-      setSelectedStyle(null);
+      setShowPreview(true);
     } catch (error) {
       console.error('Generation error:', error);
       alert('Failed to generate video. Please try again.');
     } finally {
       setIsGenerating(false);
     }
+  };
+
+  // Extract characters from script (basic NLP)
+  const extractCharactersFromScript = (script: string) => {
+    const lines = script.split('\n');
+    const characters: any[] = [];
+    const characterNames = new Set<string>();
+
+    lines.forEach(line => {
+      // Look for dialogue patterns like "CHARACTER: dialogue" or "Character says:"
+      const match = line.match(/^([A-Z][A-Za-z\s]+)[:]/);
+      if (match) {
+        const name = match[1].trim();
+        if (!characterNames.has(name)) {
+          characterNames.add(name);
+          characters.push({
+            id: `char_${characters.length}`,
+            name,
+            role: characters.length === 0 ? 'narrator' : 'character',
+            gender: inferGender(name),
+            age: 'adult',
+            description: `Character from the story`
+          });
+        }
+      }
+    });
+
+    // If no characters found, add a default narrator
+    if (characters.length === 0) {
+      characters.push({
+        id: 'narrator',
+        name: 'Narrator',
+        role: 'narrator',
+        gender: 'male',
+        age: 'adult',
+        description: 'Story narrator'
+      });
+    }
+
+    return characters;
+  };
+
+  const inferGender = (name: string): 'male' | 'female' | 'neutral' => {
+    const femaleNames = ['sarah', 'emma', 'lily', 'diana', 'maria', 'anna'];
+    const maleNames = ['david', 'john', 'michael', 'james', 'robert', 'william'];
+    const lowerName = name.toLowerCase();
+    
+    if (femaleNames.some(n => lowerName.includes(n))) return 'female';
+    if (maleNames.some(n => lowerName.includes(n))) return 'male';
+    return 'neutral';
+  };
+
+  const generateScenesFromScript = (script: string, duration: number) => {
+    const paragraphs = script.split('\n\n').filter(p => p.trim());
+    const sceneCount = Math.max(3, Math.min(paragraphs.length, 10));
+    const sceneDuration = duration / sceneCount;
+
+    return paragraphs.slice(0, sceneCount).map((paragraph, index) => ({
+      id: `scene_${index}`,
+      duration: sceneDuration,
+      content: paragraph,
+      timestamp: index * sceneDuration
+    }));
   };
 
   return (
@@ -166,6 +273,75 @@ export default function AdvancedVideoCreator() {
                   <div className="flex justify-between text-xs text-slate-400 mt-1">
                     <span>30s</span>
                     <span>5min</span>
+                  </div>
+                </div>
+
+                {/* Quality Settings */}
+                <div className="pt-4 border-t border-slate-700">
+                  <h3 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
+                    🎥 Quality Settings
+                  </h3>
+                  
+                  <div className="mb-4">
+                    <label className="block text-slate-300 font-medium mb-2">Video Quality</label>
+                    <select
+                      value={qualityPreset}
+                      onChange={(e) => setQualityPreset(e.target.value)}
+                      className="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:border-green-500 focus:outline-none transition-colors"
+                    >
+                      {Object.entries(QUALITY_PRESETS).map(([key, preset]) => (
+                        <option key={key} value={key}>
+                          {preset.name} - {preset.description}
+                        </option>
+                      ))}
+                    </select>
+                    <p className="text-xs text-slate-400 mt-2">
+                      {QUALITY_PRESETS[qualityPreset as keyof typeof QUALITY_PRESETS].resolution} @ {QUALITY_PRESETS[qualityPreset as keyof typeof QUALITY_PRESETS].fps}fps
+                    </p>
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="block text-slate-300 font-medium mb-2">Subtitle Style</label>
+                    <select
+                      value={subtitleStyle}
+                      onChange={(e) => setSubtitleStyle(e.target.value)}
+                      className="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:border-green-500 focus:outline-none transition-colors"
+                      disabled={!enableSubtitles}
+                    >
+                      {Object.entries(SUBTITLE_STYLES).map(([key, style]) => (
+                        <option key={key} value={key}>
+                          {style.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="space-y-3">
+                    <label className="flex items-center gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={enableSubtitles}
+                        onChange={(e) => setEnableSubtitles(e.target.checked)}
+                        className="w-5 h-5 rounded border-slate-700 bg-slate-900 text-green-500 focus:ring-2 focus:ring-green-500"
+                      />
+                      <div>
+                        <span className="text-white font-medium">Enable Subtitles</span>
+                        <p className="text-xs text-slate-400">Accurate captions with speaker labels</p>
+                      </div>
+                    </label>
+
+                    <label className="flex items-center gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={enableSpatialAudio}
+                        onChange={(e) => setEnableSpatialAudio(e.target.checked)}
+                        className="w-5 h-5 rounded border-slate-700 bg-slate-900 text-green-500 focus:ring-2 focus:ring-green-500"
+                      />
+                      <div>
+                        <span className="text-white font-medium">Spatial Audio</span>
+                        <p className="text-xs text-slate-400">3D audio positioning for immersive experience</p>
+                      </div>
+                    </label>
                   </div>
                 </div>
 
@@ -309,24 +485,118 @@ export default function AdvancedVideoCreator() {
           className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6"
         >
           <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/30 rounded-2xl p-6">
-            <div className="text-4xl mb-4">🎭</div>
-            <h3 className="text-white font-bold text-xl mb-2">Auto Character Generation</h3>
-            <p className="text-slate-300">AI creates perfect characters for your niche automatically</p>
+            <div className="text-4xl mb-4">�</div>
+            <h3 className="text-white font-bold text-xl mb-2">Character Voice Mapping</h3>
+            <p className="text-slate-300">Each character gets a unique voice that stays consistent across all episodes</p>
           </div>
 
           <div className="bg-gradient-to-br from-yellow-500/10 to-orange-500/10 border border-yellow-500/30 rounded-2xl p-6">
-            <div className="text-4xl mb-4">🎬</div>
-            <h3 className="text-white font-bold text-xl mb-2">Smart Scene Breakdown</h3>
-            <p className="text-slate-300">Intelligent script analysis creates perfect scene timing</p>
+            <div className="text-4xl mb-4">📝</div>
+            <h3 className="text-white font-bold text-xl mb-2">Accurate Subtitles</h3>
+            <p className="text-slate-300">AI-generated captions with speaker labels and word-level highlighting</p>
           </div>
 
           <div className="bg-gradient-to-br from-emerald-500/10 to-green-500/10 border border-emerald-500/30 rounded-2xl p-6">
-            <div className="text-4xl mb-4">⚡</div>
-            <h3 className="text-white font-bold text-xl mb-2">Professional Effects</h3>
-            <p className="text-slate-300">Studio-quality transitions, particles, and animations</p>
+            <div className="text-4xl mb-4">🎬</div>
+            <h3 className="text-white font-bold text-xl mb-2">HD/4K Quality</h3>
+            <p className="text-slate-300">Professional video quality up to 4K with HDR and spatial audio</p>
           </div>
         </motion.div>
       </div>
+
+      {/* Voice Mapping Preview Modal */}
+      <AnimatePresence>
+        {showVoiceConfig && voiceMappings.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50"
+            onClick={() => setShowVoiceConfig(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="bg-slate-900 rounded-2xl p-8 max-w-4xl max-h-[90vh] overflow-y-auto border border-green-600/30"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-start justify-between mb-6">
+                <div>
+                  <h2 className="text-3xl font-bold text-white mb-2">🎤 Voice Mapping</h2>
+                  <p className="text-slate-400">Each character has been assigned a unique voice</p>
+                </div>
+                <button
+                  onClick={() => setShowVoiceConfig(false)}
+                  className="text-slate-400 hover:text-white text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                {voiceMappings.map((mapping, idx) => (
+                  <div key={idx} className="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
+                    <div className="flex items-start justify-between mb-4">
+                      <div>
+                        <h3 className="text-white font-bold text-xl">{mapping.characterName}</h3>
+                        <p className="text-slate-400 text-sm">{mapping.description}</p>
+                      </div>
+                      <span className="px-3 py-1 bg-green-600/20 text-green-400 rounded-full text-sm font-bold">
+                        {mapping.voiceConsistency}% Match
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                      <div className="bg-slate-900/50 rounded-lg p-3">
+                        <p className="text-slate-400 text-xs">Voice</p>
+                        <p className="text-white font-bold text-sm">{mapping.voiceProfile.voiceName}</p>
+                      </div>
+                      <div className="bg-slate-900/50 rounded-lg p-3">
+                        <p className="text-slate-400 text-xs">Gender</p>
+                        <p className="text-white font-bold text-sm capitalize">{mapping.voiceProfile.gender}</p>
+                      </div>
+                      <div className="bg-slate-900/50 rounded-lg p-3">
+                        <p className="text-slate-400 text-xs">Age</p>
+                        <p className="text-white font-bold text-sm capitalize">{mapping.voiceProfile.age.replace('-', ' ')}</p>
+                      </div>
+                      <div className="bg-slate-900/50 rounded-lg p-3">
+                        <p className="text-slate-400 text-xs">Accent</p>
+                        <p className="text-white font-bold text-sm">{mapping.voiceProfile.accent}</p>
+                      </div>
+                    </div>
+
+                    <div className="bg-green-900/20 border border-green-600/30 rounded-lg p-3">
+                      <p className="text-green-400 text-sm">
+                        ✓ Voice will remain consistent across all episodes in this series
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-6 p-4 bg-gradient-to-r from-green-900/20 to-yellow-900/20 border border-green-600/30 rounded-xl">
+                <h4 className="text-white font-bold mb-2">✨ Professional Features Enabled:</h4>
+                <ul className="space-y-2 text-slate-300 text-sm">
+                  <li>✓ {voiceMappings.length} unique character voices mapped</li>
+                  <li>✓ HD/{QUALITY_PRESETS[qualityPreset as keyof typeof QUALITY_PRESETS].resolution} quality rendering</li>
+                  <li>✓ {enableSubtitles ? 'Accurate subtitles with speaker labels' : 'Subtitles disabled'}</li>
+                  <li>✓ {enableSpatialAudio ? '3D spatial audio enabled' : 'Stereo audio'}</li>
+                  <li>✓ Professional audio mixing and compression</li>
+                  <li>✓ Voice consistency tracking for series episodes</li>
+                </ul>
+              </div>
+
+              <button
+                onClick={() => setShowVoiceConfig(false)}
+                className="w-full mt-6 bg-gradient-to-r from-green-600 to-yellow-600 hover:from-green-500 hover:to-yellow-500 text-white font-bold py-4 rounded-xl transition-all"
+              >
+                Continue →
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <style jsx>{`
         .custom-scrollbar::-webkit-scrollbar {
