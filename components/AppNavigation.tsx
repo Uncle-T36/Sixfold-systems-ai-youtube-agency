@@ -2,6 +2,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import SmartNotifications from './SmartNotifications';
+import AIHelpAssistant from './AIHelpAssistant';
 
 interface AppNavigationProps {
   title: string;
@@ -159,6 +160,9 @@ export default function AppNavigation({ title, showBack = true, currentPage }: A
           </div>
         </div>
       </div>
+
+      {/* AI Help Assistant - Available on every page */}
+      <AIHelpAssistant />
     </>
   );
 }
