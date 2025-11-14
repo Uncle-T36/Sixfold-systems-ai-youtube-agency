@@ -34,8 +34,11 @@ export default function AdminDashboard() {
   };
 
   const handleLogin = () => {
-    // CHANGE THIS PASSWORD TO YOUR OWN SECURE PASSWORD
-    const ADMIN_PASSWORD = 'SixFold2025!Admin'; // TODO: Change this immediately!
+    // Get password from settings (or use default if not set)
+    const savedSettings = localStorage.getItem('system_settings');
+    const ADMIN_PASSWORD = savedSettings 
+      ? JSON.parse(savedSettings).adminPassword 
+      : 'SixFold2025!Admin';
     
     if (adminPassword === ADMIN_PASSWORD) {
       setIsAuthenticated(true);
@@ -162,12 +165,20 @@ export default function AdminDashboard() {
             <h1 className="text-4xl font-bold text-white mb-2">🔒 Admin Dashboard</h1>
             <p className="text-slate-400">Owner access only - Connect your accounts securely</p>
           </div>
-          <button
-            onClick={handleLogout}
-            className="px-6 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-500"
-          >
-            Logout
-          </button>
+          <div className="flex gap-3">
+            <a
+              href="/settings"
+              className="px-6 py-3 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-500"
+            >
+              ⚙️ Settings
+            </a>
+            <button
+              onClick={handleLogout}
+              className="px-6 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-500"
+            >
+              Logout
+            </button>
+          </div>
         </div>
 
         {/* Connection Status */}

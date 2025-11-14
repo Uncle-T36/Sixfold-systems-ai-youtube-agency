@@ -35,12 +35,12 @@ const SUPABASE_CONFIG = {
 };
 
 // Singleton client instance
-let supabaseClient: SupabaseClient | null = null;
+let supabaseClient: SupabaseClient<any, 'public', any> | null = null;
 
 /**
  * Get Supabase client (singleton pattern)
  */
-export function getSupabaseClient(): SupabaseClient {
+export function getSupabaseClient(): SupabaseClient<any, 'public', any> {
   if (!supabaseClient) {
     if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
       // Fallback to localStorage if Supabase not configured
@@ -48,11 +48,15 @@ export function getSupabaseClient(): SupabaseClient {
       throw new Error('SUPABASE_NOT_CONFIGURED');
     }
 
-    supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_CONFIG);
+    supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_CONFIG) as any;
     console.log('✅ Supabase client initialized');
   }
 
-  return supabaseClient;
+  if (!supabaseClient) {
+    throw new Error('Failed to initialize Supabase client');
+  }
+
+  return supabaseClient as any;
 }
 
 /**
