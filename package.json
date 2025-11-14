@@ -10,7 +10,12 @@
     "lint": "next lint",
     "generate-content": "node --max-old-space-size=2048 scripts/generate-daily-content.js",
     "analyze-trends": "node --max-old-space-size=1024 scripts/analyze-trends.js",
-    "upload-videos": "node --max-old-space-size=2048 scripts/upload-videos.js"
+    "upload-videos": "node --max-old-space-size=2048 scripts/upload-videos.js",
+    "test-build": "npm run build && echo ✅ Build successful! Safe to deploy.",
+    "deploy-safe": "npm run test-build && vercel --prod",
+    "deploy-preview": "vercel",
+    "check-quota": "vercel ls && echo ⚠️  Each deployment uses 1 quota point. Free tier: 100/day",
+    "save-only": "git add -A && git commit && git push && echo ✅ Pushed to GitHub. Deploy later with: npm run deploy-safe"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.17",

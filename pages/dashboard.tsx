@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import InteractiveDashboard from '../components/InteractiveDashboard';
+import SmartContentGenerator from '../components/SmartContentGenerator';
+import AutomationDashboard from '../components/AutomationDashboard';
 import AppNavigation from '../components/AppNavigation';
 import ActivityFeed from '../components/ActivityFeed';
 import WealthAutopilot from '../components/WealthAutopilot';
@@ -159,6 +160,11 @@ export default function Dashboard() {
             <AICommandCenter />
           </div>
 
+          {/* 🤖 AUTOMATION DASHBOARD - Script → Video → Analyze → Upload */}
+          <div className="mb-6">
+            <AutomationDashboard />
+          </div>
+
           {/* System Health Overview - Complete status at a glance */}
           <div className="mb-6">
             <SystemHealthOverview />
@@ -220,7 +226,11 @@ export default function Dashboard() {
           <div className="mb-6">
             <ActivityFeed />
           </div>
-          <InteractiveDashboard />
+          
+          {/* SMART CONTENT GENERATOR - Analyze channels & create videos */}
+          <div className="mb-6">
+            <SmartContentGenerator />
+          </div>
           
           {/* Support Info */}
           <div className="mt-8">

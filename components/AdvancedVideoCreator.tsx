@@ -36,6 +36,110 @@ export default function AdvancedVideoCreator() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedConfig, setGeneratedConfig] = useState<AnimationConfig | null>(null);
   const [showPreview, setShowPreview] = useState(false);
+  const [fromSeries, setFromSeries] = useState(false);
+
+  // Load pending video creation from Series Creator OR AI Chat
+  React.useEffect(() => {
+    // First check if there's an AI content request with detailed requirements
+    const aiRequest = localStorage.getItem('ai_content_request');
+    if (aiRequest) {
+      try {
+        const data = JSON.parse(aiRequest);
+        setFormData({
+          title: data.topic || '',
+          script: `[AI-GENERATED SCRIPT FOR: ${data.topic}]\n\n${generateDetailedScript(data)}`,
+          niche: data.niche?.toLowerCase() || 'general',
+          duration: parseDuration(data.duration)
+        });
+        
+        // Set quality preset based on AI request
+        if (data.quality?.includes('4K') || data.quality?.includes('Ultra')) {
+          setQualityPreset('cinema_quality');
+        } else if (data.quality?.includes('1080') || data.quality?.includes('HD')) {
+          setQualityPreset('youtube_premium');
+        }
+        
+        setFromSeries(true);
+        localStorage.removeItem('ai_content_request');
+        
+        setTimeout(() => {
+          alert(`🎬 AI CONTENT READY!\n\n✅ Topic: ${data.topic}\n✅ Style: ${data.style}\n✅ Quality: ${data.quality}\n✅ Voice: ${data.voiceType}\n✅ Niche: ${data.niche}\n\nSelect a video style below and click "Generate Professional Video"!`);
+        }, 500);
+        return;
+      } catch (e) {
+        console.error('Failed to load AI request:', e);
+      }
+    }
+
+    // Fallback: Check for series creator pending data
+    const pendingData = localStorage.getItem('pending_video_creation');
+    if (pendingData) {
+      try {
+        const data = JSON.parse(pendingData);
+        setFormData({
+          title: data.title || '',
+          script: data.script || '',
+          niche: data.category || 'general',
+          duration: Math.ceil((data.script?.split(' ').length || 300) / 2.5)
+        });
+        setFromSeries(true);
+        localStorage.removeItem('pending_video_creation');
+        
+        setTimeout(() => {
+          alert(`📺 Series script loaded!\n\n"${data.title}"\n\nSelect a video style below and click "Generate Professional Video"!`);
+        }, 500);
+      } catch (e) {
+        console.error('Failed to load pending video:', e);
+      }
+    }
+  }, []);
+
+  // Helper: Generate detailed script from AI request
+  const generateDetailedScript = (data: any): string => {
+    return `
+[HOOK - First 10 seconds]
+${data.topic}
+
+[INTRODUCTION]
+${data.style === 'Documentary' ? 'In this documentary-style video, we explore...' : 
+  data.style === 'Tutorial' ? 'Today I\'m going to show you exactly how to...' :
+  data.style === 'Animated' ? 'Get ready for an animated journey into...' :
+  'This is the incredible story of...'}
+
+[MAIN CONTENT]
+${data.specificRequirements?.join('\n') || 'Compelling content that keeps viewers engaged...'}
+
+Point 1: The Essential Foundation
+${data.niche}-specific insights and analysis
+
+Point 2: Deep Dive Analysis  
+Evidence, examples, and real-world applications
+
+Point 3: Actionable Takeaways
+How viewers can apply this information
+
+[ENGAGEMENT]
+Drop a comment below with your thoughts!
+
+[CONCLUSION]
+That's everything you need to know about ${data.topic}.
+
+[CALL TO ACTION]
+Like, subscribe, and check the description for more resources!
+`;
+  };
+
+  // Helper: Parse duration string to seconds
+  const parseDuration = (durationStr: string): number => {
+    const match = durationStr.match(/(\d+)/);
+    if (match) {
+      const num = parseInt(match[1]);
+      if (durationStr.includes('second')) return num;
+      if (durationStr.includes('hour')) return num * 3600;
+      return num * 60; // default to minutes
+    }
+    return 480; // 8 minutes default
+  };
 
   const categories = ['all', 'animation', 'cartoon', 'motion-graphics', 'hybrid'];
 
@@ -180,6 +284,23 @@ export default function AdvancedVideoCreator() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 py-8 px-4">
       <div className="max-w-7xl mx-auto">
+        {/* Series Import Banner */}
+        {fromSeries && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 p-4 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border-2 border-green-500/50 rounded-xl"
+          >
+            <div className="flex items-center gap-3">
+              <span className="text-3xl">📺</span>
+              <div>
+                <div className="text-white font-bold">Series Script Loaded!</div>
+                <div className="text-green-400 text-sm">Your script is ready. Select a video style below and click "Generate Professional Video"</div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}

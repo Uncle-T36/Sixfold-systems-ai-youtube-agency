@@ -468,34 +468,73 @@ export default function SeriesChannelCreator() {
                     </div>
                   </div>
 
-                  <div className="mt-8 flex gap-4">
+                  <div className="mt-8 space-y-4">
+                    {/* PRIMARY ACTION: Generate Video */}
                     <button
                       onClick={() => {
-                        // Save script
+                        // Save script first
                         const scripts = JSON.parse(localStorage.getItem('generated_scripts') || '[]');
-                        scripts.push({
+                        const scriptData = {
                           id: `script-${Date.now()}`,
                           story: selectedStory,
                           script: generatedScript,
                           seriesId: seriesChannel?.id,
                           createdAt: new Date().toISOString()
-                        });
+                        };
+                        scripts.push(scriptData);
                         localStorage.setItem('generated_scripts', JSON.stringify(scripts));
-                        alert('✅ Script saved successfully!');
+
+                        // Redirect to video creator with script data
+                        localStorage.setItem('pending_video_creation', JSON.stringify({
+                          title: selectedStory.title,
+                          script: generatedScript.script,
+                          description: `A ${selectedStory.category} story from ${selectedStory.country} (${selectedStory.era}). ${generatedScript.script.substring(0, 150)}...`,
+                          keywords: generatedScript.keywords,
+                          seriesId: seriesChannel?.id,
+                          seriesName: seriesChannel?.name,
+                          category: selectedCategory,
+                          thumbnailIdeas: generatedScript.thumbnailSuggestions,
+                          hookTime: generatedScript.hookTime
+                        }));
+
+                        // Navigate to video creator page
+                        window.location.href = '/video-creator';
                       }}
-                      className="flex-1 px-8 py-4 bg-gradient-to-r from-green-500 to-yellow-500 hover:from-green-600 hover:to-yellow-600 rounded-xl text-white font-bold text-lg shadow-lg"
+                      className="w-full px-8 py-6 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 rounded-xl text-white font-bold text-xl shadow-lg shadow-green-500/50 transition-all transform hover:scale-[1.02]"
                     >
-                      💾 Save Script
+                      🎬 CREATE VIDEO NOW → Generate MP4 with Voiceover & Animations
                     </button>
-                    <button
-                      onClick={() => {
-                        navigator.clipboard.writeText(generatedScript.script);
-                        alert('📋 Script copied to clipboard!');
-                      }}
-                      className="px-8 py-4 bg-slate-800 hover:bg-slate-700 rounded-xl text-white font-semibold"
-                    >
-                      📋 Copy Script
-                    </button>
+
+                    {/* Secondary Actions */}
+                    <div className="flex gap-4">
+                      <button
+                        onClick={() => {
+                          // Save script only
+                          const scripts = JSON.parse(localStorage.getItem('generated_scripts') || '[]');
+                          scripts.push({
+                            id: `script-${Date.now()}`,
+                            story: selectedStory,
+                            script: generatedScript,
+                            seriesId: seriesChannel?.id,
+                            createdAt: new Date().toISOString()
+                          });
+                          localStorage.setItem('generated_scripts', JSON.stringify(scripts));
+                          alert('✅ Script saved! Go to Video Creator page anytime to generate the video.');
+                        }}
+                        className="flex-1 px-6 py-3 bg-slate-800 hover:bg-slate-700 rounded-xl text-white font-semibold border border-slate-700"
+                      >
+                        💾 Save Script for Later
+                      </button>
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(generatedScript.script);
+                          alert('📋 Script copied to clipboard!');
+                        }}
+                        className="flex-1 px-6 py-3 bg-slate-800 hover:bg-slate-700 rounded-xl text-white font-semibold border border-slate-700"
+                      >
+                        📋 Copy Script Text
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

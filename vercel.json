@@ -39,5 +39,10 @@
         }
       ]
     }
-  ]
+  ],
+  "github": {
+    "enabled": true,
+    "autoAlias": true,
+    "silent": true
+  }
 }

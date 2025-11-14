@@ -2,7 +2,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import SmartNotifications from './SmartNotifications';
-import AIHelpAssistant from './AIHelpAssistant';
+import SmartAIChat from './SmartAIChat';
 
 interface AppNavigationProps {
   title: string;
@@ -24,7 +24,6 @@ export default function AppNavigation({ title, showBack = true, currentPage }: A
     { name: 'Series Creator', path: '/series', icon: '📺' },
     { name: 'Video Creator', path: '/video-creator', icon: '🎬' },
     { name: 'Connect', path: '/connect', icon: '🔌' },
-    { name: 'Payment', path: '/payment-setup', icon: '💳' },
     { name: 'Revenue', path: '/revenue', icon: '📈' },
     { name: 'About', path: '/about', icon: 'ℹ️' },
     { name: 'Support', path: '/support', icon: '🆘' },
@@ -161,8 +160,8 @@ export default function AppNavigation({ title, showBack = true, currentPage }: A
         </div>
       </div>
 
-      {/* AI Help Assistant - Available on every page */}
-      <AIHelpAssistant />
+      {/* Smart AI Chat - Context-Aware Assistant */}
+      <SmartAIChat />
     </>
   );
 }
