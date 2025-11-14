@@ -164,8 +164,26 @@ function restoreFromIndexedDB(key: string): void {
 
   const request = indexedDB.open('AIYouTubeAgency', 1);
 
+  request.onerror = () => {
+    console.error('IndexedDB open failed during restore');
+  };
+
+  request.onupgradeneeded = (event: any) => {
+    const db = event.target.result;
+    if (!db.objectStoreNames.contains('backups')) {
+      db.createObjectStore('backups', { keyPath: 'key' });
+    }
+  };
+
   request.onsuccess = (event: any) => {
     const db = event.target.result;
+    
+    // Check if object store exists before trying to access it
+    if (!db.objectStoreNames.contains('backups')) {
+      console.warn('Backups object store not found');
+      return;
+    }
+
     const transaction = db.transaction(['backups'], 'readonly');
     const store = transaction.objectStore('backups');
     const getRequest = store.get('backup');
@@ -175,6 +193,10 @@ function restoreFromIndexedDB(key: string): void {
         localStorage.setItem(key, getRequest.result.data.data[key]);
         console.log(`✅ Restored ${key} from IndexedDB`);
       }
+    };
+
+    getRequest.onerror = () => {
+      console.error(`Failed to restore ${key} from IndexedDB`);
     };
   };
 }
