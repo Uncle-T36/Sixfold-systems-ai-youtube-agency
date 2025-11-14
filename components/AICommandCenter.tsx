@@ -367,7 +367,7 @@ What would you like me to help with?`;
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 rounded-2xl p-6 shadow-2xl"
+        className="bg-gradient-to-r from-emerald-600 via-pink-600 to-red-600 rounded-2xl p-6 shadow-2xl"
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
@@ -376,7 +376,7 @@ What would you like me to help with?`;
             </div>
             <div>
               <h2 className="text-3xl font-bold text-white mb-1">AI Command Center</h2>
-              <p className="text-purple-100">
+              <p className="text-emerald-100">
                 Ask me anything • Give instructions • Request adjustments
               </p>
             </div>
@@ -508,7 +508,7 @@ What would you like me to help with?`;
       </div>
 
       {/* Example Prompts */}
-      <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/30 rounded-xl p-6">
+      <div className="bg-gradient-to-r from-blue-500/10 to-emerald-500/10 border border-blue-500/30 rounded-xl p-6">
         <h3 className="text-white font-bold mb-3 flex items-center space-x-2">
           <span>💡</span>
           <span>Example Commands:</span>

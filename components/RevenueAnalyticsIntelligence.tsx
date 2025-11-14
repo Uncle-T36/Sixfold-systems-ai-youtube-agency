@@ -384,7 +384,7 @@ export default function RevenueAnalyticsIntelligence() {
               onClick={() => setFilter('low-competition')}
               className={`px-4 py-2 rounded-xl font-semibold transition-all ${
                 filter === 'low-competition'
-                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
+                  ? 'bg-gradient-to-r from-emerald-500 to-pink-500 text-white'
                   : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
               }`}
             >
@@ -460,7 +460,7 @@ export default function RevenueAnalyticsIntelligence() {
                 <div className="text-xs text-slate-400 mb-2">🏆 Top Creators Making Bank:</div>
                 <div className="flex flex-wrap gap-2">
                   {opp.topCreators.map((creator) => (
-                    <span key={creator} className="px-3 py-1 bg-purple-500/20 border border-purple-500/30 rounded-lg text-sm text-purple-300">
+                    <span key={creator} className="px-3 py-1 bg-emerald-500/20 border border-emerald-500/30 rounded-lg text-sm text-emerald-300">
                       {creator}
                     </span>
                   ))}
@@ -477,7 +477,7 @@ export default function RevenueAnalyticsIntelligence() {
       </div>
 
       {/* Pro Tips */}
-      <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/30 rounded-2xl p-6">
+      <div className="bg-gradient-to-r from-emerald-500/10 to-pink-500/10 border border-emerald-500/30 rounded-2xl p-6">
         <h3 className="text-white font-bold text-xl mb-4 flex items-center space-x-2">
           <span>💎</span>
           <span>Pro Tips from AI Analysis</span>
@@ -502,7 +502,7 @@ export default function RevenueAnalyticsIntelligence() {
             </p>
           </div>
           <div className="bg-slate-900/50 rounded-xl p-4">
-            <h4 className="text-purple-400 font-bold mb-2">🚀 Scale Fast:</h4>
+            <h4 className="text-emerald-400 font-bold mb-2">🚀 Scale Fast:</h4>
             <p className="text-slate-300 text-sm">
               Create content in English first, then Hindi/Spanish. Tap into multiple billion-person markets.
             </p>

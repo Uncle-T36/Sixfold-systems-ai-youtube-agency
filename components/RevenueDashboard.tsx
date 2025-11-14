@@ -138,7 +138,7 @@ export default function RevenueDashboard() {
           </div>
 
           {/* Average Revenue Per User */}
-          <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white">
+          <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl p-6 text-white">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold">Avg Revenue Per User</h3>
               <svg className="w-8 h-8 opacity-80" fill="currentColor" viewBox="0 0 20 20">
@@ -148,7 +148,7 @@ export default function RevenueDashboard() {
             <div className="text-3xl font-bold mb-2">
               ${Math.round(metrics.averageRevenuePerUser)}
             </div>
-            <div className="text-purple-100 text-sm">
+            <div className="text-emerald-100 text-sm">
               {metrics.churnRate < 0.05 ? 'Low churn' : 'Monitor churn'}
             </div>
           </div>
@@ -205,7 +205,7 @@ export default function RevenueDashboard() {
                   <div className="text-white font-medium">Break Even Point</div>
                   <div className="text-gray-400 text-sm">When revenue covers costs</div>
                 </div>
-                <div className="text-2xl font-bold text-purple-400">
+                <div className="text-2xl font-bold text-emerald-400">
                   {metrics.projections.breakEvenPoint}
                 </div>
               </div>
@@ -244,7 +244,7 @@ export default function RevenueDashboard() {
                     <div 
                       className={`h-2 rounded-full ${
                         index === 0 ? 'bg-green-500' : 
-                        index === 1 ? 'bg-blue-500' : 'bg-purple-500'
+                        index === 1 ? 'bg-blue-500' : 'bg-emerald-500'
                       }`}
                       style={{ width: `${tier.percentage}%` }}
                     ></div>

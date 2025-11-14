@@ -80,6 +80,8 @@ module.exports = {
           green: '#22c55e',   // Main accent - vibrant green
           gold: '#eab308',    // Secondary accent - rich gold
           emerald: '#10b981', // Premium emerald
+          pink: '#ec4899',    // Magenta/Pink accent
+          teal: '#14b8a6',    // Teal accent
         },
       },
       animation: {
@@ -100,8 +102,8 @@ module.exports = {
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-wealth': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        'gradient-premium': 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+        'gradient-wealth': 'linear-gradient(135deg, #22c55e 0%, #10b981 100%)',  // Green to emerald
+        'gradient-premium': 'linear-gradient(135deg, #10b981 0%, #14b8a6 100%)', // Emerald to teal
       },
     },
   },

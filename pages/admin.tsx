@@ -202,7 +202,7 @@ export default function AdminDashboard() {
             {!stripeConnected && (
               <button
                 onClick={handleConnectStripe}
-                className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold py-3 rounded-xl hover:from-purple-500 hover:to-blue-500"
+                className="w-full bg-gradient-to-r from-emerald-600 to-blue-600 text-white font-bold py-3 rounded-xl hover:from-emerald-500 hover:to-blue-500"
               >
                 Connect Stripe Now
               </button>

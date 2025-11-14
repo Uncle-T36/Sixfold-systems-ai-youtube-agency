@@ -469,7 +469,7 @@ export default function AIHelpAssistant() {
                       {topic.steps && (
                         <div className="bg-white rounded-lg p-3 text-sm space-y-1">
                           {topic.steps.map((step, i) => (
-                            <div key={i} className={step.startsWith('💰') || step.startsWith('🔥') || step.startsWith('💡') ? 'text-purple-600 font-semibold' : 'text-gray-700'}>
+                            <div key={i} className={step.startsWith('💰') || step.startsWith('🔥') || step.startsWith('💡') ? 'text-emerald-600 font-semibold' : 'text-gray-700'}>
                               {step}
                             </div>
                           ))}

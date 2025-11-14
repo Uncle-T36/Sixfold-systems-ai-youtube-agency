@@ -271,7 +271,7 @@ export default function InfrastructureStatus() {
         {/* Rate Limiter */}
         <motion.div
           whileHover={{ scale: 1.02 }}
-          className="rounded-xl p-5 border bg-purple-500/10 border-purple-500/20"
+          className="rounded-xl p-5 border bg-emerald-500/10 border-emerald-500/20"
         >
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-lg font-semibold text-white">🛡️ Rate Limiter</h3>
@@ -285,7 +285,7 @@ export default function InfrastructureStatus() {
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Requests (1m)</span>
-              <span className="text-purple-400 font-medium">{health.rateLimiter.requestsInLastMinute.toLocaleString()}</span>
+              <span className="text-emerald-400 font-medium">{health.rateLimiter.requestsInLastMinute.toLocaleString()}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Blocked</span>
@@ -463,7 +463,7 @@ export default function InfrastructureStatus() {
             <div className="text-xs text-gray-400">Response Time</div>
           </div>
           <div>
-            <div className="text-2xl font-bold text-purple-400">∞</div>
+            <div className="text-2xl font-bold text-emerald-400">∞</div>
             <div className="text-xs text-gray-400">Max Users</div>
           </div>
         </div>

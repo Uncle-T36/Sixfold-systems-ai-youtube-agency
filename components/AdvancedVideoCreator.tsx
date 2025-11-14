@@ -437,7 +437,7 @@ export default function AdvancedVideoCreator() {
                           
                           <div className="flex items-center gap-2 mb-2">
                             <span className={`px-2 py-1 rounded-lg text-xs font-semibold ${
-                              style.quality === 'ultra' ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' :
+                              style.quality === 'ultra' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' :
                               style.quality === 'high' ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' :
                               'bg-gray-500/20 text-gray-300 border border-gray-500/30'
                             }`}>

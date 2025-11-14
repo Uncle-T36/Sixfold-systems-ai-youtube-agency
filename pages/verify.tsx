@@ -292,7 +292,7 @@ export default function FeatureVerification() {
               </a>
               <a
                 href="/payment-setup"
-                className="px-6 py-4 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 rounded-xl text-white font-bold text-center transition-all"
+                className="px-6 py-4 bg-gradient-to-r from-pink-500 to-emerald-600 hover:from-pink-600 hover:to-emerald-700 rounded-xl text-white font-bold text-center transition-all"
               >
                 💳 Payment Setup
               </a>

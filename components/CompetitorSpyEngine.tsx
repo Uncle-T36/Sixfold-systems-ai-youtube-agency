@@ -106,7 +106,7 @@ export default function CompetitorSpyEngine() {
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'title': return 'from-purple-500 to-pink-500';
+      case 'title': return 'from-emerald-500 to-pink-500';
       case 'thumbnail': return 'from-orange-500 to-red-500';
       case 'timing': return 'from-blue-500 to-cyan-500';
       case 'length': return 'from-green-500 to-teal-500';
@@ -129,20 +129,20 @@ export default function CompetitorSpyEngine() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 rounded-2xl p-8 shadow-2xl">
+      <div className="bg-gradient-to-r from-emerald-600 via-pink-600 to-red-600 rounded-2xl p-8 shadow-2xl">
         <div className="flex items-center justify-between">
           <div>
             <div className="flex items-center space-x-3 mb-2">
               <span className="text-5xl">🕵️</span>
               <h2 className="text-3xl font-bold text-white">Competitor Spy Engine</h2>
             </div>
-            <p className="text-purple-100 text-lg">
+            <p className="text-emerald-100 text-lg">
               Analyzing top YouTubers' winning strategies...
             </p>
           </div>
           <div className="text-center">
             <div className="text-5xl font-bold text-white">{insights.length}</div>
-            <div className="text-purple-200 text-sm">Strategies Found</div>
+            <div className="text-emerald-200 text-sm">Strategies Found</div>
           </div>
         </div>
       </div>
@@ -155,7 +155,7 @@ export default function CompetitorSpyEngine() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: index * 0.05 }}
-            className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl p-6 border-2 border-slate-700 hover:border-purple-500/50 transition-all"
+            className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl p-6 border-2 border-slate-700 hover:border-emerald-500/50 transition-all"
           >
             {/* Competitor Badge */}
             <div className="flex items-center justify-between mb-4">
@@ -192,7 +192,7 @@ export default function CompetitorSpyEngine() {
             </div>
 
             {/* Apply Button */}
-            <button className="w-full px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold rounded-xl transition-all transform hover:scale-[1.02]">
+            <button className="w-full px-4 py-3 bg-gradient-to-r from-emerald-500 to-pink-500 hover:from-emerald-600 hover:to-pink-600 text-white font-bold rounded-xl transition-all transform hover:scale-[1.02]">
               Apply to My Channels →
             </button>
           </motion.div>
@@ -200,7 +200,7 @@ export default function CompetitorSpyEngine() {
       </div>
 
       {/* Auto-Update Notice */}
-      <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/30 rounded-xl p-6">
+      <div className="bg-gradient-to-r from-blue-500/10 to-emerald-500/10 border border-blue-500/30 rounded-xl p-6">
         <div className="flex items-start space-x-4">
           <span className="text-3xl">🤖</span>
           <div>

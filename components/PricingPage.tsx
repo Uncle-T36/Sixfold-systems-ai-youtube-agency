@@ -50,14 +50,14 @@ export default function PricingPage({ onSelectPlan }: PricingPageProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-900 via-blue-900 to-teal-900 flex items-center justify-center">
         <div className="text-white text-xl">Loading pricing...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-900 via-blue-900 to-teal-900 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
@@ -76,8 +76,8 @@ export default function PricingPage({ onSelectPlan }: PricingPageProps) {
               onClick={() => setBillingInterval('monthly')}
               className={`px-6 py-2 rounded-md text-sm font-medium transition-all ${
                 billingInterval === 'monthly'
-                  ? 'bg-white text-purple-900 shadow-md'
-                  : 'text-white hover:text-purple-200'
+                  ? 'bg-white text-emerald-900 shadow-md'
+                  : 'text-white hover:text-emerald-200'
               }`}
             >
               Monthly
@@ -86,8 +86,8 @@ export default function PricingPage({ onSelectPlan }: PricingPageProps) {
               onClick={() => setBillingInterval('yearly')}
               className={`px-6 py-2 rounded-md text-sm font-medium transition-all ${
                 billingInterval === 'yearly'
-                  ? 'bg-white text-purple-900 shadow-md'
-                  : 'text-white hover:text-purple-200'
+                  ? 'bg-white text-emerald-900 shadow-md'
+                  : 'text-white hover:text-emerald-200'
               }`}
             >
               Yearly
@@ -195,7 +195,7 @@ export default function PricingPage({ onSelectPlan }: PricingPageProps) {
               <div className="text-sm text-blue-200">Additional Costs</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-purple-400">24/7</div>
+              <div className="text-2xl font-bold text-emerald-400">24/7</div>
               <div className="text-sm text-blue-200">Automation</div>
             </div>
             <div className="text-center">
@@ -248,7 +248,7 @@ export default function PricingPage({ onSelectPlan }: PricingPageProps) {
           </p>
           <button
             onClick={() => onSelectPlan?.('professional')}
-            className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-purple-400 hover:to-pink-400 transition-all duration-300 shadow-lg hover:shadow-xl"
+            className="bg-gradient-to-r from-emerald-500 to-pink-500 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-emerald-400 hover:to-pink-400 transition-all duration-300 shadow-lg hover:shadow-xl"
           >
             Start Free Trial Now
           </button>

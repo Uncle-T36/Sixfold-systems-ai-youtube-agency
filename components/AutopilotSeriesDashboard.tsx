@@ -131,7 +131,7 @@ export default function AutopilotSeriesDashboard({ userId, channelId }: { userId
           </div>
           <div className="bg-white rounded-lg shadow p-4">
             <div className="text-gray-500 text-sm mb-1">Avg Viral Score</div>
-            <div className="text-3xl font-bold text-purple-600">{status.stats.avgViralScore.toFixed(0)}%</div>
+            <div className="text-3xl font-bold text-emerald-600">{status.stats.avgViralScore.toFixed(0)}%</div>
           </div>
           <div className="bg-white rounded-lg shadow p-4">
             <div className="text-gray-500 text-sm mb-1">Est. Total Views</div>

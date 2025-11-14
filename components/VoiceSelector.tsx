@@ -36,7 +36,7 @@ export default function VoiceSelector({ selectedVoice, onSelect, channelNiche }:
   // Get voice style color
   const getStyleColor = (style: string) => {
     if (style.toLowerCase().includes('dark') || style.toLowerCase().includes('mystery')) {
-      return 'from-purple-600 to-purple-800';
+      return 'from-emerald-600 to-emerald-800';
     }
     if (style.toLowerCase().includes('motivational') || style.toLowerCase().includes('energetic')) {
       return 'from-accent-pink to-luxury-600';
@@ -73,7 +73,7 @@ export default function VoiceSelector({ selectedVoice, onSelect, channelNiche }:
           onClick={() => setFilter('dark')}
           className={`px-4 py-2 rounded-xl font-medium transition-all ${
             filter === 'dark'
-              ? 'bg-gradient-to-r from-purple-600 to-purple-800 text-white shadow-lg'
+              ? 'bg-gradient-to-r from-emerald-600 to-emerald-800 text-white shadow-lg'
               : 'bg-slate-800 text-slate-400 hover:text-white'
           }`}
         >
@@ -204,15 +204,15 @@ export default function VoiceSelector({ selectedVoice, onSelect, channelNiche }:
       </div>
 
       {/* Info Card */}
-      <div className="bg-gradient-to-r from-purple-600/10 to-accent-pink/10 border border-purple-500/20 rounded-xl p-6">
+      <div className="bg-gradient-to-r from-emerald-600/10 to-accent-pink/10 border border-emerald-500/20 rounded-xl p-6">
         <div className="flex items-start gap-4">
-          <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-purple-800 rounded-xl flex items-center justify-center flex-shrink-0">
+          <div className="w-12 h-12 bg-gradient-to-r from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center flex-shrink-0">
             <span className="text-2xl">🎙️</span>
           </div>
           <div>
             <h4 className="text-white font-bold text-lg mb-2">DarkWhisper Style Voices</h4>
             <p className="text-slate-300 text-sm mb-3">
-              Looking for that deep, mysterious voice like DarkWhisper channel? Try our <strong className="text-purple-400">"Dark Narrator"</strong> or <strong className="text-purple-400">"Dark Whisper"</strong> voices. Perfect for horror stories, true crime, and mysterious content that keeps viewers hooked.
+              Looking for that deep, mysterious voice like DarkWhisper channel? Try our <strong className="text-emerald-400">"Dark Narrator"</strong> or <strong className="text-emerald-400">"Dark Whisper"</strong> voices. Perfect for horror stories, true crime, and mysterious content that keeps viewers hooked.
             </p>
             <div className="flex gap-3">
               <div className="flex items-center gap-2 text-success-400 text-sm">

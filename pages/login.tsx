@@ -75,7 +75,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-900 via-blue-900 to-teal-900 flex items-center justify-center px-4">
       <div className="max-w-md w-full">
         {/* Header */}
         <div className="text-center mb-8">
@@ -95,7 +95,7 @@ export default function LoginPage() {
               onClick={() => setIsLogin(true)}
               className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
                 isLogin
-                  ? 'bg-white text-purple-900 shadow-sm'
+                  ? 'bg-white text-emerald-900 shadow-sm'
                   : 'text-blue-200 hover:text-white'
               }`}
             >
@@ -105,7 +105,7 @@ export default function LoginPage() {
               onClick={() => setIsLogin(false)}
               className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
                 !isLogin
-                  ? 'bg-white text-purple-900 shadow-sm'
+                  ? 'bg-white text-emerald-900 shadow-sm'
                   : 'text-blue-200 hover:text-white'
               }`}
             >
@@ -132,7 +132,7 @@ export default function LoginPage() {
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                   placeholder="Enter your full name"
                   required={!isLogin}
                 />
@@ -148,7 +148,7 @@ export default function LoginPage() {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                 placeholder="Enter your email"
                 required
               />
@@ -163,7 +163,7 @@ export default function LoginPage() {
                 name="password"
                 value={formData.password}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                 placeholder="Enter your password"
                 required
                 minLength={8}
@@ -180,7 +180,7 @@ export default function LoginPage() {
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                   placeholder="Confirm your password"
                   required={!isLogin}
                 />
@@ -190,7 +190,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 px-6 rounded-lg font-semibold hover:from-purple-400 hover:to-pink-400 disabled:from-gray-600 disabled:to-gray-600 disabled:cursor-not-allowed transition-all"
+              className="w-full bg-gradient-to-r from-emerald-500 to-pink-500 text-white py-3 px-6 rounded-lg font-semibold hover:from-emerald-400 hover:to-pink-400 disabled:from-gray-600 disabled:to-gray-600 disabled:cursor-not-allowed transition-all"
             >
               {loading ? (
                 <div className="flex items-center justify-center">
@@ -245,7 +245,7 @@ export default function LoginPage() {
                 Don't have an account?{' '}
                 <button
                   onClick={() => setIsLogin(false)}
-                  className="text-purple-400 hover:text-purple-300 font-medium"
+                  className="text-emerald-400 hover:text-emerald-300 font-medium"
                 >
                   Sign up here
                 </button>
@@ -255,7 +255,7 @@ export default function LoginPage() {
                 Already have an account?{' '}
                 <button
                   onClick={() => setIsLogin(true)}
-                  className="text-purple-400 hover:text-purple-300 font-medium"
+                  className="text-emerald-400 hover:text-emerald-300 font-medium"
                 >
                   Sign in here
                 </button>

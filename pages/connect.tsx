@@ -282,7 +282,7 @@ export default function EasyChannelConnection() {
               {/* Channel Name Input */}
               <div className="bg-slate-800/30 rounded-2xl p-6 border border-slate-700/50">
                 <div className="flex items-center space-x-3 mb-4">
-                  <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-pink-500 to-purple-500 rounded-xl">
+                  <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-pink-500 to-emerald-500 rounded-xl">
                     <span className="text-xl font-bold text-white">2</span>
                   </div>
                   <label className="text-white font-bold text-lg">
@@ -449,9 +449,9 @@ export default function EasyChannelConnection() {
               </div>
 
               {/* Info Box */}
-              <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/30 rounded-2xl p-5 shadow-lg">
+              <div className="bg-gradient-to-r from-blue-500/10 to-emerald-500/10 border border-blue-500/30 rounded-2xl p-5 shadow-lg">
                 <div className="flex items-start space-x-4">
-                  <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex-shrink-0">
+                  <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-blue-500 to-emerald-500 rounded-xl flex-shrink-0">
                     <span className="text-2xl">⚡</span>
                   </div>
                   <div>
@@ -562,7 +562,7 @@ export default function EasyChannelConnection() {
               onClick={() => window.location.href = '/dashboard'}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="group relative w-full mt-8 overflow-hidden bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 hover:from-purple-700 hover:via-pink-700 hover:to-red-700 text-white px-8 py-6 rounded-2xl font-bold text-xl shadow-2xl hover:shadow-purple-500/50 transition-all duration-300"
+              className="group relative w-full mt-8 overflow-hidden bg-gradient-to-r from-emerald-600 via-pink-600 to-red-600 hover:from-emerald-700 hover:via-pink-700 hover:to-red-700 text-white px-8 py-6 rounded-2xl font-bold text-xl shadow-2xl hover:shadow-emerald-500/50 transition-all duration-300"
             >
               {/* Animated shimmer effect */}
               <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 transform translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>

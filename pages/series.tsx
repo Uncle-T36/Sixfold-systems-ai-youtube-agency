@@ -9,7 +9,10 @@ export default function SeriesPage() {
         title="Series Creator" 
         currentPage="Create viral story series with AI"
       />
-      <SeriesChannelCreator />
+      {/* Add left padding for desktop sidebar */}
+      <div className="sm:pl-20 lg:pl-64 pt-4">
+        <SeriesChannelCreator />
+      </div>
     </div>
   );
 }

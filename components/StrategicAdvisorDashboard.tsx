@@ -231,7 +231,7 @@ export default function StrategicAdvisorDashboard() {
                 </div>
                 <div className="bg-slate-900/50 rounded-lg p-3">
                   <p className="text-slate-400 text-xs mb-1">Moat Strength</p>
-                  <p className="text-purple-400 font-bold">{opp.moatStrength}/10</p>
+                  <p className="text-emerald-400 font-bold">{opp.moatStrength}/10</p>
                 </div>
               </div>
 
@@ -257,7 +257,7 @@ export default function StrategicAdvisorDashboard() {
       {/* STRATEGIC QUESTIONS VIEW */}
       {viewMode === 'questions' && (
         <div className="space-y-4">
-          <div className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-600/30 rounded-xl p-4">
+          <div className="bg-gradient-to-r from-blue-900/20 to-emerald-900/20 border border-blue-600/30 rounded-xl p-4">
             <p className="text-blue-400 font-bold mb-2">❓ Strategic Questions</p>
             <p className="text-slate-300 text-sm">
               To provide optimal strategic advice, I need to understand your situation deeply. 
@@ -374,8 +374,8 @@ export default function StrategicAdvisorDashboard() {
                     <p className="text-blue-400 text-sm mb-1">Success Rate</p>
                     <p className="text-2xl font-bold text-white">{selectedOpportunity.successProbability}%</p>
                   </div>
-                  <div className="bg-slate-800/50 rounded-lg p-4 border border-purple-600/20">
-                    <p className="text-purple-400 text-sm mb-1">Moat Strength</p>
+                  <div className="bg-slate-800/50 rounded-lg p-4 border border-emerald-600/20">
+                    <p className="text-emerald-400 text-sm mb-1">Moat Strength</p>
                     <p className="text-2xl font-bold text-white">{selectedOpportunity.moatStrength}/10</p>
                   </div>
                   <div className="bg-slate-800/50 rounded-lg p-4 border border-orange-600/20">
@@ -655,8 +655,8 @@ function ViralTrendsView() {
   return (
     <div className="space-y-6">
       {/* Trend Signals */}
-      <div className="bg-gradient-to-r from-purple-900/20 to-pink-900/20 border border-purple-600/30 rounded-xl p-4">
-        <h3 className="text-purple-400 font-bold text-lg mb-3">📡 Live Trend Signals</h3>
+      <div className="bg-gradient-to-r from-emerald-900/20 to-pink-900/20 border border-emerald-600/30 rounded-xl p-4">
+        <h3 className="text-emerald-400 font-bold text-lg mb-3">📡 Live Trend Signals</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {signals.map((signal, idx) => (
             <div key={idx} className="bg-slate-900/50 rounded-lg p-3 flex items-start gap-3">
@@ -673,7 +673,7 @@ function ViralTrendsView() {
                 <div className="flex items-center gap-2 mt-1">
                   <div className="flex-1 bg-slate-800 rounded-full h-1.5">
                     <div 
-                      className="bg-gradient-to-r from-purple-600 to-pink-600 h-1.5 rounded-full"
+                      className="bg-gradient-to-r from-emerald-600 to-pink-600 h-1.5 rounded-full"
                       style={{ width: `${signal.strength * 10}%` }}
                     />
                   </div>
@@ -695,7 +695,7 @@ function ViralTrendsView() {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: idx * 0.1 }}
-              className="bg-slate-800/50 rounded-xl p-6 border border-slate-700 hover:border-purple-600/50 transition-all cursor-pointer"
+              className="bg-slate-800/50 rounded-xl p-6 border border-slate-700 hover:border-emerald-600/50 transition-all cursor-pointer"
               onClick={() => setSelectedTrend(trend)}
             >
               <div className="flex items-start justify-between mb-4">
@@ -717,7 +717,7 @@ function ViralTrendsView() {
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
+                  <div className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-pink-400">
                     {trend.viralProbability}%
                   </div>
                   <p className="text-slate-400 text-xs">Viral Probability</p>
@@ -736,7 +736,7 @@ function ViralTrendsView() {
                 </div>
                 <div className="bg-slate-900/50 rounded-lg p-3">
                   <p className="text-slate-400 text-xs">Growth Rate</p>
-                  <p className="text-purple-400 font-bold">+{trend.growthRate}%</p>
+                  <p className="text-emerald-400 font-bold">+{trend.growthRate}%</p>
                 </div>
                 <div className="bg-slate-900/50 rounded-lg p-3">
                   <p className="text-slate-400 text-xs">First-Mover</p>
@@ -745,8 +745,8 @@ function ViralTrendsView() {
               </div>
 
               {/* Reasoning */}
-              <div className="bg-purple-900/20 border border-purple-600/30 rounded-lg p-3 mb-3">
-                <p className="text-purple-400 font-bold text-sm mb-1">🧠 Why This Will Go Viral:</p>
+              <div className="bg-emerald-900/20 border border-emerald-600/30 rounded-lg p-3 mb-3">
+                <p className="text-emerald-400 font-bold text-sm mb-1">🧠 Why This Will Go Viral:</p>
                 <p className="text-slate-300 text-sm">{trend.reasoning}</p>
               </div>
 
@@ -759,7 +759,7 @@ function ViralTrendsView() {
                       {angle}
                     </span>
                   ))}
-                  <span className="px-3 py-1 bg-purple-600/20 rounded-full text-purple-400 text-xs font-bold">
+                  <span className="px-3 py-1 bg-emerald-600/20 rounded-full text-emerald-400 text-xs font-bold">
                     +{trend.contentAngles.length - 2} more
                   </span>
                 </div>
@@ -801,7 +801,7 @@ function ViralTrendsView() {
               </div>
               <div className="bg-slate-900/50 rounded-lg p-3 mt-3">
                 <p className="text-green-400 text-sm"><strong>Action:</strong> {change.action}</p>
-                <p className="text-purple-400 text-sm mt-1"><strong>Expected Boost:</strong> {change.expectedBoost}</p>
+                <p className="text-emerald-400 text-sm mt-1"><strong>Expected Boost:</strong> {change.expectedBoost}</p>
               </div>
             </div>
           ))}
@@ -863,7 +863,7 @@ function ViralTrendsView() {
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
-              className="bg-slate-900 rounded-2xl p-8 max-w-4xl max-h-[90vh] overflow-y-auto border border-purple-600/30"
+              className="bg-slate-900 rounded-2xl p-8 max-w-4xl max-h-[90vh] overflow-y-auto border border-emerald-600/30"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-start justify-between mb-6">
@@ -881,8 +881,8 @@ function ViralTrendsView() {
 
               {/* Full Content Recommendations */}
               <div className="space-y-6">
-                <div className="bg-purple-900/20 border border-purple-600/30 rounded-xl p-6">
-                  <h3 className="text-purple-400 font-bold text-lg mb-4">📹 Video Ideas</h3>
+                <div className="bg-emerald-900/20 border border-emerald-600/30 rounded-xl p-6">
+                  <h3 className="text-emerald-400 font-bold text-lg mb-4">📹 Video Ideas</h3>
                   {generateContentRecommendations(selectedTrend).videoIdeas.map((video, idx) => (
                     <div key={idx} className="bg-slate-900/50 rounded-lg p-4 mb-3">
                       <h4 className="text-white font-bold mb-2">{video.title}</h4>
@@ -907,7 +907,7 @@ function ViralTrendsView() {
                   <h3 className="text-white font-bold mb-3">🔑 Keywords to Target</h3>
                   <div className="flex flex-wrap gap-2">
                     {selectedTrend.keywords.map((keyword, i) => (
-                      <span key={i} className="px-3 py-1 bg-purple-600/20 rounded-full text-purple-400 text-sm">
+                      <span key={i} className="px-3 py-1 bg-emerald-600/20 rounded-full text-emerald-400 text-sm">
                         {keyword}
                       </span>
                     ))}
@@ -925,7 +925,7 @@ function ViralTrendsView() {
                           <p className="text-slate-400 text-sm">{platform.bestFormat}</p>
                         </div>
                         <div className="text-right">
-                          <p className="text-purple-400 font-bold">{platform.trendScore}/10</p>
+                          <p className="text-emerald-400 font-bold">{platform.trendScore}/10</p>
                           <p className="text-slate-400 text-xs">Trend Score</p>
                         </div>
                       </div>
@@ -938,7 +938,7 @@ function ViralTrendsView() {
                     alert('Trend added to content calendar!');
                     setSelectedTrend(null);
                   }}
-                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold py-4 rounded-xl transition-all"
+                  className="w-full bg-gradient-to-r from-emerald-600 to-pink-600 hover:from-emerald-500 hover:to-pink-500 text-white font-bold py-4 rounded-xl transition-all"
                 >
                   Add to Content Calendar →
                 </button>

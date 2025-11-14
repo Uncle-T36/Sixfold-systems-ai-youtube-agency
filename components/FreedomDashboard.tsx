@@ -110,9 +110,9 @@ export default function FreedomDashboard() {
                 <div className="text-sm text-gray-600">Estimated Revenue</div>
                 <div className="text-2xl font-bold text-teal-600">${firstContent.estimatedRevenue.toLocaleString()}</div>
               </div>
-              <div className="bg-purple-50 rounded-lg p-4">
+              <div className="bg-emerald-50 rounded-lg p-4">
                 <div className="text-sm text-gray-600">Time to Create</div>
-                <div className="text-2xl font-bold text-purple-600">{firstContent.timeToCreate}</div>
+                <div className="text-2xl font-bold text-emerald-600">{firstContent.timeToCreate}</div>
               </div>
             </div>
 
@@ -156,7 +156,7 @@ export default function FreedomDashboard() {
               <h3 className="text-xl font-bold mb-3">🖼️ Thumbnail Concepts:</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {firstContent.thumbnailIdeas.map((idea: string, i: number) => (
-                  <div key={i} className="bg-gradient-to-br from-purple-100 to-pink-100 p-4 rounded-lg">
+                  <div key={i} className="bg-gradient-to-br from-emerald-100 to-pink-100 p-4 rounded-lg">
                     <div className="text-sm font-semibold mb-2">Option {i + 1}:</div>
                     <div className="text-sm">{idea}</div>
                   </div>
@@ -258,7 +258,7 @@ export default function FreedomDashboard() {
                   </div>
                 </div>
                 {month.milestone && (
-                  <div className="w-64 text-sm font-semibold text-purple-600">
+                  <div className="w-64 text-sm font-semibold text-emerald-600">
                     {month.milestone}
                   </div>
                 )}

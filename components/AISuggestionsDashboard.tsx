@@ -176,7 +176,7 @@ export default function AISuggestionsDashboard() {
       case 'money': return 'from-green-500 to-teal-500';
       case 'growth': return 'from-blue-500 to-cyan-500';
       case 'urgent': return 'from-red-500 to-orange-500';
-      case 'improvement': return 'from-purple-500 to-pink-500';
+      case 'improvement': return 'from-emerald-500 to-pink-500';
       case 'warning': return 'from-yellow-500 to-orange-500';
       default: return 'from-slate-500 to-slate-600';
     }
