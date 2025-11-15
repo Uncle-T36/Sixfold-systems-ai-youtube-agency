@@ -5,9 +5,9 @@
  * Like having an expert YouTube business consultant 24/7
  */
 
-import { automateFullVideoProduction } from './automationEngine';
-import { generateScript } from './storyEngine';
-import { analyzeChannelPerformance } from './analyticsEngine';
+// Intelligent imports - these will be called when available
+// import { automateFullVideoProduction } from './automationEngine';
+// import { generateScript } from './storyEngine';
 
 export interface GeniusContext {
   // User data
@@ -167,7 +167,7 @@ async function handleMoneyMaking(
 • Target: $${targetAmount.toLocaleString()} total
 
 **IMMEDIATE ACTIONS I'M EXECUTING:**
-${strategy.actions.map((a, i) => `${i + 1}. ${a}`).join('\n')}
+${strategy.actions.map((a: string, i: number) => `${i + 1}. ${a}`).join('\n')}
 
 Ready to start? I can automate everything right now! 🚀`,
 
@@ -642,6 +642,55 @@ Creating your first episode now... 🎨`,
     predictions: {
       estimatedViews: 100000,
       successProbability: 85
+    }
+  };
+}
+
+async function handleShortFormCreation(
+  requirements: any,
+  context: GeniusContext
+): Promise<GeniusResponse> {
+  return {
+    message: `⚡ **CREATING SHORT-FORM CONTENT**
+
+**Video Specifications:**
+• Platform: TikTok, Instagram Reels, YouTube Shorts
+• Duration: 15-60 seconds
+• Style: Fast-paced viral content
+• Optimization: Hook in first 1 second
+
+Creating your viral short now... Ready in 30 seconds! 🚀`,
+
+    reasoning: 'Short-form content has highest viral potential with minimal effort',
+
+    actions: [
+      {
+        type: 'generate',
+        target: 'short_form_production',
+        description: 'Create viral short',
+        autoExecute: true,
+        params: requirements
+      }
+    ],
+
+    insights: [
+      {
+        category: 'content',
+        insight: 'Shorts get 10x more views than long-form',
+        impact: 'high',
+        action: 'Using short-form for maximum reach'
+      }
+    ],
+
+    nextSteps: [
+      'Creating 15-60 second viral video',
+      'Optimizing for mobile viewing',
+      'Auto-posting to all platforms'
+    ],
+
+    predictions: {
+      estimatedViews: 50000,
+      successProbability: 80
     }
   };
 }
