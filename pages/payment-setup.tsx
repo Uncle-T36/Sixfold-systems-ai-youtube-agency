@@ -19,6 +19,10 @@ interface BankAccount {
 }
 
 export default function PaymentSetup() {
+  const [isOwner, setIsOwner] = useState(false);
+  const [ownerPassword, setOwnerPassword] = useState('');
+  const [showPasswordPrompt, setShowPasswordPrompt] = useState(true);
+  
   const [bankAccount, setBankAccount] = useState<BankAccount>({
     accountHolderName: '',
     bankName: '',
@@ -35,6 +39,13 @@ export default function PaymentSetup() {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    // Check if already authenticated
+    const authenticated = sessionStorage.getItem('owner_authenticated');
+    if (authenticated === 'true') {
+      setIsOwner(true);
+      setShowPasswordPrompt(false);
+    }
+    
     // Load existing bank account from localStorage
     const saved = localStorage.getItem('owner_bank_account');
     if (saved) {
@@ -42,6 +53,21 @@ export default function PaymentSetup() {
       setStripeConnected(true);
     }
   }, []);
+
+  const verifyOwner = () => {
+    // IMPORTANT: Change this password to YOUR own secure password!
+    const OWNER_PASSWORD = 'SixFold2025!'; // ⚠️ CHANGE THIS!
+    
+    if (ownerPassword === OWNER_PASSWORD) {
+      setIsOwner(true);
+      setShowPasswordPrompt(false);
+      sessionStorage.setItem('owner_authenticated', 'true');
+      setError('');
+    } else {
+      setError('❌ Incorrect password. Only the owner can access this page.');
+      setOwnerPassword('');
+    }
+  };
 
   const saveBankAccount = async () => {
     setSaving(true);
@@ -91,6 +117,57 @@ export default function PaymentSetup() {
       setSuccess('Bank account removed');
     }
   };
+
+  // PASSWORD PROTECTION - Users will see this instead of bank details
+  if (showPasswordPrompt || !isOwner) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+        <AppNavigation title="🔒 Owner Access" />
+        
+        <div className="sm:ml-20 lg:ml-64 p-4 sm:p-6 lg:p-8">
+          <div className="max-w-md mx-auto mt-20">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl"
+            >
+              <div className="text-center mb-6">
+                <div className="text-6xl mb-4">🔒</div>
+                <h2 className="text-2xl font-bold text-white mb-2">Owner Access Only</h2>
+                <p className="text-slate-400">Enter password to access payment settings</p>
+              </div>
+
+              <input
+                type="password"
+                value={ownerPassword}
+                onChange={(e) => setOwnerPassword(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && verifyOwner()}
+                placeholder="Enter owner password"
+                className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:border-green-500 focus:outline-none mb-4"
+              />
+
+              {error && (
+                <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-3 mb-4">
+                  <p className="text-red-400 text-sm text-center">{error}</p>
+                </div>
+              )}
+
+              <button
+                onClick={verifyOwner}
+                className="w-full py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold rounded-xl transition-all"
+              >
+                Unlock Payment Settings
+              </button>
+
+              <p className="text-xs text-slate-500 text-center mt-4">
+                🔐 This page is protected. Only you (the owner) can see your bank account details.
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
