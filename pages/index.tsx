@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-dark-bg via-dark-card to-dark-bg">
       <AppNavigation title="SixFold Studios" showBack={false} />
-      <div className="sm:ml-20 lg:ml-64 flex items-center justify-center min-h-[calc(100vh-5rem)] p-4 sm:p-6 lg:p-8">
+      <div className="sm:pl-20 lg:pl-64 pt-20 sm:pt-24 flex items-center justify-center min-h-[calc(100vh-5rem)] p-4 sm:p-6 lg:p-8">
         <div className="max-w-7xl w-full animate-fade-in">
         {/* Hero Section */}
         <div className="text-center mb-12 sm:mb-16">

@@ -125,7 +125,7 @@ export default function OwnerRevenueDashboard() {
     <div className="min-h-screen bg-gradient-to-br from-dark-bg via-dark-card to-dark-bg">
       <AppNavigation title="Revenue Dashboard" currentPage="Owner Only - Financial Overview" showBack={true} />
       
-      <div className="sm:ml-20 lg:ml-64 p-4 sm:p-6 lg:p-8">
+      <div className="sm:pl-20 lg:pl-64 pt-20 sm:pt-24 p-4 sm:p-6 lg:p-8">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">

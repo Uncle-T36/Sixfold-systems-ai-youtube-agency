@@ -166,7 +166,7 @@ export default function FeatureVerification() {
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
       <AppNavigation title="🔍 Feature Verification" />
       
-      <div className="sm:ml-20 lg:ml-64 p-4 sm:p-6 lg:p-8">
+      <div className="sm:pl-20 lg:pl-64 pt-20 sm:pt-24 p-4 sm:p-6 lg:p-8">
         <div className="max-w-6xl mx-auto">
           
           {/* Header */}
