@@ -371,6 +371,62 @@ export default function SettingsPage() {
                 </p>
               </div>
 
+              {/* Owner Password for Payment Page */}
+              <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-6">
+                <div className="mb-4">
+                  <h3 className="text-lg font-bold text-purple-300 mb-2">🔐 Owner Payment Password</h3>
+                  <p className="text-purple-200/80 text-sm mb-4">
+                    This password protects your banking details page. Only you can access payment settings with this password.
+                  </p>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Payment Page Password *
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showPassword['ownerPassword'] ? 'text' : 'password'}
+                      value={typeof window !== 'undefined' ? localStorage.getItem('owner_password') || 'SixFold2025!' : 'SixFold2025!'}
+                      onChange={(e) => {
+                        if (typeof window !== 'undefined') {
+                          localStorage.setItem('owner_password', e.target.value);
+                          // Force re-render
+                          setShowPassword({ ...showPassword });
+                        }
+                      }}
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-purple-500"
+                      placeholder="Enter owner password"
+                    />
+                    <button
+                      onClick={() => togglePasswordVisibility('ownerPassword')}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+                    >
+                      {showPassword['ownerPassword'] ? '👁️' : '👁️‍🗨️'}
+                    </button>
+                  </div>
+                  <p className="text-sm text-purple-300/70 mt-2">
+                    ⚠️ Change from default password! Used for accessing Payment Setup page.
+                  </p>
+                </div>
+                
+                <button
+                  onClick={() => {
+                    if (typeof window !== 'undefined') {
+                      const newPassword = prompt('Enter new owner password:', localStorage.getItem('owner_password') || 'SixFold2025!');
+                      if (newPassword && newPassword.trim()) {
+                        localStorage.setItem('owner_password', newPassword);
+                        alert('✅ Owner password updated! Use this to access Payment Setup page.');
+                        setShowPassword({ ...showPassword }); // Force re-render
+                      }
+                    }
+                  }}
+                  className="mt-4 px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-purple-500/50 transition"
+                >
+                  Change Owner Password
+                </button>
+              </div>
+
               <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl">
                 <div>
                   <p className="font-medium text-white">Two-Factor Authentication (2FA)</p>

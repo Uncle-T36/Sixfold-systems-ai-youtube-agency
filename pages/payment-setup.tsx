@@ -55,8 +55,10 @@ export default function PaymentSetup() {
   }, []);
 
   const verifyOwner = () => {
-    // IMPORTANT: Change this password to YOUR own secure password!
-    const OWNER_PASSWORD = 'SixFold2025!'; // ⚠️ CHANGE THIS!
+    // Read password from localStorage (set in Settings page)
+    const OWNER_PASSWORD = typeof window !== 'undefined' 
+      ? localStorage.getItem('owner_password') || 'SixFold2025!'
+      : 'SixFold2025!';
     
     if (ownerPassword === OWNER_PASSWORD) {
       setIsOwner(true);
