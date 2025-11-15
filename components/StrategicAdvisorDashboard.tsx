@@ -673,7 +673,7 @@ function ViralTrendsView() {
                 <div className="flex items-center gap-2 mt-1">
                   <div className="flex-1 bg-slate-800 rounded-full h-1.5">
                     <div 
-                      className="bg-gradient-to-r from-emerald-600 to-pink-600 h-1.5 rounded-full"
+                      className="bg-gradient-to-r from-emerald-600 to-yellow-600 h-1.5 rounded-full"
                       style={{ width: `${signal.strength * 10}%` }}
                     />
                   </div>
@@ -717,7 +717,7 @@ function ViralTrendsView() {
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-pink-400">
+                  <div className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-yellow-400">
                     {trend.viralProbability}%
                   </div>
                   <p className="text-slate-400 text-xs">Viral Probability</p>
@@ -938,7 +938,7 @@ function ViralTrendsView() {
                     alert('Trend added to content calendar!');
                     setSelectedTrend(null);
                   }}
-                  className="w-full bg-gradient-to-r from-emerald-600 to-pink-600 hover:from-emerald-500 hover:to-pink-500 text-white font-bold py-4 rounded-xl transition-all"
+                  className="w-full bg-gradient-to-r from-emerald-600 to-yellow-600 hover:from-emerald-500 hover:to-yellow-500 text-white font-bold py-4 rounded-xl transition-all"
                 >
                   Add to Content Calendar →
                 </button>
@@ -950,3 +950,4 @@ function ViralTrendsView() {
     </div>
   );
 }
+

@@ -262,3 +262,4 @@ export default function ViralPredictor() {
     </motion.div>
   );
 }
+

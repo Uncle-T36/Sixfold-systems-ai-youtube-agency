@@ -106,7 +106,7 @@ export default function CompetitorSpyEngine() {
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'title': return 'from-emerald-500 to-pink-500';
+      case 'title': return 'from-emerald-500 to-yellow-500';
       case 'thumbnail': return 'from-orange-500 to-red-500';
       case 'timing': return 'from-blue-500 to-cyan-500';
       case 'length': return 'from-green-500 to-teal-500';
@@ -192,7 +192,7 @@ export default function CompetitorSpyEngine() {
             </div>
 
             {/* Apply Button */}
-            <button className="w-full px-4 py-3 bg-gradient-to-r from-emerald-500 to-pink-500 hover:from-emerald-600 hover:to-pink-600 text-white font-bold rounded-xl transition-all transform hover:scale-[1.02]">
+            <button className="w-full px-4 py-3 bg-gradient-to-r from-emerald-500 to-yellow-500 hover:from-emerald-600 hover:to-yellow-600 text-white font-bold rounded-xl transition-all transform hover:scale-[1.02]">
               Apply to My Channels →
             </button>
           </motion.div>
@@ -214,3 +214,4 @@ export default function CompetitorSpyEngine() {
     </div>
   );
 }
+

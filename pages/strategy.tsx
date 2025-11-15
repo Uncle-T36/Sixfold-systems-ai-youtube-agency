@@ -13,3 +13,4 @@ export default function StrategyPage() {
     </div>
   );
 }
+

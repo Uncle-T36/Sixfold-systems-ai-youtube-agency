@@ -24,3 +24,4 @@ export default function PageLayout({ children, title, currentPage, showBack = tr
     </div>
   );
 }
+

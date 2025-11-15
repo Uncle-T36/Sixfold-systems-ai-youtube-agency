@@ -166,3 +166,4 @@ export default function AppNavigation({ title, showBack = true, currentPage }: A
     </>
   );
 }
+

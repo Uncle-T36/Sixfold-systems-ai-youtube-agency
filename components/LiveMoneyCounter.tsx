@@ -150,3 +150,4 @@ export default function LiveMoneyCounter() {
     </motion.div>
   );
 }
+

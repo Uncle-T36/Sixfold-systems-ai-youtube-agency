@@ -143,16 +143,16 @@ export default function GeniusAssistant() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950">
+    <div className="flex flex-col h-full bg-gradient-to-br from-slate-950 via-emerald-950 to-slate-950">
       {/* Header */}
-      <div className="p-6 border-b border-purple-500/30 bg-black/40 backdrop-blur">
+      <div className="p-6 border-b border-emerald-500/30 bg-black/40 backdrop-blur">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
+          <div className="w-12 h-12 rounded-full bg-gradient-to-r from-green-500 to-yellow-500 flex items-center justify-center">
             <span className="text-2xl">🧠</span>
           </div>
           <div>
             <h2 className="text-2xl font-bold text-white">Genius AI Assistant</h2>
-            <p className="text-purple-300 text-sm">Your 24/7 YouTube money-making expert</p>
+            <p className="text-emerald-300 text-sm">Your 24/7 YouTube money-making expert</p>
           </div>
         </div>
 
@@ -166,7 +166,7 @@ export default function GeniusAssistant() {
           </button>
           <button
             onClick={() => handleQuickAction('Create a viral anime series with consistent characters')}
-            className="px-3 py-1.5 rounded-full bg-pink-500/20 border border-pink-500/50 text-pink-300 text-xs hover:bg-pink-500/30 transition"
+            className="px-3 py-1.5 rounded-full bg-yellow-500/20 border border-yellow-500/50 text-yellow-400 text-xs hover:bg-yellow-500/30 transition"
           >
             🎌 Viral Anime Series
           </button>
@@ -178,7 +178,7 @@ export default function GeniusAssistant() {
           </button>
           <button
             onClick={() => handleQuickAction('Analyze my performance and optimize')}
-            className="px-3 py-1.5 rounded-full bg-purple-500/20 border border-purple-500/50 text-purple-300 text-xs hover:bg-purple-500/30 transition"
+            className="px-3 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-500/50 text-emerald-300 text-xs hover:bg-emerald-500/30 transition"
           >
             📊 Optimize Everything
           </button>
@@ -191,25 +191,25 @@ export default function GeniusAssistant() {
           <div className="text-center py-12">
             <div className="text-6xl mb-4">🚀</div>
             <h3 className="text-2xl font-bold text-white mb-2">Ready to Make Money?</h3>
-            <p className="text-purple-300 mb-6">
+            <p className="text-emerald-300 mb-6">
               I'm your genius AI assistant with full access to your entire app.
               <br />
               I can create content, run automation, analyze performance, and more!
             </p>
             <div className="space-y-2 max-w-md mx-auto text-left">
-              <div className="p-3 rounded-lg bg-purple-500/10 border border-purple-500/30">
+              <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30">
                 <p className="text-white font-semibold">💡 Try asking:</p>
-                <p className="text-purple-300 text-sm mt-1">
+                <p className="text-emerald-300 text-sm mt-1">
                   "I want to make $10,000 this month"
                 </p>
               </div>
-              <div className="p-3 rounded-lg bg-purple-500/10 border border-purple-500/30">
-                <p className="text-purple-300 text-sm">
+              <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30">
+                <p className="text-emerald-300 text-sm">
                   "Create a mystery anime series with 10 episodes"
                 </p>
               </div>
-              <div className="p-3 rounded-lg bg-purple-500/10 border border-purple-500/30">
-                <p className="text-purple-300 text-sm">
+              <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30">
+                <p className="text-emerald-300 text-sm">
                   "Automate everything so I can make money while I sleep"
                 </p>
               </div>
@@ -224,8 +224,8 @@ export default function GeniusAssistant() {
               <div
                 className={`p-4 rounded-2xl ${
                   msg.role === 'user'
-                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
-                    : 'bg-black/60 border border-purple-500/30 text-white'
+                    ? 'bg-gradient-to-r from-green-500 to-yellow-500 text-white'
+                    : 'bg-black/60 border border-emerald-500/30 text-white'
                 }`}
               >
                 <div className="whitespace-pre-wrap">{msg.content}</div>
@@ -236,15 +236,15 @@ export default function GeniusAssistant() {
                 <div className="mt-3 space-y-2">
                   {/* Insights */}
                   {msg.response.insights && msg.response.insights.length > 0 && (
-                    <div className="p-3 rounded-lg bg-purple-500/10 border border-purple-500/30">
-                      <p className="text-purple-300 font-semibold mb-2 flex items-center gap-2">
+                    <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30">
+                      <p className="text-emerald-300 font-semibold mb-2 flex items-center gap-2">
                         💡 Key Insights:
                       </p>
                       {msg.response.insights.map((insight, i) => (
                         <div key={i} className="ml-4 mb-2">
                           <p className="text-white text-sm">• {insight.insight}</p>
                           {insight.action && (
-                            <p className="text-purple-300 text-xs ml-4">→ {insight.action}</p>
+                            <p className="text-green-400 text-xs ml-4">→ {insight.action}</p>
                           )}
                         </div>
                       ))}
@@ -258,7 +258,7 @@ export default function GeniusAssistant() {
                         <button
                           key={i}
                           onClick={() => executeAction(action)}
-                          className="px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition"
+                          className="px-4 py-2 rounded-lg bg-gradient-to-r from-green-700 to-yellow-500 text-white text-sm font-semibold hover:shadow-lg hover:shadow-green-700/50 transition"
                         >
                           {action.description}
                         </button>
@@ -301,7 +301,7 @@ export default function GeniusAssistant() {
                 </div>
               )}
 
-              <p className="text-xs text-purple-400 mt-1">
+              <p className="text-xs text-green-600 mt-1">
                 {msg.timestamp.toLocaleTimeString()}
               </p>
             </div>
@@ -311,12 +311,12 @@ export default function GeniusAssistant() {
         {isProcessing && (
           <div className="flex justify-start">
             <div className="max-w-3xl mr-12">
-              <div className="p-4 rounded-2xl bg-black/60 border border-purple-500/30">
+              <div className="p-4 rounded-2xl bg-black/60 border border-green-700/30">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                  <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                  <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                  <span className="text-purple-300 text-sm ml-2">Analyzing and executing...</span>
+                  <div className="w-2 h-2 bg-green-700 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                  <div className="w-2 h-2 bg-green-700 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                  <div className="w-2 h-2 bg-green-700 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                  <span className="text-green-400 text-sm ml-2">Analyzing and executing...</span>
                 </div>
               </div>
             </div>
@@ -327,7 +327,7 @@ export default function GeniusAssistant() {
       </div>
 
       {/* Input */}
-      <div className="p-6 border-t border-purple-500/30 bg-black/40 backdrop-blur">
+      <div className="p-6 border-t border-green-700/30 bg-black/40 backdrop-blur">
         <div className="flex gap-3">
           <input
             type="text"
@@ -335,21 +335,22 @@ export default function GeniusAssistant() {
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && !isProcessing && handleSend()}
             placeholder="Ask me anything... 'I want to make $10K' or 'Create a viral series'"
-            className="flex-1 px-4 py-3 rounded-xl bg-black/60 border border-purple-500/30 text-white placeholder-purple-400 focus:outline-none focus:border-purple-500"
+            className="flex-1 px-4 py-3 rounded-xl bg-black/60 border border-green-700/30 text-white placeholder-green-600 focus:outline-none focus:border-green-700"
             disabled={isProcessing}
           />
           <button
             onClick={handleSend}
             disabled={isProcessing || !input.trim()}
-            className="px-8 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-8 py-3 rounded-xl bg-gradient-to-r from-green-700 to-yellow-500 text-white font-semibold hover:shadow-lg hover:shadow-green-700/50 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isProcessing ? 'Processing...' : 'Send'}
           </button>
         </div>
-        <p className="text-purple-400 text-xs mt-2 text-center">
+        <p className="text-green-600 text-xs mt-2 text-center">
           💡 I have full access to your app and can execute commands automatically
         </p>
       </div>
     </div>
   );
 }
+

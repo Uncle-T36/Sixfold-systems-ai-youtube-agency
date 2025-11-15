@@ -384,7 +384,7 @@ export default function RevenueAnalyticsIntelligence() {
               onClick={() => setFilter('low-competition')}
               className={`px-4 py-2 rounded-xl font-semibold transition-all ${
                 filter === 'low-competition'
-                  ? 'bg-gradient-to-r from-emerald-500 to-pink-500 text-white'
+                  ? 'bg-gradient-to-r from-emerald-500 to-yellow-500 text-white'
                   : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
               }`}
             >
@@ -477,7 +477,7 @@ export default function RevenueAnalyticsIntelligence() {
       </div>
 
       {/* Pro Tips */}
-      <div className="bg-gradient-to-r from-emerald-500/10 to-pink-500/10 border border-emerald-500/30 rounded-2xl p-6">
+      <div className="bg-gradient-to-r from-emerald-500/10 to-yellow-500/10 border border-emerald-500/30 rounded-2xl p-6">
         <h3 className="text-white font-bold text-xl mb-4 flex items-center space-x-2">
           <span>💎</span>
           <span>Pro Tips from AI Analysis</span>
@@ -512,3 +512,4 @@ export default function RevenueAnalyticsIntelligence() {
     </div>
   );
 }
+

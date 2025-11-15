@@ -372,10 +372,10 @@ export default function SettingsPage() {
               </div>
 
               {/* Owner Password for Payment Page */}
-              <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-6">
+              <div className="bg-green-700/10 border border-green-700/30 rounded-xl p-6">
                 <div className="mb-4">
-                  <h3 className="text-lg font-bold text-purple-300 mb-2">🔐 Owner Payment Password</h3>
-                  <p className="text-purple-200/80 text-sm mb-4">
+                  <h3 className="text-lg font-bold text-green-300 mb-2">🔐 Owner Payment Password</h3>
+                  <p className="text-green-200/80 text-sm mb-4">
                     This password protects your banking details page. Only you can access payment settings with this password.
                   </p>
                 </div>
@@ -395,7 +395,7 @@ export default function SettingsPage() {
                           setShowPassword({ ...showPassword });
                         }
                       }}
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-purple-500"
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-green-700"
                       placeholder="Enter owner password"
                     />
                     <button
@@ -405,7 +405,7 @@ export default function SettingsPage() {
                       {showPassword['ownerPassword'] ? '👁️' : '👁️‍🗨️'}
                     </button>
                   </div>
-                  <p className="text-sm text-purple-300/70 mt-2">
+                  <p className="text-sm text-green-300/70 mt-2">
                     ⚠️ Change from default password! Used for accessing Payment Setup page.
                   </p>
                 </div>
@@ -421,7 +421,7 @@ export default function SettingsPage() {
                       }
                     }
                   }}
-                  className="mt-4 px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-purple-500/50 transition"
+                  className="mt-4 px-6 py-2 bg-gradient-to-r from-green-700 to-yellow-500 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-green-700/50 transition"
                 >
                   Change Owner Password
                 </button>
@@ -1226,3 +1226,4 @@ export default function SettingsPage() {
     </div>
   );
 }
+

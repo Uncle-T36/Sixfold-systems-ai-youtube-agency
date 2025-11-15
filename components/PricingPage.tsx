@@ -248,7 +248,7 @@ export default function PricingPage({ onSelectPlan }: PricingPageProps) {
           </p>
           <button
             onClick={() => onSelectPlan?.('professional')}
-            className="bg-gradient-to-r from-emerald-500 to-pink-500 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-emerald-400 hover:to-pink-400 transition-all duration-300 shadow-lg hover:shadow-xl"
+            className="bg-gradient-to-r from-emerald-500 to-yellow-500 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-emerald-400 hover:to-yellow-400 transition-all duration-300 shadow-lg hover:shadow-xl"
           >
             Start Free Trial Now
           </button>

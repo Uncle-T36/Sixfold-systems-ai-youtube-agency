@@ -69,7 +69,7 @@ export default function LandingPage() {
             </button>
             <button
               onClick={handleGetStarted}
-              className="bg-gradient-to-r from-emerald- to-pink-500 text-white px-6 py-2 rounded-lg hover:from-emerald- hover:to-pink-400 transition-all"
+              className="bg-gradient-to-r from-emerald- to-yellow-500 text-white px-6 py-2 rounded-lg hover:from-emerald- hover:to-yellow-400 transition-all"
             >
               Get Started
             </button>
@@ -110,7 +110,7 @@ export default function LandingPage() {
               </button>
               <button
                 onClick={handleGetStarted}
-                className="w-full bg-gradient-to-r from-emerald- to-pink-500 text-white px-6 py-3 rounded-lg hover:from-emerald- hover:to-pink-400 transition-all mt-4"
+                className="w-full bg-gradient-to-r from-emerald- to-yellow-500 text-white px-6 py-3 rounded-lg hover:from-emerald- hover:to-yellow-400 transition-all mt-4"
               >
                 Get Started
               </button>
@@ -123,7 +123,7 @@ export default function LandingPage() {
       <div className="max-w-7xl mx-auto px-4 py-12 lg:py-20 text-center">
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
           Build Your AI
-          <span className="bg-gradient-to-r from-emerald- to-pink-400 bg-clip-text text-transparent"> YouTube Empire</span>
+          <span className="bg-gradient-to-r from-emerald- to-yellow-400 bg-clip-text text-transparent"> YouTube Empire</span>
         </h1>
         
         <p className="text-xl md:text-2xl text-blue-200 max-w-4xl mx-auto mb-8 leading-relaxed">
@@ -134,7 +134,7 @@ export default function LandingPage() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
           <button
             onClick={handleGetStarted}
-            className="bg-gradient-to-r from-emerald- to-pink-500 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-emerald- hover:to-pink-400 transition-all shadow-lg hover:shadow-xl w-full sm:w-auto"
+            className="bg-gradient-to-r from-emerald- to-yellow-500 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-emerald- hover:to-yellow-400 transition-all shadow-lg hover:shadow-xl w-full sm:w-auto"
           >
             Start Free Trial
           </button>
@@ -302,7 +302,7 @@ export default function LandingPage() {
           ].map((testimonial, index) => (
             <div key={index} className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
               <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-emerald- to-pink-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-emerald- to-yellow-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
                   {testimonial.name[0]}
                 </div>
                 <div>
@@ -331,7 +331,7 @@ export default function LandingPage() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <button
             onClick={handleGetStarted}
-            className="bg-gradient-to-r from-emerald- to-pink-500 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-emerald- hover:to-pink-400 transition-all shadow-lg hover:shadow-xl w-full sm:w-auto"
+            className="bg-gradient-to-r from-emerald- to-yellow-500 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-emerald- hover:to-yellow-400 transition-all shadow-lg hover:shadow-xl w-full sm:w-auto"
           >
             Start Your Free Trial Now
           </button>
@@ -384,3 +384,4 @@ export default function LandingPage() {
     </div>
   );
 }
+

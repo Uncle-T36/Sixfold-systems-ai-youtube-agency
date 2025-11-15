@@ -162,7 +162,7 @@ export default function SystemHealthOverview() {
         className={`relative overflow-hidden rounded-2xl p-8 border-2 ${
           healthScore >= 80 ? 'border-green-500 bg-gradient-to-br from-green-500/20 to-teal-500/20' :
           healthScore >= 50 ? 'border-yellow-500 bg-gradient-to-br from-yellow-500/20 to-orange-500/20' :
-          'border-red-500 bg-gradient-to-br from-red-500/20 to-pink-500/20'
+          'border-red-500 bg-gradient-to-br from-red-500/20 to-yellow-500/20'
         }`}
       >
         <div className="flex items-center justify-between">
@@ -189,7 +189,7 @@ export default function SystemHealthOverview() {
             className={`h-4 rounded-full ${
               healthScore >= 80 ? 'bg-gradient-to-r from-green-500 to-teal-500' :
               healthScore >= 50 ? 'bg-gradient-to-r from-yellow-500 to-orange-500' :
-              'bg-gradient-to-r from-red-500 to-pink-500'
+              'bg-gradient-to-r from-red-500 to-yellow-500'
             }`}
           />
         </div>
@@ -225,3 +225,4 @@ export default function SystemHealthOverview() {
     </div>
   );
 }
+

@@ -404,7 +404,7 @@ export default function PaymentSetup() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="mt-6 bg-gradient-to-r from-emerald-500/10 to-pink-500/10 rounded-2xl p-6 border border-emerald-500/20"
+            className="mt-6 bg-gradient-to-r from-emerald-500/10 to-yellow-500/10 rounded-2xl p-6 border border-emerald-500/20"
           >
             <h3 className="text-white font-semibold text-lg mb-3">
               📘 Need Help Setting Up Stripe?
@@ -430,3 +430,4 @@ export default function PaymentSetup() {
     </div>
   );
 }
+

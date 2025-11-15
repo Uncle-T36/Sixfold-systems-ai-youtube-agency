@@ -201,7 +201,7 @@ export default function EasyChannelConnection() {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-r from-teal-500/10 to-pink-500/10 backdrop-blur-sm border border-teal-500/20 rounded-2xl p-6 mb-6"
+          className="bg-gradient-to-r from-teal-500/10 to-yellow-500/10 backdrop-blur-sm border border-teal-500/20 rounded-2xl p-6 mb-6"
         >
           <div className="flex items-start space-x-4">
             <span className="text-4xl">👋</span>
@@ -222,7 +222,7 @@ export default function EasyChannelConnection() {
         >
           <div className="max-w-2xl mx-auto">
             <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-teal-500 to-pink-500 rounded-2xl mb-4">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-teal-500 to-yellow-500 rounded-2xl mb-4">
                 <span className="text-3xl">📺</span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
@@ -282,7 +282,7 @@ export default function EasyChannelConnection() {
               {/* Channel Name Input */}
               <div className="bg-slate-800/30 rounded-2xl p-6 border border-slate-700/50">
                 <div className="flex items-center space-x-3 mb-4">
-                  <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-pink-500 to-emerald-500 rounded-xl">
+                  <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-yellow-500 to-emerald-500 rounded-xl">
                     <span className="text-xl font-bold text-white">2</span>
                   </div>
                   <label className="text-white font-bold text-lg">
@@ -294,7 +294,7 @@ export default function EasyChannelConnection() {
                   value={channelName}
                   onChange={(e) => setChannelName(e.target.value)}
                   placeholder="My Gaming Channel"
-                  className="w-full bg-slate-900 text-white px-5 py-4 rounded-xl border-2 border-slate-700 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500/20 transition-all text-base shadow-inner"
+                  className="w-full bg-slate-900 text-white px-5 py-4 rounded-xl border-2 border-slate-700 focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700/20 transition-all text-base shadow-inner"
                 />
                 <p className="text-slate-400 text-sm mt-3 flex items-start space-x-2">
                   <span>💡</span>
@@ -423,7 +423,7 @@ export default function EasyChannelConnection() {
                 <button
                   onClick={connectChannel}
                   disabled={connecting || analyzing || !channelUrl.trim() || !channelName.trim()}
-                  className="group relative w-full overflow-hidden bg-gradient-to-r from-teal-500 via-cyan-500 to-pink-500 hover:from-teal-600 hover:via-cyan-600 hover:to-pink-600 text-white font-bold px-8 py-6 rounded-2xl text-xl shadow-2xl hover:shadow-teal-500/50 transform hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
+                  className="group relative w-full overflow-hidden bg-gradient-to-r from-teal-500 via-cyan-500 to-yellow-500 hover:from-teal-600 hover:via-cyan-600 hover:to-yellow-600 text-white font-bold px-8 py-6 rounded-2xl text-xl shadow-2xl hover:shadow-teal-500/50 transform hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
                 >
                   {/* Animated background effect */}
                   <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
@@ -562,7 +562,7 @@ export default function EasyChannelConnection() {
               onClick={() => window.location.href = '/dashboard'}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="group relative w-full mt-8 overflow-hidden bg-gradient-to-r from-emerald-600 via-pink-600 to-red-600 hover:from-emerald-700 hover:via-pink-700 hover:to-red-700 text-white px-8 py-6 rounded-2xl font-bold text-xl shadow-2xl hover:shadow-emerald-500/50 transition-all duration-300"
+              className="group relative w-full mt-8 overflow-hidden bg-gradient-to-r from-emerald-600 via-yellow-600 to-red-600 hover:from-emerald-700 hover:via-yellow-700 hover:to-red-700 text-white px-8 py-6 rounded-2xl font-bold text-xl shadow-2xl hover:shadow-emerald-500/50 transition-all duration-300"
             >
               {/* Animated shimmer effect */}
               <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 transform translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
@@ -580,3 +580,4 @@ export default function EasyChannelConnection() {
     </div>
   );
 }
+

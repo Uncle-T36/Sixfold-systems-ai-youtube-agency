@@ -253,3 +253,4 @@ export default function AutomationDashboard() {
     </div>
   );
 }
+
