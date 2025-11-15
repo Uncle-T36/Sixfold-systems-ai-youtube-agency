@@ -6,6 +6,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/router';
 import { geniusAnalyzeAndExecute, type GeniusContext, type GeniusResponse } from '@/lib/geniusAI';
 
 interface Message {
@@ -16,6 +17,7 @@ interface Message {
 }
 
 export default function GeniusAssistant() {
+  const router = useRouter();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -147,6 +149,13 @@ export default function GeniusAssistant() {
       {/* Header */}
       <div className="p-6 border-b border-emerald-500/30 bg-black/40 backdrop-blur">
         <div className="flex items-center gap-3">
+          <button
+            onClick={() => router.back()}
+            className="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition"
+            title="Go Back"
+          >
+            <span className="text-xl text-white">←</span>
+          </button>
           <div className="w-12 h-12 rounded-full bg-gradient-to-r from-green-500 to-yellow-500 flex items-center justify-center">
             <span className="text-2xl">🧠</span>
           </div>

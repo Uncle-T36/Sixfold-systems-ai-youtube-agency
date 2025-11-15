@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   STORY_CATEGORIES,
@@ -12,6 +13,7 @@ import {
 } from '../lib/storyEngine';
 
 export default function SeriesChannelCreator() {
+  const router = useRouter();
   const [step, setStep] = useState<'setup' | 'discover' | 'script' | 'preview'>('setup');
   const [seriesConfig, setSeriesConfig] = useState({
     name: '',
@@ -116,6 +118,22 @@ export default function SeriesChannelCreator() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 py-8 px-4">
       <div className="max-w-7xl mx-auto">
+        {/* Header with Back Button */}
+        <div className="mb-8 flex items-center gap-4">
+          <button
+            onClick={() => router.back()}
+            className="w-12 h-12 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition"
+            title="Go Back"
+          >
+            <span className="text-2xl text-white">←</span>
+          </button>
+          <div>
+            <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-yellow-400">
+              📺 Series Channel Creator
+            </h1>
+            <p className="text-gray-400">Create viral story series that keep viewers coming back</p>
+          </div>
+        </div>
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}

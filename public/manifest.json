@@ -1,0 +1,44 @@
+{
+  "name": "SixFold AI YouTube Agency",
+  "short_name": "SixFold AI",
+  "description": "AI-powered YouTube automation platform - Create viral videos, manage channels, and maximize revenue on autopilot",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0f1a",
+  "theme_color": "#006B3D",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["business", "productivity", "entertainment"],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "View your YouTube analytics",
+      "url": "/dashboard"
+    },
+    {
+      "name": "Genius AI",
+      "short_name": "AI Chat",
+      "description": "Chat with your AI assistant",
+      "url": "/ai-assistant"
+    },
+    {
+      "name": "Create Video",
+      "short_name": "Video",
+      "description": "Create a new video",
+      "url": "/video-creator"
+    },
+    {
+      "name": "Series Creator",
+      "short_name": "Series",
+      "description": "Create a video series",
+      "url": "/series"
+    }
+  ]
+}

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   VIDEO_STYLES, 
@@ -19,6 +20,7 @@ import {
 } from '../lib/professionalVideoProduction';
 
 export default function AdvancedVideoCreator() {
+  const router = useRouter();
   const [selectedStyle, setSelectedStyle] = useState<VideoStyle | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [formData, setFormData] = useState({
@@ -284,6 +286,17 @@ Like, subscribe, and check the description for more resources!
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 py-8 px-4">
       <div className="max-w-7xl mx-auto">
+        {/* Back Button */}
+        <div className="mb-6 flex items-center gap-4">
+          <button
+            onClick={() => router.back()}
+            className="w-12 h-12 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition"
+            title="Go Back"
+          >
+            <span className="text-2xl text-white">←</span>
+          </button>
+        </div>
+
         {/* Series Import Banner */}
         {fromSeries && (
           <motion.div
