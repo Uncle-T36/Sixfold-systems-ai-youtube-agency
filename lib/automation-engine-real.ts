@@ -35,7 +35,7 @@ export async function automateContentGeneration(
     config: { topic, ...options },
     progress: 0,
     currentStep: 'Initializing',
-    createdAt: new Date().toISOString()
+    created_at: new Date().toISOString()
   };
 
   // Save to database

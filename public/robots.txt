@@ -1,0 +1,20 @@
+# SixFold AI YouTube Agency - Robots.txt
+
+User-agent: *
+Allow: /
+Allow: /dashboard
+Allow: /connect
+Allow: /genius
+Allow: /series-creator
+Allow: /video-creator
+Allow: /analytics
+
+# Disallow sensitive pages
+Disallow: /api/
+Disallow: /payment-setup
+
+# Sitemap
+Sitemap: https://aiyoutubeagency.vercel.app/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1

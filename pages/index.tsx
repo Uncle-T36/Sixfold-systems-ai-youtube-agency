@@ -1,36 +1,44 @@
-// Landing Page - Redirects to Dashboard
+// Landing Page - SEO Optimized Homepage
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import Head from 'next/head';
 import AppNavigation from '../components/AppNavigation';
 
 export default function Home() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-dark-bg via-dark-card to-dark-bg">
-      <AppNavigation title="SixFold Studios" showBack={false} />
-      <div className="sm:pl-20 lg:pl-64 pt-20 sm:pt-24 flex items-center justify-center min-h-[calc(100vh-5rem)] p-4 sm:p-6 lg:p-8">
-        <div className="max-w-7xl w-full animate-fade-in">
-        {/* Hero Section */}
-        <div className="text-center mb-12 sm:mb-16">
-          <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-green-500 to-yellow-500 rounded-3xl flex items-center justify-center shadow-2xl">
-            <span className="text-5xl">🎬</span>
+    <>
+      <Head>
+        <title>SixFold AI YouTube Agency - Free AI YouTube Automation Platform | Create Viral Videos</title>
+        <meta name="description" content="Free AI-powered YouTube automation platform. Create viral videos, automate content creation, manage multiple channels, generate scripts with AI, and analyze performance. Start growing your YouTube channel today!" />
+        <meta name="keywords" content="YouTube automation, AI video creator, free YouTube tools, viral video generator, AI script writer, YouTube channel management, content automation, YouTube growth, video marketing, AI content creator" />
+      </Head>
+      
+      <div className="min-h-screen bg-gradient-to-br from-dark-bg via-dark-card to-dark-bg">
+        <AppNavigation title="SixFold Studios" showBack={false} />
+        <div className="sm:pl-20 lg:pl-64 pt-20 sm:pt-24 flex items-center justify-center min-h-[calc(100vh-5rem)] p-4 sm:p-6 lg:p-8">
+          <div className="max-w-7xl w-full animate-fade-in">
+          {/* Hero Section */}
+          <div className="text-center mb-12 sm:mb-16">
+            <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-green-500 to-yellow-500 rounded-3xl flex items-center justify-center shadow-2xl">
+              <span className="text-5xl" aria-label="Video camera">🎬</span>
+            </div>
+            <div className="inline-flex items-center justify-center space-x-3 mb-6 bg-gradient-to-r from-green-500/20 to-yellow-500/20 backdrop-blur-sm border border-green-500/30 rounded-full px-6 py-2 animate-pulse-soft">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <span className="text-sm sm:text-base font-semibold bg-gradient-to-r from-green-300 to-yellow-300 bg-clip-text text-transparent">Free AI YouTube Automation - Professional Grade</span>
+            </div>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-yellow-500 mb-6 tracking-tight">
+              SixFold AI YouTube Agency
+            </h1>
+            <h2 className="text-xl sm:text-2xl lg:text-3xl bg-gradient-to-r from-green-300 to-yellow-300 bg-clip-text text-transparent mb-4 font-light">
+              Create Viral YouTube Videos with AI Automation
+            </h2>
+            <p className="text-base sm:text-lg lg:text-xl text-slate-300 mb-8 max-w-3xl mx-auto">
+              Free AI script generator • Viral video prediction • Multi-channel management • Real-time analytics • Zero coding required
+            </p>
           </div>
-          <div className="inline-flex items-center justify-center space-x-3 mb-6 bg-gradient-to-r from-green-500/20 to-yellow-500/20 backdrop-blur-sm border border-green-500/30 rounded-full px-6 py-2 animate-pulse-soft">
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span className="text-sm sm:text-base font-semibold bg-gradient-to-r from-green-300 to-yellow-300 bg-clip-text text-transparent">Enterprise AI System - Professional Grade</span>
-          </div>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-yellow-500 mb-6 tracking-tight">
-            SixFold Studios
-          </h1>
-          <p className="text-xl sm:text-2xl lg:text-3xl bg-gradient-to-r from-green-300 to-yellow-300 bg-clip-text text-transparent mb-4 font-light">
-            Wealth Generation Through Content Automation
-          </p>
-          <p className="text-base sm:text-lg lg:text-xl text-slate-300 mb-8 max-w-3xl mx-auto">
-            24/7 AI Tycoon Intelligence • Auto-Viral Prediction • 6 AI Providers • Zero Crashes
-          </p>
-        </div>
 
         {/* Action Cards - Premium Design */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 mb-12 sm:mb-16">
