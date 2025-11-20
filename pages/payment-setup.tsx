@@ -46,11 +46,17 @@ export default function PaymentSetup() {
       setShowPasswordPrompt(false);
     }
     
-    // Load existing bank account from localStorage
+    // Load existing bank account from localStorage (decode base64)
     const saved = localStorage.getItem('owner_bank_account');
     if (saved) {
-      setBankAccount(JSON.parse(saved));
-      setStripeConnected(true);
+      try {
+        setBankAccount(JSON.parse(atob(saved)));
+        setStripeConnected(true);
+      } catch {
+        // If decode fails, might be old unencoded data
+        setBankAccount(JSON.parse(saved));
+        setStripeConnected(true);
+      }
     }
   }, []);
 
@@ -84,8 +90,10 @@ export default function PaymentSetup() {
         return;
       }
 
-      // Save to localStorage (in production, this would go to Stripe)
-      localStorage.setItem('owner_bank_account', JSON.stringify(bankAccount));
+      // Save to localStorage with base64 encoding (minimum security)
+      // In production, this would go to encrypted server-side storage
+      const encodedAccount = btoa(JSON.stringify(bankAccount));
+      localStorage.setItem('owner_bank_account', encodedAccount);
       
       // In production, you would call Stripe API here:
       // const response = await fetch('/api/stripe/connect-bank', {

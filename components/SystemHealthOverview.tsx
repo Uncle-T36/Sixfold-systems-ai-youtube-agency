@@ -49,8 +49,8 @@ export default function SystemHealthOverview() {
       icon: '💳',
       status: bankAccount ? 'complete' : 'incomplete',
       description: bankAccount ? 'Bank account configured' : 'No payment method',
-      action: !bankAccount ? 'Setup Payment' : undefined,
-      link: '/payment-setup'
+      action: !bankAccount ? 'Contact Admin' : undefined,
+      link: '/admin'
     });
 
     // 3. Videos Generated

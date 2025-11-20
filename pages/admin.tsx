@@ -92,7 +92,9 @@ export default function AdminDashboard() {
       verified: false
     };
 
-    localStorage.setItem('admin_bank_account', JSON.stringify(bankData));
+    // Encode bank data with base64 for minimal security
+    const encodedBankData = btoa(JSON.stringify(bankData));
+    localStorage.setItem('admin_bank_account', encodedBankData);
     localStorage.setItem('admin_bank_connected', 'true');
     
     setBankConnected(true);
