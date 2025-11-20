@@ -195,7 +195,9 @@ export default function AISuggestionsDashboard() {
 
   const handleAction = (suggestion: Suggestion) => {
     if (suggestion.id === 'missing-bank') {
-      window.location.href = '/payment-setup';
+      // Bank setup is owner-only feature - redirect to admin dashboard
+      alert('🔒 Bank setup is owner-only. Access via Admin Dashboard with password.');
+      window.location.href = '/admin';
     } else if (suggestion.id === 'enable-autopilot') {
       localStorage.setItem('autopilot_enabled', 'true');
       loadAllSuggestions();

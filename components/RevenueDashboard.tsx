@@ -1,5 +1,8 @@
 // Revenue Dashboard Component - Shows your earnings from the SaaS
+// OWNER ONLY - Protected by authentication
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import AppNavigation from './AppNavigation';
 
 interface RevenueMetrics {
   totalRevenue: number;
@@ -29,13 +32,48 @@ interface RevenueMetrics {
 }
 
 export default function RevenueDashboard() {
+  const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [adminPassword, setAdminPassword] = useState('');
+  const [showPasswordPrompt, setShowPasswordPrompt] = useState(true);
   const [metrics, setMetrics] = useState<RevenueMetrics | null>(null);
   const [loading, setLoading] = useState(true);
   const [timeframe, setTimeframe] = useState<'30d' | '90d' | '1y'>('30d');
 
+  // CHECK AUTHENTICATION - Only owner can access
   useEffect(() => {
-    fetchRevenueData();
-  }, [timeframe]);
+    const adminAuth = localStorage.getItem('admin_authenticated');
+    if (adminAuth === 'true') {
+      setIsAuthenticated(true);
+      setShowPasswordPrompt(false);
+      fetchRevenueData();
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchRevenueData();
+    }
+  }, [timeframe, isAuthenticated]);
+
+  const handleLogin = () => {
+    // Get password from settings (or use default if not set)
+    const savedSettings = localStorage.getItem('system_settings');
+    const ADMIN_PASSWORD = savedSettings 
+      ? JSON.parse(savedSettings).adminPassword 
+      : 'SixFold2025!Admin';
+    
+    if (adminPassword === ADMIN_PASSWORD) {
+      setIsAuthenticated(true);
+      setShowPasswordPrompt(false);
+      localStorage.setItem('admin_authenticated', 'true');
+      fetchRevenueData();
+    } else {
+      alert('Invalid admin password! Access denied.');
+    }
+  };
 
   const fetchRevenueData = async () => {
     try {
@@ -53,25 +91,80 @@ export default function RevenueDashboard() {
     }
   };
 
+  if (showPasswordPrompt) {
+    return (
+      <>
+        <AppNavigation title="Revenue Dashboard" currentPage="Owner Only - Requires Authentication" showBack={true} />
+        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
+          <div className="max-w-md w-full bg-slate-800/50 backdrop-blur-xl rounded-2xl p-8 border border-purple-500/20">
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold text-white mb-2">🔒 Owner Access Only</h2>
+              <p className="text-slate-400 text-sm">This page contains sensitive financial data</p>
+            </div>
+            
+            <div className="mb-6">
+              <label className="block text-white text-sm font-medium mb-2">Admin Password</label>
+              <input
+                type="password"
+                value={adminPassword}
+                onChange={(e) => setAdminPassword(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+                placeholder="Enter admin password..."
+                className="w-full px-4 py-3 bg-slate-700/50 border border-purple-500/30 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+            
+            <button
+              onClick={handleLogin}
+              className="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-lg transition-all"
+            >
+              Access Revenue Dashboard
+            </button>
+            
+            <div className="mt-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
+              <p className="text-red-400 text-xs text-center">
+                ⚠️ Unauthorized access is prohibited. Only the platform owner can view this data.
+              </p>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-white text-xl">Loading revenue data...</div>
-      </div>
+      <>
+        <AppNavigation title="Revenue Dashboard" currentPage="Owner Only - Financial Overview" showBack={true} />
+        <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+          <div className="text-white text-xl">Loading revenue data...</div>
+        </div>
+      </>
     );
   }
 
   if (!metrics) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-red-400 text-xl">Failed to load revenue data</div>
-      </div>
+      <>
+        <AppNavigation title="Revenue Dashboard" currentPage="Owner Only - Financial Overview" showBack={true} />
+        <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+          <div className="text-red-400 text-xl">Failed to load revenue data</div>
+        </div>
+      </>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 p-6">
-      <div className="max-w-7xl mx-auto">
+    <>
+      <AppNavigation title="Revenue Dashboard" currentPage="Owner Only - Financial Overview" showBack={true} />
+      <div className="sm:pl-20 lg:pl-64 pt-4">
+        <div className="min-h-screen bg-gray-900 p-6">
+          <div className="max-w-7xl mx-auto">
         
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
@@ -292,7 +385,9 @@ export default function RevenueDashboard() {
             </table>
           </div>
         </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

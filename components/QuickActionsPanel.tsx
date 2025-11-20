@@ -43,20 +43,7 @@ export default function QuickActionsPanel() {
       });
     }
 
-    // Check for bank account
-    const bankAccount = localStorage.getItem('owner_bank_account');
-    if (!bankAccount && channels.length > 0) {
-      actionsList.push({
-        id: 'setup-payment',
-        icon: '💳',
-        title: 'Set Up Payment Method',
-        description: 'Add your bank account to receive payments from your channels',
-        action: 'Setup Payment',
-        link: '/payment-setup',
-        completed: false,
-        urgent: true
-      });
-    }
+    // Bank account setup removed - owner-only feature (access via /admin page)
 
     // Check for videos
     let hasVideos = false;

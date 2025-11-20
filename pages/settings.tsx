@@ -893,6 +893,9 @@ export default function SettingsPage() {
                     <option value="medium">Medium (3-8min)</option>
                     <option value="long">Long (10-15min)</option>
                     <option value="extended">Extended (15-30min)</option>
+                    <option value="ultra">Ultra (30-45min)</option>
+                    <option value="epic">Epic (45-60min)</option>
+                    <option value="feature">Feature Length (60+ min)</option>
                   </select>
                 </div>
 
