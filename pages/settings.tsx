@@ -296,6 +296,8 @@ export default function SettingsPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       <AppNavigation title="Settings" />
       
+      {/* Add proper padding for sidebar */}
+      <div className="sm:pl-20 lg:pl-64 pt-4">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
@@ -1222,6 +1224,7 @@ export default function SettingsPage() {
             🔄 Reset to Defaults
           </button>
         </div>
+      </div>
       </div>
     </div>
   );

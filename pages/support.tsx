@@ -44,6 +44,8 @@ export default function SupportPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900">
       <AppNavigation title="Support" currentPage="Get help & contact us" />
       
+      {/* Add proper padding for sidebar */}
+      <div className="sm:pl-20 lg:pl-64 pt-4">
       <div className="max-w-7xl mx-auto px-4 py-12">
         {/* Header */}
         <motion.div
@@ -354,6 +356,7 @@ export default function SupportPage() {
             ))}
           </div>
         </motion.div>
+      </div>
       </div>
     </div>
   );

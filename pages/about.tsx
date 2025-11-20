@@ -7,6 +7,8 @@ export default function AboutPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900">
       <AppNavigation title="About" currentPage="Learn about SixFold Studios" />
       
+      {/* Add proper padding for sidebar - same as other pages */}
+      <div className="sm:pl-20 lg:pl-64 pt-4">
       <div className="max-w-6xl mx-auto px-4 py-12">
         {/* Hero Section */}
         <motion.div
@@ -188,6 +190,7 @@ export default function AboutPage() {
             </div>
           </div>
         </motion.div>
+      </div>
       </div>
     </div>
   );
