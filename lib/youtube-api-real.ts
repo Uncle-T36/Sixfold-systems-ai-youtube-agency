@@ -98,7 +98,12 @@ export async function fetchChannelData(channelId: string): Promise<YouTubeChanne
         subscriberCount: parseInt(channel.statistics?.subscriberCount || '0'),
         videoCount: parseInt(channel.statistics?.videoCount || '0')
       },
-      brandingSettings: channel.brandingSettings
+      brandingSettings: channel.brandingSettings ? {
+        channel: {
+          keywords: channel.brandingSettings.channel?.keywords || undefined,
+          country: channel.brandingSettings.channel?.country || undefined
+        }
+      } : undefined
     };
   } catch (error) {
     console.error('YouTube API Error:', error);
