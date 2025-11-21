@@ -158,7 +158,7 @@ export default function AdminDashboard() {
   // ADMIN DASHBOARD - Your secure control panel
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
-      <AppNavigation title="Admin Dashboard" />
+      <AppNavigation title="Admin Dashboard" showBack={true} />
       
       {/* Add proper padding for sidebar */}
       <div className="sm:pl-20 lg:pl-64 pt-4">
@@ -170,6 +170,12 @@ export default function AdminDashboard() {
             <p className="text-slate-400">Owner access only - Connect your accounts securely</p>
           </div>
           <div className="flex gap-3">
+            <a
+              href="/payment-setup"
+              className="px-6 py-3 bg-purple-600 text-white font-bold rounded-xl hover:bg-purple-500 transition-all"
+            >
+              💳 Bank Setup
+            </a>
             <a
               href="/settings"
               className="px-6 py-3 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-500"

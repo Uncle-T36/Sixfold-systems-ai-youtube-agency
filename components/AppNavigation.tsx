@@ -17,6 +17,9 @@ export default function AppNavigation({ title, showBack = true, currentPage }: A
     router.back();
   };
 
+  // Check if owner is authenticated
+  const isOwnerAuthenticated = typeof window !== 'undefined' && localStorage.getItem('owner_authenticated') === 'true';
+
   const navItems = [
     { name: 'Home', path: '/', icon: '🏠' },
     { name: 'Dashboard', path: '/dashboard', icon: '📊' },
@@ -26,6 +29,8 @@ export default function AppNavigation({ title, showBack = true, currentPage }: A
     { name: 'Video Creator', path: '/video-creator', icon: '🎬' },
     { name: 'Connect', path: '/connect', icon: '🔌' },
     { name: 'Revenue', path: '/revenue', icon: '📈' },
+    ...(isOwnerAuthenticated ? [{ name: 'Bank Setup', path: '/payment-setup', icon: '💳' }] : []),
+    { name: 'Settings', path: '/settings', icon: '⚙️' },
     { name: 'About', path: '/about', icon: 'ℹ️' },
     { name: 'Support', path: '/support', icon: '🆘' },
   ];
