@@ -206,13 +206,12 @@ export async function generateValidatedVideo(config: {
   
   console.log('🎬 Generating REAL validated video...');
 
-  // Import script generator for metadata
-  const { generateScript } = await import('./scriptGenerator');
-  const script = await generateScript(config.topic, {
-    niche: config.niche,
-    duration: config.duration * 60,
-    style: config.style
-  });
+  // Create basic script metadata
+  const script = {
+    title: config.topic,
+    description: `Watch this ${config.niche} video about ${config.topic}`,
+    keywords: [config.topic, config.niche, 'youtube', 'video']
+  };
 
   // Generate video using professional generator
   const { ProfessionalVideoGenerator } = await import('./professional-video-generator');

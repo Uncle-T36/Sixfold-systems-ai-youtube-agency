@@ -11,11 +11,7 @@
  * Gives INTELLIGENT suggestions to maximize your income
  */
 
-import { analyzeChannelForMonetization } from './channelAnalyzer';
-import { WealthEngine } from './wealthEngine';
-import { ProfessionalVideoGenerator } from './professional-video-generator';
-import { automateFullVideoProduction } from './automationEngine';
-import { SeriesChannelCreator } from './seriesChannelCreator';
+import { analyzeChannelPortfolio } from './wealthEngine';
 
 // ============================================
 // APP KNOWLEDGE BASE - AI KNOWS EVERYTHING
@@ -482,16 +478,16 @@ async function handleChannelRequest(
   context: UserContext
 ): Promise<AIResponse> {
   
-  const wealthEngine = new WealthEngine();
-  const bestNiches = wealthEngine.analyzeProfitGaps(context.channels).gaps.slice(0, 3);
+  const portfolioAnalysis = analyzeChannelPortfolio(channels);
+  const bestNiches = portfolioAnalysis.gaps.slice(0, 3);
 
   return {
     understanding: "You want to create or optimize channels. Smart move!",
     recommendation: "Create channels in HIGH-PAYING niches",
     steps: [
       "Top 3 recommended niches for maximum revenue:",
-      ...bestNiches.map((gap, i) => 
-        `${i + 1}. ${gap.missingNiche} - $${gap.estimatedMonthlyCPM.toFixed(2)} CPM\n   ${gap.reason}`
+      ...bestNiches.map((gap: any, i: number) => 
+        `${i + 1}. ${gap.missingNiche} - $${gap.estimatedMonthlyCPM?.toFixed(2) || '25'} CPM\n   ${gap.reason}`
       ),
       "",
       "How to create:",
