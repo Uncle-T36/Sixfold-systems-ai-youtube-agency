@@ -499,7 +499,7 @@ async function handleChannelRequest(
     ],
     expectedOutcome: {
       timeframe: "30 seconds per channel",
-      revenue: `Each channel can earn $${(bestNiches[0]?.estimatedMonthlyCPM || 25) * 100}/month at 100K views`,
+      revenue: `Each channel can earn $${(bestNiches[0]?.profitPotential || 2500)}/month at 100K views`,
       impact: "Diversified income streams"
     },
     proTips: [
