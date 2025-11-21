@@ -112,7 +112,7 @@ export class ProfessionalVideoGenerator {
   private getAnimationsForStyle(): Animation[] {
     const styleAnimations: Record<string, Animation[]> = {
       documentary: [
-        { type: 'kenburns', duration: 8, easing: 'ease-in-out' },
+        { type: 'kenburns', duration: 8, easing: 'ease-in' },
         { type: 'fade', duration: 1, easing: 'ease' }
       ],
       educational: [
