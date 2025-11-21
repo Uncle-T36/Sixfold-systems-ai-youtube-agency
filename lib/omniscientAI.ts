@@ -478,7 +478,7 @@ async function handleChannelRequest(
   context: UserContext
 ): Promise<AIResponse> {
   
-  const portfolioAnalysis = analyzeChannelPortfolio(channels);
+  const portfolioAnalysis = analyzeChannelPortfolio(context.channels);
   const bestNiches = portfolioAnalysis.gaps.slice(0, 3);
 
   return {
