@@ -194,7 +194,9 @@ export class ComprehensiveVideoSystem {
       duration: config.duration * 60,
       quality: config.quality,
       fps: 30,
-      style: config.style,
+      style: config.style === 'dramatic' || config.style === 'investigative' 
+        ? 'storytelling' 
+        : (config.style as 'educational' | 'tutorial' | 'storytelling' | 'documentary' | 'news'),
       voiceConfig: {
         enabled: config.voiceNarration,
         speed: 0.95,
