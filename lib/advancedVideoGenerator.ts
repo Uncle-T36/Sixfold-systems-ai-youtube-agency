@@ -306,7 +306,7 @@ export const CHARACTER_PRESETS = {
 export const SCENE_TEMPLATES = {
   action: {
     background: { type: 'animated', style: 'dynamic', elements: ['explosions', 'motion blur', 'particles'] },
-    cameraMovement: { type: 'tracking', speed: 'fast', easing: 'ease-in-out' },
+    cameraMovement: { type: 'tracking', speed: 'fast', easing: 'ease-in' },
     effects: ['speed lines', 'impact frames', 'screen shake']
   },
   dialogue: {
@@ -422,7 +422,7 @@ async function generateScenes(script: string, duration: number, style: VideoStyl
     cameraMovement: {
       type: index % 2 === 0 ? 'zoom' : 'pan',
       speed: 'medium',
-      easing: 'ease-in-out'
+      easing: 'ease-in'
     }
   }));
 }
@@ -459,7 +459,7 @@ function generateTransitions(sceneCount: number, style: VideoStyle): Transition[
   return Array(sceneCount - 1).fill(null).map((_, i) => ({
     type: transitionTypes[i % transitionTypes.length] as any,
     duration: 0.5,
-    easing: 'ease-in-out'
+    easing: 'ease-in'
   }));
 }
 

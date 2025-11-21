@@ -487,7 +487,7 @@ async function handleChannelRequest(
     steps: [
       "Top 3 recommended niches for maximum revenue:",
       ...bestNiches.map((gap: any, i: number) => 
-        `${i + 1}. ${gap.missingNiche} - $${gap.estimatedMonthlyCPM?.toFixed(2) || '25'} CPM\n   ${gap.reason}`
+        `${i + 1}. ${gap.missingNiche} - $${(gap.profitPotential / 100).toFixed(0)} CPM\n   ${gap.reasoning}`
       ),
       "",
       "How to create:",
