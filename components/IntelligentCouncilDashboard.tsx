@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { analyzeChannelPortfolio, type CouncilInsights } from '../lib/intelligentChannelCouncil';
 import { scrapeAllSources, type ScrapedStory } from '../lib/realWorldDataScraper';
+import { logCouncilRecommendation, getCouncilPerformanceMetrics, type CouncilPerformanceMetrics } from '../lib/councilAnalytics';
 
 export default function IntelligentCouncilDashboard() {
   const [analyzing, setAnalyzing] = useState(false);
@@ -9,11 +10,18 @@ export default function IntelligentCouncilDashboard() {
   const [scrapedStories, setScrapedStories] = useState<ScrapedStory[]>([]);
   const [newsApiKey, setNewsApiKey] = useState('');
   const [scraping, setScraping] = useState(false);
+  const [analyticsMetrics, setAnalyticsMetrics] = useState<CouncilPerformanceMetrics | null>(null);
 
   // Run analysis on component mount
   useEffect(() => {
     runAnalysis();
+    loadAnalytics();
   }, []);
+
+  const loadAnalytics = () => {
+    const metrics = getCouncilPerformanceMetrics();
+    setAnalyticsMetrics(metrics);
+  };
 
   const runAnalysis = async () => {
     setAnalyzing(true);
@@ -67,6 +75,57 @@ export default function IntelligentCouncilDashboard() {
     window.location.href = '/video-creator';
   };
 
+  const createSuggestedChannel = async (suggestion: any) => {
+    if (!confirm(`Create "${suggestion.name}" channel and auto-generate first video?`)) {
+      return;
+    }
+
+    try {
+      setScraping(true);
+      
+      // Log recommendation
+      const recId = logCouncilRecommendation(
+        'create-channel',
+        `Create ${suggestion.name} (${suggestion.niche})`,
+        undefined,
+        suggestion.name,
+        suggestion.estimatedMonthlyRevenue
+      );
+      
+      // Create new channel
+      const channels = JSON.parse(localStorage.getItem('youtube_channels') || '[]');
+      const newChannel = {
+        id: `${suggestion.niche}-${Date.now()}`,
+        name: suggestion.name,
+        description: suggestion.description,
+        thumbnailUrl: `https://via.placeholder.com/100x100/10b981/ffffff?text=${suggestion.name.charAt(0)}`,
+        subscriberCount: 0,
+        voiceId: 'dark-narrator-male'
+      };
+      
+      channels.push(newChannel);
+      localStorage.setItem('youtube_channels', JSON.stringify(channels));
+      
+      // Auto-start autonomous system
+      const { autoGenerateFirstVideo, autoplanVideosUntilMonetization } = await import('../lib/autonomousVideoSystem');
+      
+      alert(`🚀 Creating "${suggestion.name}" channel...\n\n⏳ Generating first video automatically...`);
+      
+      const firstVideo = await autoGenerateFirstVideo(newChannel);
+      const plan = await autoplanVideosUntilMonetization(newChannel);
+      
+      alert(`✅ SUCCESS!\n\n📺 Channel: ${suggestion.name}\n🎬 First Video: ${firstVideo.title}\n📅 ${plan.totalVideosPlanned} videos planned\n💰 Est. Revenue: $${suggestion.estimatedMonthlyRevenue}/month\n\n🔥 Channel is ready to grow!`);
+      
+      // Refresh analysis and analytics
+      await runAnalysis();
+      loadAnalytics();
+    } catch (error: any) {
+      alert(`❌ Failed to create channel: ${error.message}`);
+    } finally {
+      setScraping(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 py-8 px-4">
       <div className="max-w-7xl mx-auto">
@@ -99,6 +158,23 @@ export default function IntelligentCouncilDashboard() {
             >
               {scraping ? '🔄 Scraping...' : '🌍 Scrape Real Stories'}
             </button>
+            
+            {insights && (
+              <button
+                onClick={() => {
+                  const dataStr = JSON.stringify(insights, null, 2);
+                  const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                  const url = URL.createObjectURL(dataBlob);
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.download = `council-insights-${new Date().toISOString().split('T')[0]}.json`;
+                  link.click();
+                }}
+                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold rounded-xl shadow-lg transition-all"
+              >
+                📊 Export Analysis
+              </button>
+            )}
           </div>
         </motion.div>
 
@@ -144,9 +220,35 @@ export default function IntelligentCouncilDashboard() {
             animate={{ opacity: 1, y: 0 }}
             className="mb-8 p-6 bg-gradient-to-r from-orange-500/10 to-red-500/10 border-2 border-orange-500/30 rounded-2xl"
           >
-            <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-              🎯 Priority Action Items
-            </h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                🎯 Priority Action Items
+              </h2>
+              <button
+                onClick={async () => {
+                  if (!confirm('🤖 Auto-implement ALL recommendations?\n\nThis will:\n✅ Create suggested channels\n✅ Generate first videos\n✅ Scrape trending stories\n✅ Plan content calendars\n\nContinue?')) {
+                    return;
+                  }
+                  setScraping(true);
+                  try {
+                    // Create all suggested channels
+                    for (const suggestion of insights.newChannelSuggestions) {
+                      await createSuggestedChannel(suggestion);
+                    }
+                    alert('✅ All recommendations implemented successfully!');
+                    await runAnalysis();
+                  } catch (error: any) {
+                    alert(`❌ Error: ${error.message}`);
+                  } finally {
+                    setScraping(false);
+                  }
+                }}
+                disabled={scraping || !insights?.newChannelSuggestions?.length}
+                className="px-6 py-3 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-bold rounded-xl shadow-lg disabled:opacity-50 transition-all"
+              >
+                🚀 Auto-Implement All
+              </button>
+            </div>
             <div className="space-y-3">
               {insights.actionItems.map((action, i) => (
                 <div key={i} className="flex items-start gap-3 p-4 bg-slate-800/50 rounded-xl">
@@ -246,8 +348,11 @@ export default function IntelligentCouncilDashboard() {
                     <div className="text-xs text-slate-400">{suggestion.whyProfitable}</div>
                   </div>
                   
-                  <button className="w-full px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition">
-                    Create This Channel
+                  <button
+                    onClick={() => createSuggestedChannel(suggestion)}
+                    className="w-full px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition"
+                  >
+                    🚀 Create & Auto-Start
                   </button>
                 </div>
               ))}
@@ -262,7 +367,34 @@ export default function IntelligentCouncilDashboard() {
             animate={{ opacity: 1, y: 0 }}
             className="mb-8"
           >
-            <h2 className="text-3xl font-bold text-white mb-6">🌍 Real World Stories (Scraped Live)</h2>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-3xl font-bold text-white">🌍 Real World Stories (Scraped Live)</h2>
+              <button
+                onClick={async () => {
+                  if (!confirm(`🤖 Generate videos for ALL ${scrapedStories.length} stories?\n\nThis will create ${scrapedStories.length} videos automatically.`)) {
+                    return;
+                  }
+                  setScraping(true);
+                  try {
+                    let created = 0;
+                    for (const story of scrapedStories.slice(0, 20)) { // Limit to 20 for performance
+                      createVideoFromStory(story);
+                      created++;
+                      await new Promise(r => setTimeout(r, 100)); // Small delay
+                    }
+                    alert(`✅ Queued ${created} videos for generation!`);
+                  } catch (error: any) {
+                    alert(`❌ Error: ${error.message}`);
+                  } finally {
+                    setScraping(false);
+                  }
+                }}
+                disabled={scraping}
+                className="px-6 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold rounded-xl shadow-lg disabled:opacity-50 transition-all"
+              >
+                🎬 Generate All Videos
+              </button>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {scrapedStories.slice(0, 12).map((story, i) => (
                 <div key={i} className="p-5 bg-slate-800/50 border-2 border-slate-700/50 rounded-xl hover:border-cyan-500/50 transition-all group">
