@@ -18,6 +18,7 @@ import RevenueOptimizationEngine from '../components/RevenueOptimizationEngine';
 import CompetitorSpyEngine from '../components/CompetitorSpyEngine';
 import AICommandCenter from '../components/AICommandCenter';
 import RevenueAnalyticsIntelligence from '../components/RevenueAnalyticsIntelligence';
+import AutoPilotPanel from '../components/AutoPilotPanel';
 import { generateFirstVideoForAllChannels } from '../lib/firstVideoGenerator';
 import { autoUpdate, getVersionInfo, CURRENT_VERSION } from '../lib/versionManager';
 
@@ -178,6 +179,11 @@ export default function Dashboard() {
           {/* Live Money Counter - Most important! */}
           <div className="mb-6">
             <LiveMoneyCounter />
+          </div>
+
+          {/* Auto-Pilot Control Panel - NEW: Background video generation */}
+          <div className="mb-6">
+            <AutoPilotPanel />
           </div>
 
           {/* Revenue Analytics & Intelligence - What's making money + regional opportunities */}

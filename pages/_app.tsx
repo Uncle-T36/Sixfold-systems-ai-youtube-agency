@@ -6,6 +6,7 @@ import HelpWidget from '../components/HelpWidget'
 import { useEffect } from 'react'
 import { initializeDataProtection } from '../lib/dataProtection'
 import { initializeCloudPersistence } from '../lib/cloudPersistence'
+import { startAutoScheduler, getSchedulerStatus } from '../lib/autoScheduler'
 
 export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
@@ -18,6 +19,13 @@ export default function App({ Component, pageProps }: AppProps) {
       initializeCloudPersistence().then(() => {
         console.log('✅ Cloud persistence ready');
       });
+      
+      // 🤖 Start Auto-Scheduler if it was enabled
+      const schedulerStatus = getSchedulerStatus();
+      if (schedulerStatus.enabled) {
+        startAutoScheduler();
+        console.log('🤖 Auto-Scheduler resumed');
+      }
       
       // 📱 Register service worker for PWA
       if ('serviceWorker' in navigator) {
