@@ -52,18 +52,16 @@ export default function TopNichesBrowser({ onNicheSetup }: Props) {
       channels.push(channelData);
       localStorage.setItem('youtube_channels', JSON.stringify(channels));
       
+      // Create mock channel object for autonomous system
+      const mockChannel = {
+        id: channelId,
+        name: niche.channelName,
+        description: niche.channelDescription,
+        subscriberCount: 0,
+      };
+      
       // Auto-generate first 3 videos from niche topics
       for (let i = 0; i < 3; i++) {
-        const topic = niche.videoTopics[i];
-        
-        // Create mock channel object for autonomous system
-        const mockChannel = {
-          id: channelId,
-          name: niche.channelName,
-          description: niche.channelDescription,
-          subscriberCount: 0,
-        };
-        
         await autonomousVideoSystem.autoGenerateFirstVideo(mockChannel);
         
         // Small delay between videos
@@ -71,7 +69,7 @@ export default function TopNichesBrowser({ onNicheSetup }: Props) {
       }
       
       // Auto-plan remaining videos from niche topics
-      await autonomousVideoSystem.autoplanVideosUntilMonetization(channelId);
+      await autonomousVideoSystem.autoplanVideosUntilMonetization(mockChannel);
       
       setSetupComplete([...setupComplete, niche.id]);
       setSelectedNiche(null);
