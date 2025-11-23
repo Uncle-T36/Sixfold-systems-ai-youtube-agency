@@ -106,7 +106,7 @@ export default function TopNichesBrowser({ onNicheSetup }: Props) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-4">
         <div>
           <p className="text-gray-400">High-CPM niches. One-click setup. Start earning in 90 days.</p>
         </div>
@@ -116,22 +116,21 @@ export default function TopNichesBrowser({ onNicheSetup }: Props) {
         </div>
       </div>
         
-        {/* Category Filter */}
-        <div className="flex gap-2 flex-wrap">
-          {categories.map(cat => (
-            <button
-              key={cat.id}
-              onClick={() => setSelectedCategory(cat.id)}
-              className={`px-4 py-2 rounded-lg font-semibold transition-all ${
-                selectedCategory === cat.id
-                  ? 'bg-purple-600 text-white'
-                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-              }`}
-            >
-              {cat.icon} {cat.name}
-            </button>
-          ))}
-        </div>
+      {/* Category Filter */}
+      <div className="flex gap-2 flex-wrap">
+        {categories.map(cat => (
+          <button
+            key={cat.id}
+            onClick={() => setSelectedCategory(cat.id)}
+            className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+              selectedCategory === cat.id
+                ? 'bg-purple-600 text-white'
+                : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+            }`}
+          >
+            {cat.icon} {cat.name}
+          </button>
+        ))}
       </div>
 
       {/* Niches Grid */}
