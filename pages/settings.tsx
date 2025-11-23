@@ -16,6 +16,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import AppNavigation from '../components/AppNavigation';
+import CloudBackupSettings from '../components/CloudBackupSettings';
 
 interface Settings {
   // Security
@@ -243,6 +244,7 @@ export default function SettingsPage() {
   const tabs = [
     { id: 'security', label: '🔒 Security', icon: '🔐' },
     { id: 'banking', label: '🏦 Banking', icon: '💰' },
+    { id: 'backup', label: '☁️ Backup', icon: '💾' },
     { id: 'api-keys', label: '🔑 API Keys', icon: '🔑' },
     { id: 'payments', label: '💳 Payments', icon: '�' },
     { id: 'content', label: '🎬 Content', icon: '📹' },
@@ -649,6 +651,30 @@ export default function SettingsPage() {
                   </div>
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* CLOUD BACKUP TAB */}
+          {activeTab === 'backup' && (
+            <div className="space-y-6">
+              <h2 className="text-2xl font-bold text-white mb-6">☁️ Cloud Backup & Data Persistence</h2>
+              
+              <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-6 mb-6">
+                <div className="flex items-start gap-3">
+                  <span className="text-3xl">💡</span>
+                  <div>
+                    <h3 className="text-lg font-bold text-blue-400 mb-2">Why Cloud Backup?</h3>
+                    <p className="text-blue-200/80 mb-2">
+                      Every Vercel deployment creates a new URL, and localStorage is URL-specific. Without cloud backup, your channel data resets on each deployment.
+                    </p>
+                    <p className="text-sm text-blue-200/70">
+                      Cloud backup syncs your data to GitHub Gist (free, private) so it automatically restores across deployments. Never lose your channels again!
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <CloudBackupSettings />
             </div>
           )}
 
