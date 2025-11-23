@@ -147,16 +147,50 @@ export default function EasyChannelConnection() {
       setConnectedChannels(updated);
       setSuccess(`✅ Channel "${channelName}" connected successfully!`);
       
+      // 🤖 AUTO-START: Generate first video and plan monetization strategy
+      (async () => {
+        try {
+          setAnalyzing(true);
+          const { autoGenerateFirstVideo, autoplanVideosUntilMonetization } = await import('../lib/autonomousVideoSystem');
+          
+          // Generate first hook video
+          console.log('🤖 AUTO-GENERATING first video...');
+          const firstVideo = await autoGenerateFirstVideo({
+            id: channelId,
+            name: channelName.trim(),
+            description: channelDescription.trim(),
+            subscriberCount: 0
+          });
+          
+          console.log(`✅ First video generated: ${firstVideo.title}`);
+          
+          // Plan next videos until monetization
+          console.log('📅 Planning video strategy...');
+          const plan = await autoplanVideosUntilMonetization({
+            id: channelId,
+            name: channelName.trim(),
+            description: channelDescription.trim(),
+            subscriberCount: 0
+          });
+          
+          console.log(`✅ ${plan.totalVideosPlanned} videos planned until monetization`);
+          setSuccess(`🎉 Channel connected! First video generated & ${plan.totalVideosPlanned} videos planned!`);
+          
+        } catch (err) {
+          console.error('Auto-generation error:', err);
+          setSuccess(`✅ Channel "${channelName}" connected successfully!`);
+        } finally {
+          setAnalyzing(false);
+        }
+      })();
+      
       // Analyze channel description in background
       if (channelDescription.trim()) {
-        setAnalyzing(true);
         analyzeChannelDescription(channelName.trim(), channelId, channelDescription.trim())
           .then(() => {
-            setAnalyzing(false);
             console.log('✅ Channel analyzed - check notifications for suggestions!');
           })
           .catch(err => {
-            setAnalyzing(false);
             console.error('Analysis error:', err);
           });
       }

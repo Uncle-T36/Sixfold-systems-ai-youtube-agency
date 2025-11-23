@@ -49,7 +49,27 @@ export default function SeriesChannelCreator() {
     channels.push(channel);
     localStorage.setItem('series_channels', JSON.stringify(channels));
     
+    // Move to discover step and automatically start discovering stories so the button feels responsive
     setStep('discover');
+
+    // Trigger discovery automatically (non-blocking)
+    setTimeout(() => {
+      // If a category hasn't been selected explicitly, use the series genre origin if possible
+      if (!selectedCategory) {
+        // Try to find key by matching STORY_CATEGORIES name
+        const foundKey = Object.entries(STORY_CATEGORIES).find(([, cat]) => cat.name === seriesConfig.genre)?.[0];
+        if (foundKey) setSelectedCategory(foundKey as string);
+      }
+
+      // Start discovery (will show loading overlay)
+      try {
+        // call the discovery flow - use the existing handler
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        handleDiscoverStories();
+      } catch (e) {
+        console.error('Auto-discover failed:', e);
+      }
+    }, 150);
   };
 
   const handleDiscoverStories = async () => {

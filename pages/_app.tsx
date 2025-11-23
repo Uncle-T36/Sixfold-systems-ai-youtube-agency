@@ -5,6 +5,7 @@ import ErrorBoundary from '../components/ErrorBoundary'
 import HelpWidget from '../components/HelpWidget'
 import { useEffect } from 'react'
 import { initializeDataProtection } from '../lib/dataProtection'
+import { initializeCloudPersistence } from '../lib/cloudPersistence'
 
 export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
@@ -12,6 +13,11 @@ export default function App({ Component, pageProps }: AppProps) {
     // This ensures users NEVER lose their channels during updates
     if (typeof window !== 'undefined') {
       initializeDataProtection();
+      
+      // 🌐 Initialize cloud persistence (auto-restore from cloud)
+      initializeCloudPersistence().then(() => {
+        console.log('✅ Cloud persistence ready');
+      });
       
       // 📱 Register service worker for PWA
       if ('serviceWorker' in navigator) {
