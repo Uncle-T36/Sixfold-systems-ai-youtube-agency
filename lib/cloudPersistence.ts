@@ -162,31 +162,42 @@ export async function loadFromCloud(): Promise<boolean> {
 
 /**
  * 🔄 AUTO-SYNC - Automatically save to cloud on data changes
+ * Returns cleanup function
  */
-export function enableAutoSync(): void {
+export function enableAutoSync(): (() => void) | void {
   if (!GITHUB_TOKEN) {
     console.warn('⚠️ Cloud sync disabled. Set GitHub token to enable.');
     return;
   }
 
   // Save to cloud every 5 minutes
-  setInterval(() => {
+  const syncInterval = setInterval(() => {
     saveToCloud();
   }, 5 * 60 * 1000);
 
   // Save to cloud before page unload
-  window.addEventListener('beforeunload', () => {
+  const handleBeforeUnload = () => {
     saveToCloud();
-  });
+  };
+  window.addEventListener('beforeunload', handleBeforeUnload);
 
   // Save to cloud when visibility changes (tab switch)
-  document.addEventListener('visibilitychange', () => {
+  const handleVisibilityChange = () => {
     if (document.hidden) {
       saveToCloud();
     }
-  });
+  };
+  document.addEventListener('visibilitychange', handleVisibilityChange);
 
   console.log('✅ Auto-sync enabled - Data will be saved to cloud automatically');
+
+  // Return cleanup function
+  return () => {
+    clearInterval(syncInterval);
+    window.removeEventListener('beforeunload', handleBeforeUnload);
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
+    console.log('🧹 Cloud persistence cleanup complete');
+  };
 }
 
 /**

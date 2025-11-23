@@ -109,22 +109,31 @@ export function restoreDataIfMissing(): boolean {
 
 /**
  * Auto-backup on every critical data change
+ * Returns cleanup function
  */
-export function setupAutoBackup(): void {
+export function setupAutoBackup(): () => void {
   // Backup every 5 minutes
-  setInterval(() => {
+  const backupInterval = setInterval(() => {
     backupAllData();
   }, 5 * 60 * 1000);
 
   // Backup before page unload
-  window.addEventListener('beforeunload', () => {
+  const handleBeforeUnload = () => {
     backupAllData();
-  });
+  };
+  window.addEventListener('beforeunload', handleBeforeUnload);
 
   // Initial backup
   backupAllData();
   
   console.log('✅ Auto-backup system initialized');
+
+  // Return cleanup function
+  return () => {
+    clearInterval(backupInterval);
+    window.removeEventListener('beforeunload', handleBeforeUnload);
+    console.log('🧹 Auto-backup cleanup complete');
+  };
 }
 
 // =========================

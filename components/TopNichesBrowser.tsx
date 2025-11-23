@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TOP_NICHES, TopNiche, calculateNicheRevenue, getHighRevenueNiches, getNichesByCategory } from '../lib/topNiches';
 import { autonomousVideoSystem } from '../lib/autonomousVideoSystem';
+import { safeStorage } from '../lib/safeStorage';
+import { retryWithBackoff, requestDeduplicator, validateChannelData, checkDuplicateChannel } from '../lib/helperUtils';
 
 interface Props {
   onNicheSetup?: (channelId: string) => void;
@@ -11,6 +13,13 @@ export default function TopNichesBrowser({ onNicheSetup }: Props) {
   const [selectedNiche, setSelectedNiche] = useState<TopNiche | null>(null);
   const [isSettingUp, setIsSettingUp] = useState(false);
   const [setupComplete, setSetupComplete] = useState<string[]>([]);
+  const [setupProgress, setSetupProgress] = useState<string>('');
+  const [isClient, setIsClient] = useState(false);
+
+  // Ensure we're on client side before using localStorage
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const categories = [
     { id: 'all', name: '🎯 All Niches', icon: '🎯' },
@@ -29,12 +38,25 @@ export default function TopNichesBrowser({ onNicheSetup }: Props) {
   };
 
   const handleSetupChannel = async (niche: TopNiche) => {
+    if (!isClient) {
+      alert('⚠️ Please wait for the page to fully load.');
+      return;
+    }
+
     setIsSettingUp(true);
+    setSetupProgress('Initializing...');
+    let channelId: string | null = null;
     
     try {
-      // Create channel with niche template
-      const channelId = `channel_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      // Generate unique channel ID
+      channelId = `channel_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       
+      // Check for duplicates
+      if (checkDuplicateChannel(channelId)) {
+        throw new Error('Channel ID already exists. Please try again.');
+      }
+
+      // Create channel data
       const channelData = {
         id: channelId,
         name: niche.channelName,
@@ -46,11 +68,24 @@ export default function TopNichesBrowser({ onNicheSetup }: Props) {
         status: 'active',
         nicheTemplate: niche.id,
       };
+
+      // Validate and sanitize data
+      const validation = validateChannelData(channelData);
+      if (!validation.valid) {
+        throw new Error(`Invalid channel data: ${validation.errors.join(', ')}`);
+      }
+
+      setSetupProgress('Creating channel...');
+
+      // Save to localStorage with safety checks
+      const channelsJson = await safeStorage.getItem('youtube_channels');
+      const channels = JSON.parse(channelsJson || '[]');
+      channels.push(validation.sanitizedData);
       
-      // Save to localStorage
-      const channels = JSON.parse(localStorage.getItem('youtube_channels') || '[]');
-      channels.push(channelData);
-      localStorage.setItem('youtube_channels', JSON.stringify(channels));
+      const saved = await safeStorage.setItem('youtube_channels', JSON.stringify(channels));
+      if (!saved) {
+        throw new Error('Failed to save channel. Storage may be full.');
+      }
       
       // Create mock channel object for autonomous system
       const mockChannel = {
@@ -60,31 +95,108 @@ export default function TopNichesBrowser({ onNicheSetup }: Props) {
         subscriberCount: 0,
       };
       
-      // Auto-generate first 3 videos from niche topics
+      // Generate 3 videos with retry logic and deduplication
+      setSetupProgress('Generating videos (this may take 30-60 seconds)...');
+      const videoPromises: Promise<any>[] = [];
+      
       for (let i = 0; i < 3; i++) {
-        await autonomousVideoSystem.autoGenerateFirstVideo(mockChannel);
+        const videoKey = `video_${channelId}_${i}`;
         
-        // Small delay between videos
-        await new Promise(resolve => setTimeout(resolve, 500));
+        const videoPromise = requestDeduplicator.deduplicate(
+          videoKey,
+          () => retryWithBackoff(
+            () => autonomousVideoSystem.autoGenerateFirstVideo(mockChannel),
+            {
+              maxRetries: 3,
+              initialDelay: 1000,
+              onRetry: (error, attempt) => {
+                setSetupProgress(`Generating video ${i + 1}/3 (retry ${attempt})...`);
+              }
+            }
+          )
+        );
+        
+        videoPromises.push(videoPromise);
+        
+        // Small delay between starting video generations
+        if (i < 2) {
+          await new Promise(resolve => setTimeout(resolve, 500));
+        }
       }
       
-      // Auto-plan remaining videos from niche topics
-      await autonomousVideoSystem.autoplanVideosUntilMonetization(mockChannel);
+      // Wait for all videos with detailed error handling
+      const results = await Promise.allSettled(videoPromises);
+      const successful = results.filter(r => r.status === 'fulfilled').length;
+      const failed = results.filter(r => r.status === 'rejected');
+      
+      if (failed.length > 0) {
+        console.warn(`${failed.length}/3 videos failed:`, failed);
+      }
+      
+      if (successful === 0) {
+        throw new Error('All video generation attempts failed. Please try again later.');
+      }
+      
+      // Auto-plan remaining videos with retry
+      setSetupProgress('Planning content strategy...');
+      await retryWithBackoff(
+        () => autonomousVideoSystem.autoplanVideosUntilMonetization(mockChannel),
+        {
+          maxRetries: 3,
+          initialDelay: 1000,
+          onRetry: (error, attempt) => {
+            setSetupProgress(`Planning content (retry ${attempt})...`);
+          }
+        }
+      );
       
       setSetupComplete([...setupComplete, niche.id]);
       setSelectedNiche(null);
+      setSetupProgress('');
       
       if (onNicheSetup) {
         onNicheSetup(channelId);
       }
       
-      alert(`✅ ${niche.channelName} is ready!\n\n3 videos generated\n15-20 videos planned\nExpected revenue Day 90: $${niche.expectedRevenueDay90.toLocaleString()}\n\nStart uploading NOW!`);
+      // Success message
+      const warningMsg = failed.length > 0 
+        ? `\n⚠️ Note: ${failed.length} video(s) failed to generate. You can create more manually.` 
+        : '';
       
-    } catch (error) {
+      alert(
+        `✅ ${niche.channelName} is ready!\n\n` +
+        `${successful}/3 videos generated\n` +
+        `15-20 videos planned\n` +
+        `Expected revenue Day 90: $${niche.expectedRevenueDay90.toLocaleString()}\n\n` +
+        `Start uploading NOW!${warningMsg}`
+      );
+      
+    } catch (error: any) {
       console.error('Setup failed:', error);
-      alert('Setup failed. Check console for details.');
+      
+      // Rollback channel if it was created
+      if (channelId) {
+        try {
+          const channelsJson = await safeStorage.getItem('youtube_channels');
+          const channels = JSON.parse(channelsJson || '[]');
+          const filtered = channels.filter((ch: any) => ch.id !== channelId);
+          await safeStorage.setItem('youtube_channels', JSON.stringify(filtered));
+          console.log('✅ Channel rolled back successfully');
+        } catch (rollbackError) {
+          console.error('Failed to rollback channel:', rollbackError);
+        }
+      }
+      
+      // User-friendly error message
+      const errorMsg = error.message || 'Unknown error occurred';
+      alert(
+        `❌ Setup failed: ${errorMsg}\n\n` +
+        `The channel has been rolled back. Please try again.\n\n` +
+        `If the problem persists, check your internet connection or try a different niche.`
+      );
     } finally {
       setIsSettingUp(false);
+      setSetupProgress('');
     }
   };
 
@@ -225,7 +337,7 @@ export default function TopNichesBrowser({ onNicheSetup }: Props) {
                     : 'bg-purple-600 hover:bg-purple-700'
                 }`}
               >
-                {isSetup ? '✅ Channel Active' : isSettingUp ? '⏳ Setting Up...' : '🚀 Setup This Niche'}
+                {isSetup ? '✅ Channel Active' : isSettingUp ? (setupProgress || '⏳ Setting Up...') : '🚀 Setup This Niche'}
               </button>
             </div>
           );
