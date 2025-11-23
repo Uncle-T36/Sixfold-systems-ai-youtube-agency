@@ -1,5 +1,6 @@
 import React from 'react';
 import TopNichesBrowser from '../components/TopNichesBrowser';
+import PageLayout from '../components/PageLayout';
 import { useRouter } from 'next/router';
 
 export default function TopNichesPage() {
@@ -12,5 +13,9 @@ export default function TopNichesPage() {
     }, 2000);
   };
 
-  return <TopNichesBrowser onNicheSetup={handleNicheSetup} />;
+  return (
+    <PageLayout title="💎 Top Niches">
+      <TopNichesBrowser onNicheSetup={handleNicheSetup} />
+    </PageLayout>
+  );
 }

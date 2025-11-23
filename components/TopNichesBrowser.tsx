@@ -104,19 +104,17 @@ export default function TopNichesBrowser({ onNicheSetup }: Props) {
   const filteredNiches = getFilteredNiches();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white p-6">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="max-w-7xl mx-auto mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h1 className="text-4xl font-bold mb-2">💎 Top Money-Making Niches</h1>
-            <p className="text-gray-300">High-CPM niches. One-click setup. Start earning in 90 days.</p>
-          </div>
-          <div className="text-right">
-            <div className="text-3xl font-bold text-green-400">$25-40 CPM</div>
-            <div className="text-sm text-gray-400">Revenue per 1,000 views</div>
-          </div>
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-gray-400">High-CPM niches. One-click setup. Start earning in 90 days.</p>
         </div>
+        <div className="text-right">
+          <div className="text-3xl font-bold text-green-400">$25-40 CPM</div>
+          <div className="text-sm text-gray-400">Revenue per 1,000 views</div>
+        </div>
+      </div>
         
         {/* Category Filter */}
         <div className="flex gap-2 flex-wrap">
@@ -137,7 +135,7 @@ export default function TopNichesBrowser({ onNicheSetup }: Props) {
       </div>
 
       {/* Niches Grid */}
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredNiches.map(niche => {
           const revenue = calculateNicheRevenue(niche);
           const isSetup = setupComplete.includes(niche.id);
