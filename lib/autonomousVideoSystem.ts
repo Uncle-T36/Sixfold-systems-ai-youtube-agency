@@ -420,5 +420,5 @@ export const autonomousVideoSystem = {
   autoGenerateFirstVideo,
   autoplanVideosUntilMonetization,
   calculateMonetizationProgress,
-  getVideoGenerationPlan,
+  autoGenerateNextScheduledVideo,
 };
