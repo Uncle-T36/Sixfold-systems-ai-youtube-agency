@@ -39,6 +39,112 @@ export default function AdvancedVideoCreator() {
   const [generatedConfig, setGeneratedConfig] = useState<AnimationConfig | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const [fromSeries, setFromSeries] = useState(false);
+  
+  // 🧠 AI CHANNEL INTELLIGENCE - Auto-detect channel and optimize settings
+  const [selectedChannel, setSelectedChannel] = useState<any>(null);
+  const [aiRecommendations, setAiRecommendations] = useState<any>(null);
+  const [connectedChannels, setConnectedChannels] = useState<any[]>([]);
+
+  // 🧠 Load connected channels and apply AI intelligence
+  React.useEffect(() => {
+    const channels = JSON.parse(localStorage.getItem('youtube_channels') || '[]');
+    setConnectedChannels(channels);
+    
+    // Auto-select first channel if available
+    if (channels.length > 0 && !selectedChannel) {
+      analyzeChannelAndOptimize(channels[0]);
+    }
+  }, []);
+
+  // 🎯 AI CHANNEL ANALYZER - Automatically detects niche and optimizes settings
+  const analyzeChannelAndOptimize = (channel: any) => {
+    setSelectedChannel(channel);
+    
+    const description = (channel.description || '').toLowerCase();
+    const name = (channel.name || '').toLowerCase();
+    const combinedText = `${name} ${description}`;
+    
+    // 🔍 NICHE DETECTION AI
+    let detectedNiche = 'general';
+    let recommendedStyle: VideoStyle | null = null;
+    let optimalDuration = 480; // 8 minutes default
+    let recommendedQuality = 'youtube_premium';
+    let reasoning = '';
+    
+    // Mystery/True Crime Detection
+    if (combinedText.match(/mystery|hidden|truth|secret|unsolved|crime|investigat|detective/)) {
+      detectedNiche = 'mystery';
+      recommendedStyle = VIDEO_STYLES.find(s => s.id === 'kinetic-typography') || null;
+      optimalDuration = 600; // 10 minutes for storytelling
+      recommendedQuality = 'cinema_quality';
+      reasoning = 'Mystery/Hidden Truth channels perform best with cinematic typography and dramatic visuals. Longer format (10-15 min) keeps viewers engaged.';
+    }
+    // Educational/Tech Detection
+    else if (combinedText.match(/tech|tutorial|learn|education|how to|explain|guide/)) {
+      detectedNiche = 'educational';
+      recommendedStyle = VIDEO_STYLES.find(s => s.id === 'whiteboard') || null;
+      optimalDuration = 420; // 7 minutes for tutorials
+      reasoning = 'Educational content works best with whiteboard or isometric 3D style. 7-10 min is optimal for retention.';
+    }
+    // Entertainment/Comedy Detection
+    else if (combinedText.match(/fun|comedy|entertainment|meme|viral|trending/)) {
+      detectedNiche = 'entertainment';
+      recommendedStyle = VIDEO_STYLES.find(s => s.id === 'cut-out') || null;
+      optimalDuration = 180; // 3 minutes for viral content
+      reasoning = 'Entertainment channels need quick, engaging content. 2-5 min with bold visuals maximizes shareability.';
+    }
+    // Horror/Paranormal Detection
+    else if (combinedText.match(/horror|scary|paranormal|ghost|haunted|creepy/)) {
+      detectedNiche = 'horror';
+      recommendedStyle = VIDEO_STYLES.find(s => s.id === '2d-cartoon') || null;
+      optimalDuration = 540; // 9 minutes
+      recommendedQuality = 'cinema_quality';
+      reasoning = 'Horror content needs atmospheric 2D or anime style with dramatic pacing. 8-12 min builds suspense.';
+    }
+    // Business/Finance Detection
+    else if (combinedText.match(/business|finance|money|invest|wealth|entrepreneur|startup/)) {
+      detectedNiche = 'business';
+      recommendedStyle = VIDEO_STYLES.find(s => s.id === 'isometric-3d') || null;
+      optimalDuration = 480; // 8 minutes
+      reasoning = 'Business/finance audiences prefer clean isometric 3D or motion graphics. 8-12 min for detailed analysis.';
+    }
+    // Gaming Detection
+    else if (combinedText.match(/gaming|game|play|stream|esports|gamer/)) {
+      detectedNiche = 'gaming';
+      recommendedStyle = VIDEO_STYLES.find(s => s.id === 'pixel-art') || null;
+      optimalDuration = 360; // 6 minutes
+      reasoning = 'Gaming content excels with pixel art or 3D cartoon style. 5-8 min keeps pace with gaming culture.';
+    }
+    
+    // Apply AI recommendations
+    const recommendations = {
+      niche: detectedNiche,
+      style: recommendedStyle,
+      duration: optimalDuration,
+      quality: recommendedQuality,
+      reasoning: reasoning,
+      channelName: channel.name,
+      channelDescription: channel.description || 'No description available'
+    };
+    
+    setAiRecommendations(recommendations);
+    setFormData(prev => ({
+      ...prev,
+      niche: detectedNiche,
+      duration: optimalDuration
+    }));
+    setQualityPreset(recommendedQuality);
+    
+    if (recommendedStyle) {
+      setSelectedStyle(recommendedStyle);
+      setActiveCategory(recommendedStyle.category);
+    }
+    
+    // Show AI insights notification
+    setTimeout(() => {
+      alert(`🧠 AI CHANNEL INTELLIGENCE ACTIVATED!\n\n📺 Channel: ${channel.name}\n🎯 Detected Niche: ${detectedNiche.toUpperCase()}\n🎨 Recommended Style: ${recommendedStyle?.name || 'Choose from suggestions'}\n⏱️ Optimal Duration: ${Math.floor(optimalDuration / 60)} minutes\n🎥 Quality: ${recommendedQuality === 'cinema_quality' ? '4K Cinema' : '1440p HD'}\n\n💡 ${reasoning}`);
+    }, 800);
+  };
 
   // Load pending video creation from Series Creator OR AI Chat
   React.useEffect(() => {
@@ -339,6 +445,81 @@ Like, subscribe, and check the description for more resources!
           </div>
         </motion.div>
 
+        {/* 🧠 AI CHANNEL INTELLIGENCE PANEL */}
+        {connectedChannels.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="mb-8 p-6 bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-cyan-500/10 border-2 border-purple-500/30 rounded-2xl backdrop-blur-sm"
+          >
+            <div className="flex items-start gap-4">
+              <span className="text-4xl">🧠</span>
+              <div className="flex-1">
+                <h3 className="text-2xl font-bold text-white mb-2">AI Channel Intelligence</h3>
+                <p className="text-slate-300 mb-4">AI automatically detects your channel's niche and optimizes video settings</p>
+                
+                {/* Channel Selector */}
+                <div className="mb-4">
+                  <label className="text-sm font-semibold text-slate-400 mb-2 block">Select Channel:</label>
+                  <select
+                    value={selectedChannel?.id || ''}
+                    onChange={(e) => {
+                      const channel = connectedChannels.find(c => c.id === e.target.value);
+                      if (channel) analyzeChannelAndOptimize(channel);
+                    }}
+                    className="w-full px-4 py-3 bg-slate-800/50 border-2 border-slate-700/50 rounded-xl text-white focus:border-purple-500/50 transition"
+                  >
+                    <option value="">Choose a connected channel...</option>
+                    {connectedChannels.map(channel => (
+                      <option key={channel.id} value={channel.id}>
+                        📺 {channel.name} ({channel.subscriberCount?.toLocaleString() || 0} subscribers)
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                
+                {/* AI Recommendations */}
+                {aiRecommendations && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4"
+                  >
+                    <div className="p-4 bg-purple-500/20 border border-purple-500/30 rounded-xl">
+                      <div className="text-purple-400 text-xs font-semibold mb-1">DETECTED NICHE</div>
+                      <div className="text-white text-lg font-bold capitalize">{aiRecommendations.niche}</div>
+                    </div>
+                    <div className="p-4 bg-blue-500/20 border border-blue-500/30 rounded-xl">
+                      <div className="text-blue-400 text-xs font-semibold mb-1">RECOMMENDED STYLE</div>
+                      <div className="text-white text-sm font-bold">{aiRecommendations.style?.name || 'Choose below'}</div>
+                    </div>
+                    <div className="p-4 bg-cyan-500/20 border border-cyan-500/30 rounded-xl">
+                      <div className="text-cyan-400 text-xs font-semibold mb-1">OPTIMAL DURATION</div>
+                      <div className="text-white text-lg font-bold">{Math.floor(aiRecommendations.duration / 60)} min</div>
+                    </div>
+                    <div className="p-4 bg-green-500/20 border border-green-500/30 rounded-xl">
+                      <div className="text-green-400 text-xs font-semibold mb-1">QUALITY</div>
+                      <div className="text-white text-sm font-bold">{aiRecommendations.quality === 'cinema_quality' ? '4K Cinema' : '1440p HD'}</div>
+                    </div>
+                  </motion.div>
+                )}
+                
+                {aiRecommendations && (
+                  <div className="p-4 bg-slate-800/50 border border-slate-700/30 rounded-xl">
+                    <div className="flex items-start gap-2">
+                      <span className="text-xl">💡</span>
+                      <div>
+                        <div className="text-yellow-400 font-semibold text-sm mb-1">AI Insight:</div>
+                        <p className="text-slate-300 text-sm leading-relaxed">{aiRecommendations.reasoning}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Panel - Video Details */}
           <motion.div
@@ -393,20 +574,23 @@ Like, subscribe, and check the description for more resources!
 
                 <div>
                   <label className="block text-slate-300 font-medium mb-2">
-                    Duration: {formData.duration} seconds
+                    Duration: {Math.floor(formData.duration / 60)} min {formData.duration % 60} sec
+                    {aiRecommendations && formData.duration === aiRecommendations.duration && (
+                      <span className="ml-2 text-xs text-green-400">🎯 AI Recommended</span>
+                    )}
                   </label>
                   <input
                     type="range"
                     min="30"
-                    max="300"
-                    step="15"
+                    max="900"
+                    step="30"
                     value={formData.duration}
                     onChange={(e) => setFormData({ ...formData, duration: parseInt(e.target.value) })}
                     className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-green-500"
                   />
                   <div className="flex justify-between text-xs text-slate-400 mt-1">
                     <span>30s</span>
-                    <span>5min</span>
+                    <span>15min</span>
                   </div>
                 </div>
 
