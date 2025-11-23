@@ -55,22 +55,23 @@ export default function TopNichesBrowser({ onNicheSetup }: Props) {
       // Auto-generate first 3 videos from niche topics
       for (let i = 0; i < 3; i++) {
         const topic = niche.videoTopics[i];
-        await autonomousVideoSystem.autoGenerateFirstVideo(channelId, {
-          topic,
-          style: niche.contentStyle,
-          targetAudience: niche.targetAudience,
-        });
+        
+        // Create mock channel object for autonomous system
+        const mockChannel = {
+          id: channelId,
+          name: niche.channelName,
+          description: niche.channelDescription,
+          subscriberCount: 0,
+        };
+        
+        await autonomousVideoSystem.autoGenerateFirstVideo(mockChannel);
         
         // Small delay between videos
         await new Promise(resolve => setTimeout(resolve, 500));
       }
       
       // Auto-plan remaining videos from niche topics
-      await autonomousVideoSystem.autoplanVideosUntilMonetization(channelId, {
-        topics: niche.videoTopics.slice(3), // Use remaining topics
-        videosPerWeek: 5,
-        style: niche.contentStyle,
-      });
+      await autonomousVideoSystem.autoplanVideosUntilMonetization(channelId);
       
       setSetupComplete([...setupComplete, niche.id]);
       setSelectedNiche(null);
