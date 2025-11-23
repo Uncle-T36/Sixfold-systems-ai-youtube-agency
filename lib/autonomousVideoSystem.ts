@@ -414,3 +414,11 @@ function selectBestVideoStyle(niche: string): string {
   };
   return styleMap[niche] || 'kinetic-typography';
 }
+
+// Export as singleton for easy imports
+export const autonomousVideoSystem = {
+  autoGenerateFirstVideo,
+  autoplanVideosUntilMonetization,
+  calculateMonetizationProgress,
+  getVideoGenerationPlan,
+};
