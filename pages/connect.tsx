@@ -600,18 +600,54 @@ export default function EasyChannelConnection() {
             className="mt-12"
           >
             <div className="bg-gradient-to-r from-green-500/10 to-teal-500/10 border border-green-500/30 rounded-2xl p-6 mb-6">
-              <div className="flex items-center space-x-3">
-                <div className="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-green-500 to-teal-500 rounded-2xl">
-                  <span className="text-2xl">✅</span>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-green-500 to-teal-500 rounded-2xl">
+                    <span className="text-2xl">✅</span>
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-white">
+                      Your Connected Channels
+                    </h3>
+                    <p className="text-slate-300 text-sm">
+                      {connectedChannels.length} {connectedChannels.length === 1 ? 'channel' : 'channels'} ready to generate videos
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-white">
-                    Your Connected Channels
-                  </h3>
-                  <p className="text-slate-300 text-sm">
-                    {connectedChannels.length} {connectedChannels.length === 1 ? 'channel' : 'channels'} ready to generate videos
-                  </p>
-                </div>
+                
+                {/* Refresh Button */}
+                <button
+                  onClick={async () => {
+                    const existing = getSafeChannels();
+                    const updatedChannels = await Promise.all(
+                      existing.map(async (channel: ConnectedChannel) => {
+                        try {
+                          const response = await fetch(`/api/youtube/channel-info?channelId=${channel.id}`);
+                          if (response.ok) {
+                            const data = await response.json();
+                            return {
+                              ...channel,
+                              subscriberCount: data.subscriberCount || channel.subscriberCount || 0,
+                              thumbnailUrl: data.thumbnailUrl || channel.thumbnailUrl,
+                            };
+                          }
+                        } catch (err) {
+                          console.log(`Could not fetch data for ${channel.name}`);
+                        }
+                        return channel;
+                      })
+                    );
+                    setSafeChannels(updatedChannels);
+                    setConnectedChannels(updatedChannels);
+                    alert('✅ Channel data refreshed!');
+                  }}
+                  className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl transition-all flex items-center gap-2"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  Refresh Data
+                </button>
               </div>
             </div>
 
@@ -626,11 +662,27 @@ export default function EasyChannelConnection() {
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4 flex-1">
-                      <img
-                        src={channel.thumbnailUrl}
-                        alt={channel.name}
-                        className="w-16 h-16 rounded-full border-2 border-luxury-500/30"
-                      />
+                      {/* Professional Channel Avatar */}
+                      <div className="relative">
+                        {channel.thumbnailUrl ? (
+                          <img
+                            src={channel.thumbnailUrl}
+                            alt={channel.name}
+                            className="w-16 h-16 rounded-full border-2 border-teal-500/50 object-cover"
+                            onError={(e) => {
+                              // Fallback to gradient avatar if image fails
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                              target.nextElementSibling?.classList.remove('hidden');
+                            }}
+                          />
+                        ) : null}
+                        <div 
+                          className={`w-16 h-16 rounded-full border-2 border-teal-500/50 bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white font-bold text-xl ${channel.thumbnailUrl ? 'hidden' : ''}`}
+                        >
+                          {channel.name.charAt(0).toUpperCase()}
+                        </div>
+                      </div>
                       <div className="flex-1">
                         <h4 className="text-white font-bold text-lg">{channel.name}</h4>
                         <p className="text-slate-400 text-sm">
