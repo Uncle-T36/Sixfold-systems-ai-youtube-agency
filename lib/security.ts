@@ -18,23 +18,27 @@ class SecurityManager {
 
   /**
    * Initialize or retrieve encryption key
+   * AUTO-GENERATES if not provided - NO VERCEL SETUP REQUIRED
    */
   private initializeEncryptionKey(): void {
     if (typeof window === 'undefined') return;
 
     try {
-      // Try to get existing key
+      // Try to get existing key from session
       let key = sessionStorage.getItem(this.ENCRYPTION_KEY_NAME);
       
       if (!key) {
-        // Generate new key per session
+        // AUTO-GENERATE secure key (no Vercel env vars needed)
         key = this.generateSecureKey();
         sessionStorage.setItem(this.ENCRYPTION_KEY_NAME, key);
+        console.log('✅ Auto-generated encryption key for this session');
       }
       
       this.encryptionKey = key;
     } catch (error) {
-      console.warn('Failed to initialize encryption key:', error);
+      console.warn('⚠️ Failed to initialize encryption key, using fallback:', error);
+      // Fallback: use hardcoded key (less secure but works)
+      this.encryptionKey = 'fallback_key_' + Date.now();
     }
   }
 
@@ -419,18 +423,25 @@ class Firewall {
 class EnvironmentManager {
   /**
    * Get environment variable safely
+   * Returns default value if not set (app still works!)
    */
   getEnvVar(key: string, defaultValue: string = ''): string {
     // Server-side (Next.js)
     if (typeof process !== 'undefined' && process.env) {
-      return process.env[key] || defaultValue;
+      const value = process.env[key];
+      if (value) return value;
     }
 
     // Client-side - check window.__ENV__ (set by server)
     if (typeof window !== 'undefined' && (window as any).__ENV__) {
-      return (window as any).__ENV__[key] || defaultValue;
+      const value = (window as any).__ENV__[key];
+      if (value) return value;
     }
 
+    // Return default - app continues to work
+    if (defaultValue) {
+      console.log(`ℹ️ Using default value for ${key} (optional feature may be limited)`);
+    }
     return defaultValue;
   }
 
