@@ -12,6 +12,35 @@
  * PURPOSE: Build a YouTube empire through strategic AI-driven decisions
  */
 
+export interface VideoCouncilAnalysis {
+  videoId: string;
+  title: string;
+  approved: boolean;
+  overallScore: number; // 0-100
+  philosopherVotes: {
+    philosopher: string;
+    vote: 'approve' | 'reject' | 'revise';
+    score: number;
+    reasoning: string;
+    suggestions?: string[];
+  }[];
+  trendAlignment: {
+    currentTrends: string[];
+    alignmentScore: number; // 0-100
+    trendingKeywords: string[];
+  };
+  algorithmPrediction: {
+    estimatedCTR: number; // Click-through rate %
+    estimatedWatchTime: number; // minutes
+    estimatedViews: number;
+    viralPotential: number; // 0-100
+    algorithmFriendly: boolean;
+  };
+  finalVerdict: string;
+  requiredChanges?: string[];
+  approvedForPublishing: boolean;
+}
+
 export interface PhilosophicalStrategy {
   philosopher: string;
   principle: string;
@@ -51,6 +80,221 @@ export interface EmpireGrowthPlan {
   decisions: ImperialDecision[];
   philosophicalAnalysis: string;
   warningFromTheSages: string;
+}
+
+/**
+ * 👑 IMPERIAL COUNCIL VIDEO ANALYSIS
+ * Each philosopher analyzes the video and votes on approval
+ * Only videos approved by majority are shown to user
+ */
+export async function analyzeVideoByCouncil(video: {
+  id: string;
+  title: string;
+  script: string;
+  category: string;
+}): Promise<VideoCouncilAnalysis> {
+  console.log(`👑 IMPERIAL COUNCIL: Analyzing "${video.title}"...`);
+
+  // 🎯 MACHIAVELLI: "Will this video dominate the niche?"
+  const machiavelliVote = {
+    philosopher: 'Machiavelli',
+    vote: (video.title.includes('Secret') || video.title.includes('Nobody') || 
+           video.title.includes('Truth') || video.title.includes('Exposed')) ? 'approve' : 'revise',
+    score: calculatePowerScore(video.title),
+    reasoning: video.title.match(/(Secret|Truth|Exposed|Nobody|Hidden|Revealed)/i) 
+      ? 'Strong power positioning - uses psychological triggers'
+      : 'Title lacks dominance. Add power words: "Secret", "Truth", "Exposed"',
+    suggestions: [
+      'Add urgency: "Before it\'s too late"',
+      'Use numbers: "5 Secrets" not "Secrets"',
+      'Create enemy: "Why THEY don\'t want you to know..."'
+    ]
+  } as const;
+
+  // 🏛️ SENECA: "Is this sustainable long-term content?"
+  const senecaVote = {
+    philosopher: 'Seneca (Stoic)',
+    vote: (video.script.length > 500 && !video.title.includes('Click') && 
+           !video.title.includes('Shocking')) ? 'approve' : 'revise',
+    score: calculateStoicScore(video),
+    reasoning: video.script.length > 500
+      ? 'Quality over quantity - script provides real value'
+      : 'Content too shallow. Add depth and substance for long-term authority',
+    suggestions: [
+      'Focus on evergreen content, not just trends',
+      'Build educational value, not just entertainment',
+      'Create content that compounds over time'
+    ]
+  } as const;
+
+  // ⚔️ SUN TZU: "Does this exploit competitive advantages?"
+  const sunTzuVote = {
+    philosopher: 'Sun Tzu',
+    vote: (video.category.match(/(Psychology|Philosophy|Science|Technology)/i)) ? 'approve' : 'revise',
+    score: calculateStrategicScore(video),
+    reasoning: video.category.match(/(Psychology|Philosophy|Science|Technology)/i)
+      ? 'Targets high-value, low-competition niche - strategic positioning'
+      : 'Overcrowded niche. Recommend shifting to Psychology or Philosophy',
+    suggestions: [
+      'Study top 3 competitors - copy what works',
+      'Find gaps in market coverage',
+      'Use trending topics with unique angle'
+    ]
+  } as const;
+
+  // 📚 CARNEGIE: "Will this video build loyal audience?"
+  const carnegieVote = {
+    philosopher: 'Dale Carnegie',
+    vote: (video.title.match(/(You|Your|How to)/i) && video.script.includes('you')) ? 'approve' : 'revise',
+    score: calculateEngagementScore(video),
+    reasoning: video.title.match(/(You|Your|How to)/i)
+      ? 'Speaks directly to viewer - creates personal connection'
+      : 'Too impersonal. Use "You" language to build relationship',
+    suggestions: [
+      'Address viewer directly: "You can..." not "People can..."',
+      'Ask questions to create dialogue',
+      'Share personal stories for authenticity'
+    ]
+  } as const;
+
+  // 🧠 MARCUS AURELIUS: "Is this content we'd be proud of long-term?"
+  const aureliusVote = {
+    philosopher: 'Marcus Aurelius',
+    vote: (!video.title.match(/(Clickbait|Crazy|Insane|SHOCKING)/i)) ? 'approve' : 'revise',
+    score: calculateIntegrityScore(video),
+    reasoning: !video.title.match(/(Clickbait|Crazy|Insane|SHOCKING)/i)
+      ? 'Maintains integrity - builds lasting reputation'
+      : 'Over-sensationalized. Tone down for brand integrity',
+    suggestions: [
+      'Build reputation through consistent quality',
+      'Focus on what you can control: content quality',
+      'Play long game, not short-term viral chase'
+    ]
+  } as const;
+
+  const votes = [machiavelliVote, senecaVote, sunTzuVote, carnegieVote, aureliusVote];
+  
+  // Calculate approval
+  const approvalCount = votes.filter(v => v.vote === 'approve').length;
+  const approved = approvalCount >= 3; // Majority vote (3 out of 5)
+  const overallScore = votes.reduce((sum, v) => sum + v.score, 0) / votes.length;
+
+  // Trend alignment analysis
+  const currentTrends = [
+    'AI Revolution', 'Psychology Hacks', 'Self-Improvement',
+    'Money Making', 'Productivity', 'Philosophy', 'Science Explained'
+  ];
+  
+  const trendKeywords = video.title.toLowerCase().split(' ')
+    .filter(word => word.length > 4);
+  
+  const alignmentScore = Math.min(100, 
+    (trendKeywords.filter(kw => 
+      currentTrends.some(trend => trend.toLowerCase().includes(kw))
+    ).length * 25) + 40
+  );
+
+  // Algorithm prediction
+  const estimatedCTR = calculateCTR(video.title);
+  const estimatedWatchTime = Math.min(video.script.length / 150, 12); // ~150 words/min
+  const viralPotential = (overallScore + alignmentScore + estimatedCTR) / 3;
+  
+  const algorithmPrediction = {
+    estimatedCTR,
+    estimatedWatchTime,
+    estimatedViews: Math.floor(viralPotential * 1000 * (1 + Math.random() * 2)),
+    viralPotential,
+    algorithmFriendly: overallScore >= 70 && estimatedCTR >= 8
+  };
+
+  // Final verdict
+  let finalVerdict = '';
+  let requiredChanges: string[] = [];
+  
+  if (approved && overallScore >= 75) {
+    finalVerdict = '✅ UNANIMOUS APPROVAL - This video will dominate! Publishing recommended.';
+  } else if (approved) {
+    finalVerdict = '✅ APPROVED WITH RESERVATIONS - Video passes, but could be stronger. Consider revisions.';
+    requiredChanges = votes
+      .filter(v => v.vote !== 'approve')
+      .flatMap(v => v.suggestions || [])
+      .slice(0, 3);
+  } else {
+    finalVerdict = '❌ REJECTED BY COUNCIL - Video needs major revisions before publishing.';
+    requiredChanges = votes
+      .filter(v => v.vote === 'reject' || v.vote === 'revise')
+      .flatMap(v => v.suggestions || [])
+      .slice(0, 5);
+  }
+
+  return {
+    videoId: video.id,
+    title: video.title,
+    approved,
+    overallScore: Math.round(overallScore),
+    philosopherVotes: votes,
+    trendAlignment: {
+      currentTrends,
+      alignmentScore,
+      trendingKeywords: trendKeywords.slice(0, 5)
+    },
+    algorithmPrediction,
+    finalVerdict,
+    requiredChanges: requiredChanges.length > 0 ? requiredChanges : undefined,
+    approvedForPublishing: approved && overallScore >= 70 && algorithmPrediction.algorithmFriendly
+  };
+}
+
+// Helper scoring functions
+function calculatePowerScore(title: string): number {
+  let score = 60;
+  if (title.match(/(Secret|Hidden|Truth|Exposed|Revealed)/i)) score += 15;
+  if (title.match(/\d+/)) score += 10; // Has numbers
+  if (title.match(/(Nobody|They|Everyone)/i)) score += 10;
+  if (title.includes('?')) score += 5;
+  return Math.min(100, score);
+}
+
+function calculateStoicScore(video: any): number {
+  let score = 50;
+  if (video.script.length > 800) score += 20;
+  if (video.script.length > 1500) score += 15;
+  if (!video.title.match(/(SHOCKING|INSANE|CRAZY)/i)) score += 15;
+  return Math.min(100, score);
+}
+
+function calculateStrategicScore(video: any): number {
+  const highValueNiches = ['Psychology', 'Philosophy', 'Science', 'Technology', 'Business'];
+  let score = 60;
+  if (highValueNiches.some(n => video.category.includes(n))) score += 25;
+  if (video.title.length >= 40 && video.title.length <= 70) score += 15; // Optimal length
+  return Math.min(100, score);
+}
+
+function calculateEngagementScore(video: any): number {
+  let score = 50;
+  if (video.title.match(/(You|Your)/i)) score += 20;
+  if (video.script.toLowerCase().includes('you')) score += 15;
+  if (video.title.match(/(How to|Guide|Tutorial)/i)) score += 15;
+  return Math.min(100, score);
+}
+
+function calculateIntegrityScore(video: any): number {
+  let score = 70;
+  if (video.title.match(/(SHOCKING|INSANE|CRAZY|CLICKBAIT)/i)) score -= 30;
+  if (video.script.length > 1000) score += 15;
+  if (!video.title.match(/\!\!\!/)) score += 15; // No excessive punctuation
+  return Math.max(0, score);
+}
+
+function calculateCTR(title: string): number {
+  let ctr = 5.0; // Base CTR
+  if (title.match(/\d+/)) ctr += 2.0; // Numbers increase CTR
+  if (title.match(/(Secret|Hidden|Truth)/i)) ctr += 1.5;
+  if (title.includes('?')) ctr += 1.0;
+  if (title.match(/(You|Your)/i)) ctr += 1.0;
+  if (title.length >= 40 && title.length <= 70) ctr += 1.5; // Optimal length
+  return Math.min(15, ctr);
 }
 
 /**

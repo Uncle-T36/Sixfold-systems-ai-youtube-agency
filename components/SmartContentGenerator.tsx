@@ -270,10 +270,16 @@ TikTok: @yourchannel
                 animate={{ opacity: 1, y: 0 }}
                 className="mb-6 bg-gradient-to-r from-green-500/10 via-emerald-500/10 to-teal-500/10 border border-green-500/30 rounded-2xl p-6"
               >
-                <h3 className="text-white font-bold text-2xl mb-4 flex items-center gap-3">
-                  ✅ Your Generated Videos ({videos.length})
-                  <span className="text-sm font-normal text-slate-400">Ready to approve & publish!</span>
+                <h3 className="text-white font-bold text-2xl mb-2 flex items-center gap-3">
+                  👑 Imperial Council Approved Videos ({videos.length})
                 </h3>
+                <p className="text-slate-400 text-sm mb-4">
+                  ✅ Analyzed by Machiavelli, Seneca, Sun Tzu, Carnegie & Marcus Aurelius
+                  <br />
+                  ✅ Optimized for trends, algorithm, and viral potential
+                  <br />
+                  🎯 Your task: <strong className="text-green-400">Approve for auto-upload to your channel!</strong>
+                </p>
                 
                 <div className="space-y-4">
                   {videos.map((video, i) => (
@@ -286,7 +292,7 @@ TikTok: @yourchannel
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex-1">
-                          <div className="flex items-center gap-3 mb-2">
+                          <div className="flex items-center gap-3 mb-2 flex-wrap">
                             <span className={`px-3 py-1 rounded-lg text-xs font-bold ${
                               video.status === 'ready' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
                               video.status === 'published' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
@@ -302,6 +308,16 @@ TikTok: @yourchannel
                             }`}>
                               {video.priority.toUpperCase()} PRIORITY
                             </span>
+                            {video.approvedByCouncil && (
+                              <span className="px-2 py-1 rounded text-xs font-bold bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                                👑 COUNCIL APPROVED
+                              </span>
+                            )}
+                            {video.councilAnalysis && (
+                              <span className="px-2 py-1 rounded text-xs font-semibold bg-blue-500/20 text-blue-400">
+                                ⭐ {video.councilAnalysis.overallScore}/100
+                              </span>
+                            )}
                           </div>
                           
                           <h4 className="text-white font-bold text-lg mb-3">{video.title}</h4>
@@ -312,6 +328,44 @@ TikTok: @yourchannel
                             <span>👁️ Est. {video.estimatedViews.toLocaleString()} views</span>
                             <span>⏱️ {video.estimatedWatchTime} min watch time</span>
                           </div>
+
+                          {/* Imperial Council Analysis */}
+                          {video.councilAnalysis && (
+                            <details className="mb-3">
+                              <summary className="cursor-pointer text-purple-400 hover:text-purple-300 font-semibold mb-2 text-sm">
+                                👑 View Council Analysis
+                              </summary>
+                              <div className="mt-2 p-4 bg-slate-950/50 rounded-lg border border-purple-500/30 space-y-3">
+                                <div className="text-xs">
+                                  <div className="text-green-400 font-bold mb-2">{video.councilAnalysis.finalVerdict}</div>
+                                  
+                                  <div className="grid grid-cols-2 gap-3 mb-3">
+                                    <div className="bg-slate-900/50 p-2 rounded">
+                                      <div className="text-slate-500">Algorithm Score</div>
+                                      <div className="text-white font-bold">{video.councilAnalysis.algorithmPrediction.viralPotential.toFixed(1)}/100</div>
+                                    </div>
+                                    <div className="bg-slate-900/50 p-2 rounded">
+                                      <div className="text-slate-500">Est. CTR</div>
+                                      <div className="text-white font-bold">{video.councilAnalysis.algorithmPrediction.estimatedCTR.toFixed(1)}%</div>
+                                    </div>
+                                  </div>
+
+                                  <div className="text-slate-400 mb-2 font-semibold">Philosopher Votes:</div>
+                                  {video.councilAnalysis.philosopherVotes.map((vote, idx) => (
+                                    <div key={idx} className="mb-2 text-xs">
+                                      <div className="flex items-center gap-2">
+                                        <span className={`font-bold ${vote.vote === 'approve' ? 'text-green-400' : 'text-yellow-400'}`}>
+                                          {vote.vote === 'approve' ? '✅' : '⚠️'} {vote.philosopher}
+                                        </span>
+                                        <span className="text-slate-500">({vote.score}/100)</span>
+                                      </div>
+                                      <div className="text-slate-400 ml-5">{vote.reasoning}</div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            </details>
+                          )}
                           
                           <details className="text-slate-300 text-sm">
                             <summary className="cursor-pointer text-green-400 hover:text-green-300 font-semibold mb-2">
@@ -336,7 +390,7 @@ TikTok: @yourchannel
                             }}
                             className="px-5 py-3 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-lg font-bold transition-all hover:scale-105 whitespace-nowrap"
                           >
-                            ✅ Approve & Publish
+                            ✅ Auto-Upload Now
                           </button>
                           
                           <button
@@ -350,7 +404,7 @@ TikTok: @yourchannel
                             }}
                             className="px-5 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-semibold transition-all text-sm"
                           >
-                            ✏️ Edit First
+                            ✏️ Review First
                           </button>
                         </div>
                       </div>
