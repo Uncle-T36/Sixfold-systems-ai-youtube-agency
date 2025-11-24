@@ -3,6 +3,7 @@ import { TOP_NICHES, TopNiche, calculateNicheRevenue, getHighRevenueNiches, getN
 import { autonomousVideoSystem } from '../lib/autonomousVideoSystem';
 import { safeStorage } from '../lib/safeStorage';
 import { retryWithBackoff, requestDeduplicator, validateChannelData, checkDuplicateChannel } from '../lib/helperUtils';
+import { security, firewall } from '../lib/security';
 
 interface Props {
   onNicheSetup?: (channelId: string) => void;
@@ -43,6 +44,19 @@ export default function TopNichesBrowser({ onNicheSetup }: Props) {
       return;
     }
 
+    // 🛡️ Security: Rate limiting
+    const clientId = `client_${Date.now()}`;
+    if (!security.checkRateLimit('channel_setup', 5, 300000)) { // 5 setups per 5 minutes
+      alert('⚠️ Too many setup attempts. Please wait a few minutes and try again.');
+      return;
+    }
+
+    // 🛡️ Security: Firewall check
+    if (firewall.shouldBlockRequest(clientId, 'channel_setup')) {
+      alert('🚫 Access denied. Please contact support if this is an error.');
+      return;
+    }
+
     setIsSettingUp(true);
     setSetupProgress('Initializing...');
     let channelId: string | null = null;
@@ -56,13 +70,25 @@ export default function TopNichesBrowser({ onNicheSetup }: Props) {
         throw new Error('Channel ID already exists. Please try again.');
       }
 
+      // 🛡️ Security: Sanitize niche data
+      const sanitizedNicheName = security.sanitizeInput(niche.name, 100);
+      const sanitizedChannelName = security.sanitizeInput(niche.channelName, 100);
+      const sanitizedDescription = security.sanitizeInput(niche.channelDescription, 5000);
+
+      // Check for suspicious patterns
+      if (security.containsSuspiciousPatterns(niche.channelName) || 
+          security.containsSuspiciousPatterns(niche.channelDescription)) {
+        firewall.reportSuspiciousActivity(clientId, 5);
+        throw new Error('Invalid characters detected in channel data.');
+      }
+
       // Create channel data
       const channelData = {
         id: channelId,
-        name: niche.channelName,
-        description: niche.channelDescription,
+        name: sanitizedChannelName,
+        description: sanitizedDescription,
         keywords: niche.keywords.join(', '),
-        niche: niche.name,
+        niche: sanitizedNicheName,
         cpm: niche.cpm,
         connectedAt: new Date().toISOString(),
         status: 'active',
