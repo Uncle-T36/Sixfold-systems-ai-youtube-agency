@@ -10,29 +10,48 @@ interface ConnectedChannel {
   id: string;
   name: string;
   description: string;
-  subscribers: number;
-  totalViews: number;
-  videoCount: number;
-  thumbnail: string;
+  subscriberCount: number;
+  thumbnailUrl?: string;
   connectedAt: string;
+}
+
+interface GeneratedVideo {
+  id: string;
+  title: string;
+  script: string;
+  category: string;
+  scheduledDate: string;
+  estimatedViews: number;
+  estimatedWatchTime: number;
+  priority: 'critical' | 'high' | 'medium' | 'low';
+  status: 'planned' | 'generating' | 'ready' | 'published';
 }
 
 export default function SmartContentGenerator() {
   const [channels, setChannels] = useState<ConnectedChannel[]>([]);
   const [selectedChannel, setSelectedChannel] = useState<string | null>(null);
+  const [videos, setVideos] = useState<GeneratedVideo[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [analysis, setAnalysis] = useState<any>(null);
 
   useEffect(() => {
-    // Load connected channels
-    const loadedChannels = JSON.parse(localStorage.getItem('channels') || '[]');
+    // Load connected channels from correct localStorage key
+    const loadedChannels = JSON.parse(localStorage.getItem('youtube_channels') || '[]');
     setChannels(loadedChannels);
     
     if (loadedChannels.length > 0 && !selectedChannel) {
       setSelectedChannel(loadedChannels[0].id);
     }
   }, []);
+
+  // Load videos when channel is selected
+  useEffect(() => {
+    if (selectedChannel) {
+      const channelVideos = JSON.parse(localStorage.getItem(`videos_${selectedChannel}`) || '[]');
+      setVideos(channelVideos);
+    }
+  }, [selectedChannel]);
 
   const handleAnalyzeChannel = async () => {
     if (!selectedChannel) return;
@@ -243,6 +262,104 @@ TikTok: @yourchannel
 
           {/* Right: Analysis & Video Ideas */}
           <div className="lg:col-span-2">
+            
+            {/* Show Generated Videos First */}
+            {videos.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-6 bg-gradient-to-r from-green-500/10 via-emerald-500/10 to-teal-500/10 border border-green-500/30 rounded-2xl p-6"
+              >
+                <h3 className="text-white font-bold text-2xl mb-4 flex items-center gap-3">
+                  ✅ Your Generated Videos ({videos.length})
+                  <span className="text-sm font-normal text-slate-400">Ready to approve & publish!</span>
+                </h3>
+                
+                <div className="space-y-4">
+                  {videos.map((video, i) => (
+                    <motion.div
+                      key={video.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.1 }}
+                      className="bg-slate-900/80 border-2 border-green-500/30 rounded-xl p-5 hover:border-green-500 transition-all"
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-2">
+                            <span className={`px-3 py-1 rounded-lg text-xs font-bold ${
+                              video.status === 'ready' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
+                              video.status === 'published' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
+                              'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
+                            }`}>
+                              {video.status.toUpperCase()}
+                            </span>
+                            <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                              video.priority === 'critical' ? 'bg-red-500/20 text-red-400' :
+                              video.priority === 'high' ? 'bg-orange-500/20 text-orange-400' :
+                              video.priority === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
+                              'bg-slate-500/20 text-slate-400'
+                            }`}>
+                              {video.priority.toUpperCase()} PRIORITY
+                            </span>
+                          </div>
+                          
+                          <h4 className="text-white font-bold text-lg mb-3">{video.title}</h4>
+                          
+                          <div className="flex flex-wrap items-center gap-4 text-sm text-slate-400 mb-3">
+                            <span>🎯 {video.category}</span>
+                            <span>📅 {new Date(video.scheduledDate).toLocaleDateString()}</span>
+                            <span>👁️ Est. {video.estimatedViews.toLocaleString()} views</span>
+                            <span>⏱️ {video.estimatedWatchTime} min watch time</span>
+                          </div>
+                          
+                          <details className="text-slate-300 text-sm">
+                            <summary className="cursor-pointer text-green-400 hover:text-green-300 font-semibold mb-2">
+                              📜 View Full Script
+                            </summary>
+                            <div className="mt-3 p-4 bg-slate-950/50 rounded-lg border border-slate-700 max-h-60 overflow-y-auto">
+                              <pre className="whitespace-pre-wrap font-mono text-xs">{video.script}</pre>
+                            </div>
+                          </details>
+                        </div>
+                        
+                        <div className="flex flex-col gap-2">
+                          <button
+                            onClick={() => {
+                              // Save for editing/publishing
+                              localStorage.setItem('pending_video_creation', JSON.stringify({
+                                ...video,
+                                channelId: selectedChannel,
+                                channelName: channels.find(ch => ch.id === selectedChannel)?.name
+                              }));
+                              window.location.href = '/video-creator';
+                            }}
+                            className="px-5 py-3 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-lg font-bold transition-all hover:scale-105 whitespace-nowrap"
+                          >
+                            ✅ Approve & Publish
+                          </button>
+                          
+                          <button
+                            onClick={() => {
+                              localStorage.setItem('pending_video_creation', JSON.stringify({
+                                ...video,
+                                channelId: selectedChannel,
+                                channelName: channels.find(ch => ch.id === selectedChannel)?.name
+                              }));
+                              window.location.href = '/video-creator';
+                            }}
+                            className="px-5 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-semibold transition-all text-sm"
+                          >
+                            ✏️ Edit First
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
             {!analysis ? (
               <div className="bg-slate-800/50 border border-slate-700 rounded-2xl p-12 text-center">
                 <div className="text-6xl mb-4">🤖</div>

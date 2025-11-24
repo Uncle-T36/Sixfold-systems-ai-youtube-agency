@@ -18,8 +18,35 @@ interface ConnectedChannel {
 export default function EasyChannelConnection() {
   // Load existing channels from localStorage with backup protection
   useEffect(() => {
-    const existing = getSafeChannels(); // Uses data protection system
-    setConnectedChannels(existing);
+    const loadChannels = async () => {
+      const existing = getSafeChannels(); // Uses data protection system
+      
+      // Fetch real subscriber counts for all channels
+      const updatedChannels = await Promise.all(
+        existing.map(async (channel: ConnectedChannel) => {
+          try {
+            const response = await fetch(`/api/youtube/channel-info?channelId=${channel.id}`);
+            if (response.ok) {
+              const data = await response.json();
+              return {
+                ...channel,
+                subscriberCount: data.subscriberCount || channel.subscriberCount || 0,
+                thumbnailUrl: data.thumbnailUrl || channel.thumbnailUrl,
+              };
+            }
+          } catch (err) {
+            console.log(`Could not fetch data for ${channel.name}`);
+          }
+          return channel;
+        })
+      );
+      
+      // Save updated counts
+      setSafeChannels(updatedChannels);
+      setConnectedChannels(updatedChannels);
+    };
+    
+    loadChannels();
   }, []);
 
   // Disconnect channel
@@ -131,6 +158,19 @@ export default function EasyChannelConnection() {
         return;
       }
 
+      // Fetch real subscriber count from YouTube (or use manual input)
+      let subscriberCount = 0;
+      try {
+        // Try to get real data (will work with API key, otherwise uses manual input)
+        const response = await fetch(`/api/youtube/channel-info?channelId=${channelId}`).catch(() => null);
+        if (response?.ok) {
+          const data = await response.json();
+          subscriberCount = data.subscriberCount || 0;
+        }
+      } catch (err) {
+        console.log('Using manual subscriber count (API not available)');
+      }
+
       // Save channel to local storage with backup protection
       const newChannel: ConnectedChannel = {
         id: channelId,
@@ -138,7 +178,7 @@ export default function EasyChannelConnection() {
         description: channelDescription.trim(),
         voiceId: selectedVoice,
         thumbnailUrl: `https://via.placeholder.com/100x100/667eea/ffffff?text=${channelName.charAt(0)}`,
-        subscriberCount: 0
+        subscriberCount: subscriberCount
       };
 
       const updated = [...existing, newChannel];
