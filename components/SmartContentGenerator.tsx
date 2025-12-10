@@ -13,6 +13,23 @@ interface ConnectedChannel {
   subscriberCount: number;
   thumbnailUrl?: string;
   connectedAt: string;
+  totalViews?: number;
+  videoCount?: number;
+}
+
+interface VideoCouncilAnalysis {
+  overallScore: number;
+  finalVerdict: string;
+  algorithmPrediction: {
+    viralPotential: number;
+    estimatedCTR: number;
+  };
+  philosopherVotes: Array<{
+    philosopher: string;
+    vote: 'approve' | 'reject' | 'revise';
+    score: number;
+    reasoning: string;
+  }>;
 }
 
 interface GeneratedVideo {
@@ -25,6 +42,8 @@ interface GeneratedVideo {
   estimatedWatchTime: number;
   priority: 'critical' | 'high' | 'medium' | 'low';
   status: 'planned' | 'generating' | 'ready' | 'published';
+  councilAnalysis?: VideoCouncilAnalysis;
+  approvedByCouncil?: boolean;
 }
 
 export default function SmartContentGenerator() {
@@ -241,7 +260,7 @@ TikTok: @yourchannel
                   >
                     <div className="font-semibold text-white mb-1">{channel.name}</div>
                     <div className="text-sm text-slate-400">
-                      {channel.subscribers?.toLocaleString() || 0} subscribers
+                      {channel.subscriberCount?.toLocaleString() || 0} subscribers
                     </div>
                     <div className="text-xs text-slate-500 mt-1">
                       {channel.videoCount || 0} videos • {(channel.totalViews || 0).toLocaleString()} views

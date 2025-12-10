@@ -96,7 +96,7 @@ export async function analyzeVideoByCouncil(video: {
   console.log(`👑 IMPERIAL COUNCIL: Analyzing "${video.title}"...`);
 
   // 🎯 MACHIAVELLI: "Will this video dominate the niche?"
-  const machiavelliVote = {
+  const machiavelliVote: { philosopher: string; vote: 'approve' | 'reject' | 'revise'; score: number; reasoning: string; suggestions: string[] } = {
     philosopher: 'Machiavelli',
     vote: (video.title.includes('Secret') || video.title.includes('Nobody') || 
            video.title.includes('Truth') || video.title.includes('Exposed')) ? 'approve' : 'revise',
@@ -109,10 +109,10 @@ export async function analyzeVideoByCouncil(video: {
       'Use numbers: "5 Secrets" not "Secrets"',
       'Create enemy: "Why THEY don\'t want you to know..."'
     ]
-  } as const;
+  };
 
   // 🏛️ SENECA: "Is this sustainable long-term content?"
-  const senecaVote = {
+  const senecaVote: { philosopher: string; vote: 'approve' | 'reject' | 'revise'; score: number; reasoning: string; suggestions: string[] } = {
     philosopher: 'Seneca (Stoic)',
     vote: (video.script.length > 500 && !video.title.includes('Click') && 
            !video.title.includes('Shocking')) ? 'approve' : 'revise',
@@ -125,10 +125,10 @@ export async function analyzeVideoByCouncil(video: {
       'Build educational value, not just entertainment',
       'Create content that compounds over time'
     ]
-  } as const;
+  };
 
   // ⚔️ SUN TZU: "Does this exploit competitive advantages?"
-  const sunTzuVote = {
+  const sunTzuVote: { philosopher: string; vote: 'approve' | 'reject' | 'revise'; score: number; reasoning: string; suggestions: string[] } = {
     philosopher: 'Sun Tzu',
     vote: (video.category.match(/(Psychology|Philosophy|Science|Technology)/i)) ? 'approve' : 'revise',
     score: calculateStrategicScore(video),
@@ -140,10 +140,10 @@ export async function analyzeVideoByCouncil(video: {
       'Find gaps in market coverage',
       'Use trending topics with unique angle'
     ]
-  } as const;
+  };
 
   // 📚 CARNEGIE: "Will this video build loyal audience?"
-  const carnegieVote = {
+  const carnegieVote: { philosopher: string; vote: 'approve' | 'reject' | 'revise'; score: number; reasoning: string; suggestions: string[] } = {
     philosopher: 'Dale Carnegie',
     vote: (video.title.match(/(You|Your|How to)/i) && video.script.includes('you')) ? 'approve' : 'revise',
     score: calculateEngagementScore(video),
@@ -155,10 +155,10 @@ export async function analyzeVideoByCouncil(video: {
       'Ask questions to create dialogue',
       'Share personal stories for authenticity'
     ]
-  } as const;
+  };
 
   // 🧠 MARCUS AURELIUS: "Is this content we'd be proud of long-term?"
-  const aureliusVote = {
+  const aureliusVote: { philosopher: string; vote: 'approve' | 'reject' | 'revise'; score: number; reasoning: string; suggestions: string[] } = {
     philosopher: 'Marcus Aurelius',
     vote: (!video.title.match(/(Clickbait|Crazy|Insane|SHOCKING)/i)) ? 'approve' : 'revise',
     score: calculateIntegrityScore(video),
@@ -170,7 +170,7 @@ export async function analyzeVideoByCouncil(video: {
       'Focus on what you can control: content quality',
       'Play long game, not short-term viral chase'
     ]
-  } as const;
+  };
 
   const votes = [machiavelliVote, senecaVote, sunTzuVote, carnegieVote, aureliusVote];
   
