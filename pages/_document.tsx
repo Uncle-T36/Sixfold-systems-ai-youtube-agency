@@ -22,11 +22,12 @@ export default function Document() {
         <meta name="theme-color" content="#006B3D" />
 
         {/* PWA Icons */}
-        <link rel="apple-touch-icon" href="/favicon.ico" />
-        <link rel="icon" type="image/x-icon" sizes="32x32" href="/favicon.ico" />
-        <link rel="icon" type="image/x-icon" sizes="16x16" href="/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-96x96.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-72x72.png" />
+        <link rel="icon" type="image/svg+xml" href="/icons/icon.svg" />
         <link rel="manifest" href="/manifest.json" />
-        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="shortcut icon" href="/icons/icon.svg" />
 
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
