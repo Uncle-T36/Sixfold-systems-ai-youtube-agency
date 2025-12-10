@@ -8,7 +8,7 @@ import PageLayout from '../components/PageLayout';
 
 export default function ImperialCouncilPage() {
   return (
-    <PageLayout title="Imperial Council" showNav={false}>
+    <PageLayout title="Imperial Council" showBack={false}>
       <ImperialCouncilDashboard />
     </PageLayout>
   );
