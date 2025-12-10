@@ -408,10 +408,121 @@ export function initializeDataProtection(): void {
     console.log('✅ Data restored from backup');
   }
   
+  // Check for app version change (upgrade detection)
+  checkForUpgrade();
+  
   // Setup auto-backup
   setupAutoBackup();
   
   // Log data status
   const channels = JSON.parse(localStorage.getItem('youtube_channels') || '[]');
   console.log(`📊 Current data: ${channels.length} channels`);
+}
+
+// =========================
+// UPGRADE PROTECTION
+// =========================
+
+const APP_VERSION = '2.1.0'; // Increment this on each release
+
+/**
+ * 🔄 Detect app upgrades and protect data
+ * Ensures channels are NEVER lost during updates
+ */
+function checkForUpgrade(): void {
+  const storedVersion = localStorage.getItem('app_version');
+  
+  if (!storedVersion || storedVersion !== APP_VERSION) {
+    console.log(`🔄 App upgrade detected: ${storedVersion || 'fresh install'} → ${APP_VERSION}`);
+    
+    // Create a super-safe backup before anything changes
+    createUpgradeBackup(storedVersion || 'unknown');
+    
+    // Update version
+    localStorage.setItem('app_version', APP_VERSION);
+    console.log('✅ Upgrade backup created successfully');
+  }
+}
+
+/**
+ * 💾 Create immutable backup during upgrade
+ */
+function createUpgradeBackup(previousVersion: string): void {
+  const upgradeBackup = {
+    timestamp: new Date().toISOString(),
+    previousVersion,
+    newVersion: APP_VERSION,
+    channels: localStorage.getItem('youtube_channels'),
+    connectedChannels: localStorage.getItem('connected_channels'),
+    videos: CRITICAL_KEYS.filter(k => k.includes('video')).map(k => ({
+      key: k,
+      value: localStorage.getItem(k)
+    })),
+    allCriticalData: CRITICAL_KEYS.reduce((acc, key) => {
+      acc[key] = localStorage.getItem(key);
+      return acc;
+    }, {} as Record<string, string | null>)
+  };
+  
+  // Save to multiple locations for maximum safety
+  localStorage.setItem(`upgrade_backup_${APP_VERSION}`, JSON.stringify(upgradeBackup));
+  sessionStorage.setItem('pre_upgrade_backup', JSON.stringify(upgradeBackup));
+  saveToIndexedDB(`upgrade_${APP_VERSION}`, upgradeBackup);
+  
+  console.log('💾 Upgrade backup saved to localStorage, sessionStorage, and IndexedDB');
+}
+
+/**
+ * 🔙 Emergency restore from upgrade backup
+ */
+export function restoreFromUpgradeBackup(version?: string): boolean {
+  const targetVersion = version || APP_VERSION;
+  const backupKey = `upgrade_backup_${targetVersion}`;
+  const backupData = localStorage.getItem(backupKey);
+  
+  if (!backupData) {
+    console.error(`No upgrade backup found for version ${targetVersion}`);
+    return false;
+  }
+  
+  try {
+    const backup = JSON.parse(backupData);
+    
+    // Restore channels
+    if (backup.channels) {
+      localStorage.setItem('youtube_channels', backup.channels);
+    }
+    if (backup.connectedChannels) {
+      localStorage.setItem('connected_channels', backup.connectedChannels);
+    }
+    
+    // Restore all critical data
+    if (backup.allCriticalData) {
+      Object.entries(backup.allCriticalData).forEach(([key, value]) => {
+        if (value) {
+          localStorage.setItem(key, value as string);
+        }
+      });
+    }
+    
+    console.log(`✅ Restored from upgrade backup (${targetVersion})`);
+    return true;
+  } catch (error) {
+    console.error('Failed to restore from upgrade backup:', error);
+    return false;
+  }
+}
+
+/**
+ * 📋 List all available upgrade backups
+ */
+export function listUpgradeBackups(): string[] {
+  const backups: string[] = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key?.startsWith('upgrade_backup_')) {
+      backups.push(key.replace('upgrade_backup_', ''));
+    }
+  }
+  return backups;
 }
