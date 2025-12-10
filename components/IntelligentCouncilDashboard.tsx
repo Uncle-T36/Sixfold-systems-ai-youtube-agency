@@ -30,7 +30,11 @@ export default function IntelligentCouncilDashboard() {
       setInsights(result);
       
       setTimeout(() => {
-        alert(`🧠 INTELLIGENT COUNCIL ANALYSIS COMPLETE!\n\n📊 Portfolio Health: ${result.portfolioHealth}%\n💰 Total Estimated Revenue: $${result.totalEstimatedRevenue.toLocaleString()}/month\n📺 ${result.totalChannels} channels analyzed\n\n${result.actionItems.slice(0, 3).join('\n')}`);
+        const health = result.portfolioHealth || 0;
+        const revenue = result.totalEstimatedRevenue || 0;
+        const channels = result.totalChannels || 0;
+        const actions = result.actionItems?.slice(0, 3).join('\n') || 'No action items yet';
+        alert(`🧠 INTELLIGENT COUNCIL ANALYSIS COMPLETE!\n\n📊 Portfolio Health: ${health}%\n💰 Total Estimated Revenue: $${revenue.toLocaleString()}/month\n📺 ${channels} channels analyzed\n\n${actions}`);
       }, 500);
     } catch (error: any) {
       alert(error.message || 'Analysis failed');
@@ -195,13 +199,13 @@ export default function IntelligentCouncilDashboard() {
             
             <div className="p-6 bg-gradient-to-br from-green-500/20 to-green-600/20 border-2 border-green-500/30 rounded-2xl">
               <div className="text-green-400 text-sm font-semibold mb-2">MONTHLY REVENUE</div>
-              <div className="text-white text-3xl font-bold mb-2">${insights.totalEstimatedRevenue.toLocaleString()}</div>
-              <div className="text-green-300 text-xs">{insights.totalChannels} channels</div>
+              <div className="text-white text-3xl font-bold mb-2">${(insights.totalEstimatedRevenue || 0).toLocaleString()}</div>
+              <div className="text-green-300 text-xs">{insights.totalChannels || 0} channels</div>
             </div>
             
             <div className="p-6 bg-gradient-to-br from-blue-500/20 to-blue-600/20 border-2 border-blue-500/30 rounded-2xl">
               <div className="text-blue-400 text-sm font-semibold mb-2">TOTAL SUBSCRIBERS</div>
-              <div className="text-white text-3xl font-bold mb-2">{insights.totalSubcribers.toLocaleString()}</div>
+              <div className="text-white text-3xl font-bold mb-2">{(insights.totalSubcribers || 0).toLocaleString()}</div>
               <div className="text-blue-300 text-xs">Across all channels</div>
             </div>
             
@@ -281,7 +285,7 @@ export default function IntelligentCouncilDashboard() {
                     />
                     <div className="flex-1">
                       <h3 className="text-xl font-bold text-white mb-1">{analysis.channel.name}</h3>
-                      <div className="text-slate-400 text-sm">{analysis.channel.subscriberCount.toLocaleString()} subscribers</div>
+                      <div className="text-slate-400 text-sm">{(analysis.channel.subscriberCount || 0).toLocaleString()} subscribers</div>
                     </div>
                   </div>
                   
@@ -292,7 +296,7 @@ export default function IntelligentCouncilDashboard() {
                     </div>
                     <div className="p-3 bg-green-500/20 border border-green-500/30 rounded-lg">
                       <div className="text-green-400 text-xs font-semibold mb-1">REVENUE/MONTH</div>
-                      <div className="text-white text-sm font-bold">${analysis.estimatedMonthlyRevenue.toLocaleString()}</div>
+                      <div className="text-white text-sm font-bold">${(analysis.estimatedMonthlyRevenue || 0).toLocaleString()}</div>
                     </div>
                     <div className="p-3 bg-blue-500/20 border border-blue-500/30 rounded-lg">
                       <div className="text-blue-400 text-xs font-semibold mb-1">GROWTH</div>
@@ -337,12 +341,12 @@ export default function IntelligentCouncilDashboard() {
                     
                     <div className="flex items-center gap-2">
                       <span className="text-green-400">💰</span>
-                      <span className="text-white font-semibold">${suggestion.estimatedMonthlyRevenue.toLocaleString()}/mo</span>
+                      <span className="text-white font-semibold">${(suggestion.estimatedMonthlyRevenue || 0).toLocaleString()}/mo</span>
                     </div>
                     
                     <div className="flex items-center gap-2">
                       <span className="text-yellow-400">🔥</span>
-                      <span className="text-white font-semibold">{suggestion.viralPotential}% Viral Rate</span>
+                      <span className="text-white font-semibold">{suggestion.viralPotential || 0}% Viral Rate</span>
                     </div>
                     
                     <div className="text-xs text-slate-400">{suggestion.whyProfitable}</div>

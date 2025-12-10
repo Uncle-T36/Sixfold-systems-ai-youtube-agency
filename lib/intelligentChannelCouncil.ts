@@ -100,10 +100,15 @@ export async function analyzeChannelPortfolio(newsApiKey?: string): Promise<Coun
   const nicheCount: Record<string, number> = {};
   
   for (const channel of channels) {
-    const analysis = await analyzeChannel(channel);
+    // Ensure subscriberCount has a valid number
+    const safeChannel = {
+      ...channel,
+      subscriberCount: Number(channel.subscriberCount) || 0
+    };
+    const analysis = await analyzeChannel(safeChannel);
     channelAnalyses.push(analysis);
-    totalRevenue += analysis.estimatedMonthlyRevenue;
-    totalSubscribers += channel.subscriberCount;
+    totalRevenue += analysis.estimatedMonthlyRevenue || 0;
+    totalSubscribers += safeChannel.subscriberCount;
     nicheCount[analysis.detectedNiche] = (nicheCount[analysis.detectedNiche] || 0) + 1;
   }
   
@@ -129,10 +134,10 @@ export async function analyzeChannelPortfolio(newsApiKey?: string): Promise<Coun
   
   return {
     totalChannels: channels.length,
-    totalSubcribers: totalSubscribers,
-    totalEstimatedRevenue: Math.round(totalRevenue),
-    portfolioHealth,
-    topPerformingNiche: topNiche,
+    totalSubcribers: totalSubscribers || 0,
+    totalEstimatedRevenue: Math.round(totalRevenue) || 0,
+    portfolioHealth: portfolioHealth || 0,
+    topPerformingNiche: topNiche || 'unknown',
     underutilizedNiches,
     actionItems,
     channelAnalyses,
@@ -198,12 +203,15 @@ function detectChannelNiche(text: string): string {
 
 // 💰 CALCULATE MONTHLY REVENUE
 function calculateMonthlyRevenue(subscribers: number, cpm: number): number {
+  // Ensure valid numbers
+  const safeSubs = Number(subscribers) || 0;
+  const safeCpm = Number(cpm) || 10;
   // Average view rate: 10% of subscribers per video
-  const viewsPerVideo = subscribers * 0.1;
+  const viewsPerVideo = safeSubs * 0.1;
   // Average videos per month: 8
   const monthlyViews = viewsPerVideo * 8;
   // Revenue = (Views / 1000) * CPM
-  return (monthlyViews / 1000) * cpm;
+  return Math.round((monthlyViews / 1000) * safeCpm) || 0;
 }
 
 // 📈 CALCULATE GROWTH POTENTIAL (0-100)
