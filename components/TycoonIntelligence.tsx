@@ -396,7 +396,7 @@ export default function TycoonIntelligence() {
                       <span className="text-slate-400">{action.country}</span>
                       <span className="text-slate-500">•</span>
                       <span className={`px-2 py-1 rounded-full text-xs font-semibold border ${getImpactColor(action.impact)}`}>
-                        {action.impact.toUpperCase()} IMPACT
+                        {(action.impact || 'medium').toUpperCase()} IMPACT
                       </span>
                     </div>
 

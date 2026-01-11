@@ -357,7 +357,7 @@ export class ProfessionalVideoGenerator {
     <div class="letterbox bottom"></div>
     ` : ''}
     
-    <div class="watermark">${this.config.title.toUpperCase().substring(0, 20)}</div>
+    <div class="watermark">${(this.config.title || 'VIDEO').toUpperCase().substring(0, 20)}</div>
     <div class="scene-counter">
       <span id="current-scene">1</span> / ${this.scenes.length}
     </div>

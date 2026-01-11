@@ -575,11 +575,11 @@ export function generateStrategicAdvice(
 
   top3.forEach((opp, idx) => {
     advice += `#### ${idx + 1}. ${opp.title}\n\n`;
-    advice += `**Type:** ${opp.type.toUpperCase()}\n`;
+    advice += `**Type:** ${(opp.type || 'opportunity').toUpperCase()}\n`;
     advice += `**Potential Revenue:** +$${opp.potentialRevenue.toLocaleString()}/month\n`;
     advice += `**Time to Profit:** ${opp.timeToProfit} days\n`;
     advice += `**Success Probability:** ${opp.successProbability}%\n`;
-    advice += `**Urgency:** ${opp.urgency.toUpperCase()}\n\n`;
+    advice += `**Urgency:** ${(opp.urgency || 'medium').toUpperCase()}\n\n`;
     advice += `${opp.description}\n\n`;
     advice += `**Why This Works:**\n${opp.reasoning}\n\n`;
     advice += `**Competitive Advantage:**\n${opp.competitiveAdvantage}\n\n`;

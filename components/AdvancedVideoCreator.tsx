@@ -18,6 +18,14 @@ import {
   type SubtitleConfig,
   type CharacterVoiceMapping
 } from '../lib/professionalVideoProduction';
+import { 
+  generateRealVideo, 
+  saveGeneratedVideo, 
+  downloadVideo,
+  type GeneratedVideo,
+  type GenerationProgress 
+} from '../lib/realVideoGenerator';
+import { uploadVideoToYouTube, isChannelReadyForUpload } from '../lib/youtube-uploader';
 
 export default function AdvancedVideoCreator() {
   const router = useRouter();
@@ -39,6 +47,12 @@ export default function AdvancedVideoCreator() {
   const [generatedConfig, setGeneratedConfig] = useState<AnimationConfig | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const [fromSeries, setFromSeries] = useState(false);
+  
+  // New state for real video generation
+  const [generationProgress, setGenerationProgress] = useState<GenerationProgress | null>(null);
+  const [generatedVideo, setGeneratedVideo] = useState<GeneratedVideo | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadResult, setUploadResult] = useState<any>(null);
   
   // 🧠 AI CHANNEL INTELLIGENCE - Auto-detect channel and optimize settings
   const [selectedChannel, setSelectedChannel] = useState<any>(null);
@@ -142,7 +156,7 @@ export default function AdvancedVideoCreator() {
     
     // Show AI insights notification
     setTimeout(() => {
-      alert(`🧠 AI CHANNEL INTELLIGENCE ACTIVATED!\n\n📺 Channel: ${channel.name}\n🎯 Detected Niche: ${detectedNiche.toUpperCase()}\n🎨 Recommended Style: ${recommendedStyle?.name || 'Choose from suggestions'}\n⏱️ Optimal Duration: ${Math.floor(optimalDuration / 60)} minutes\n🎥 Quality: ${recommendedQuality === 'cinema_quality' ? '4K Cinema' : '1440p HD'}\n\n💡 ${reasoning}`);
+      alert(`🧠 AI CHANNEL INTELLIGENCE ACTIVATED!\n\n📺 Channel: ${channel.name || 'Unknown'}\n🎯 Detected Niche: ${(detectedNiche || 'general').toUpperCase()}\n🎨 Recommended Style: ${recommendedStyle?.name || 'Choose from suggestions'}\n⏱️ Optimal Duration: ${Math.floor(optimalDuration / 60)} minutes\n🎥 Quality: ${recommendedQuality === 'cinema_quality' ? '4K Cinema' : '1440p HD'}\n\n💡 ${reasoning}`);
     }, 800);
   };
 
@@ -261,7 +275,20 @@ Like, subscribe, and check the description for more resources!
       return;
     }
 
+    if (!selectedChannel) {
+      alert('Please select a channel first to generate and upload videos');
+      return;
+    }
+
+    // Check if channel is ready for upload
+    const uploadReady = isChannelReadyForUpload(selectedChannel.id);
+    if (!uploadReady.ready) {
+      alert(`⚠️ Channel not ready for upload:\n${uploadReady.reason}\n\nPlease go to /connect and authenticate with YouTube OAuth first.`);
+    }
+
     setIsGenerating(true);
+    setGeneratedVideo(null);
+    setUploadResult(null);
 
     try {
       // Extract characters from script (basic parsing)
@@ -283,20 +310,44 @@ Like, subscribe, and check the description for more resources!
       });
       
       setVoiceMappings(renderJob.voiceMappings);
-      setShowVoiceConfig(true);
 
-      // Also generate with old system for compatibility
-      const config = await generateAdvancedVideo(formData, selectedStyle.id);
-      setGeneratedConfig(config);
-
-      // Queue for rendering
-      const jobId = await queueVideoRender(config, 'current-channel');
+      // 🎬 GENERATE REAL VIDEO using canvas-based rendering
+      const styleMap: Record<string, 'slideshow' | 'kinetic-text' | 'animated' | 'whiteboard'> = {
+        'kinetic-text': 'kinetic-text',
+        'whiteboard-animation': 'whiteboard',
+        'motion-graphics': 'kinetic-text',
+        'slideshow': 'slideshow',
+      };
+      const videoStyle = styleMap[selectedStyle.id] || 'kinetic-text';
       
-      // Save to localStorage with professional settings
+      const resolution = qualityPreset === 'cinema_quality' ? '4K' : 
+                        qualityPreset === 'youtube_premium' ? '1080p' : '720p';
+
+      console.log('🎬 Starting REAL video generation...');
+      
+      const video = await generateRealVideo({
+        title: formData.title,
+        script: formData.script,
+        style: videoStyle,
+        duration: formData.duration,
+        resolution: resolution as any,
+        fps: 30,
+      }, (progress) => {
+        setGenerationProgress(progress);
+        console.log(`📹 ${progress.stage}: ${progress.progress}% - ${progress.message}`);
+      });
+
+      setGeneratedVideo(video);
+      console.log('✅ Video generated successfully:', video.id);
+
+      // Save to localStorage for later reference
+      saveGeneratedVideo(video, selectedChannel.id);
+
+      // Also save to generated_videos for the old system compatibility
       const videos = JSON.parse(localStorage.getItem('generated_videos') || '[]');
       videos.push({
-        id: jobId,
-        channelId: 'current-channel',
+        id: video.id,
+        channelId: selectedChannel.id,
         title: formData.title,
         style: selectedStyle.name,
         quality: QUALITY_PRESETS[qualityPreset as keyof typeof QUALITY_PRESETS],
@@ -307,22 +358,92 @@ Like, subscribe, and check the description for more resources!
           ...SUBTITLE_STYLES[subtitleStyle as keyof typeof SUBTITLE_STYLES]
         },
         spatialAudio: enableSpatialAudio,
-        status: 'rendering',
-        createdAt: new Date().toISOString(),
-        estimatedRenderTime: renderJob.estimatedRenderTime,
-        config
+        status: 'generated',
+        createdAt: video.createdAt,
+        duration: video.duration,
+        resolution: video.resolution,
+        size: video.size,
+        hasRealVideo: true,
       });
       localStorage.setItem('generated_videos', JSON.stringify(videos));
 
-      const qualityName = QUALITY_PRESETS[qualityPreset as keyof typeof QUALITY_PRESETS].name;
-      alert(`✨ Professional HD video queued!\n\nQuality: ${qualityName}\nVoices: ${renderJob.voiceMappings.length} unique character voices\nSubtitles: ${enableSubtitles ? 'Enabled with speaker labels' : 'Disabled'}\nSpatial Audio: ${enableSpatialAudio ? 'Enabled' : 'Disabled'}\nEstimated render time: ${renderJob.estimatedRenderTime} minutes\n\nJob ID: ${jobId}`);
-      
+      setShowVoiceConfig(true);
       setShowPreview(true);
+      
+      const qualityName = QUALITY_PRESETS[qualityPreset as keyof typeof QUALITY_PRESETS].name;
+      const sizeMB = (video.size / 1024 / 1024).toFixed(2);
+      
+      alert(`🎬 VIDEO GENERATED SUCCESSFULLY!\n\n✅ Title: ${video.title}\n✅ Duration: ${video.duration} seconds\n✅ Resolution: ${video.resolution}\n✅ Size: ${sizeMB} MB\n✅ Quality: ${qualityName}\n\n📤 Click "Upload to YouTube" to publish, or download the file.`);
+      
     } catch (error) {
-      console.error('Generation error:', error);
-      alert('Failed to generate video. Please try again.');
+      console.error('❌ Generation error:', error);
+      alert('Failed to generate video. Please try again.\n\nError: ' + (error as Error).message);
     } finally {
       setIsGenerating(false);
+      setGenerationProgress(null);
+    }
+  };
+
+  // 📤 Upload generated video to YouTube
+  const handleUploadToYouTube = async () => {
+    if (!generatedVideo || !selectedChannel) {
+      alert('No video to upload or no channel selected');
+      return;
+    }
+
+    const uploadReady = isChannelReadyForUpload(selectedChannel.id);
+    if (!uploadReady.ready) {
+      alert(`⚠️ Cannot upload: ${uploadReady.reason}\n\nPlease connect your YouTube channel with OAuth at /connect first.`);
+      return;
+    }
+
+    setIsUploading(true);
+
+    try {
+      console.log('📤 Starting YouTube upload...');
+      
+      const result = await uploadVideoToYouTube(
+        selectedChannel.id,
+        generatedVideo.base64,
+        {
+          title: generatedVideo.title,
+          description: `${formData.script.substring(0, 500)}...\n\n#youtube #content #sixfold`,
+          tags: [formData.niche, 'video', 'content', selectedChannel.name || 'channel'],
+          privacyStatus: 'private', // Start as private for safety
+        }
+      );
+
+      setUploadResult(result);
+
+      if (result.success) {
+        console.log('✅ Upload successful:', result);
+        
+        // Update video status in localStorage
+        const videos = JSON.parse(localStorage.getItem('generated_videos') || '[]');
+        const videoIndex = videos.findIndex((v: any) => v.id === generatedVideo.id);
+        if (videoIndex >= 0) {
+          videos[videoIndex].status = 'uploaded';
+          videos[videoIndex].youtubeId = result.videoId;
+          videos[videoIndex].youtubeUrl = result.url;
+          localStorage.setItem('generated_videos', JSON.stringify(videos));
+        }
+
+        alert(`🎉 VIDEO UPLOADED TO YOUTUBE!\n\n✅ Video ID: ${result.videoId}\n🔗 URL: ${result.url}\n\n⚠️ Video is set to PRIVATE. Go to YouTube Studio to make it public when ready.`);
+      } else {
+        alert(`❌ Upload failed: ${result.error}\n\nPlease ensure your YouTube channel is properly connected.`);
+      }
+    } catch (error) {
+      console.error('❌ Upload error:', error);
+      alert('Upload failed: ' + (error as Error).message);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  // 💾 Download video locally
+  const handleDownload = () => {
+    if (generatedVideo) {
+      downloadVideo(generatedVideo);
     }
   };
 
@@ -694,12 +815,83 @@ Like, subscribe, and check the description for more resources!
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                       </svg>
-                      Generating...
+                      {generationProgress ? `${generationProgress.stage} (${generationProgress.progress}%)` : 'Generating...'}
                     </span>
                   ) : (
                     '✨ Generate Video'
                   )}
                 </button>
+
+                {/* Generation Progress Bar */}
+                {isGenerating && generationProgress && (
+                  <div className="mt-4">
+                    <div className="flex justify-between text-sm text-slate-400 mb-2">
+                      <span>{generationProgress.message}</span>
+                      <span>{generationProgress.progress}%</span>
+                    </div>
+                    <div className="w-full bg-slate-700 rounded-full h-2">
+                      <div 
+                        className="bg-gradient-to-r from-green-500 to-yellow-500 h-2 rounded-full transition-all duration-300"
+                        style={{ width: `${generationProgress.progress}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Generated Video Actions */}
+                {generatedVideo && !isGenerating && (
+                  <div className="mt-6 p-4 bg-gradient-to-r from-green-900/30 to-emerald-900/30 border border-green-500/50 rounded-xl">
+                    <h3 className="text-white font-bold mb-3 flex items-center gap-2">
+                      ✅ Video Generated Successfully!
+                    </h3>
+                    <div className="grid grid-cols-2 gap-2 text-sm text-slate-300 mb-4">
+                      <div>📹 Duration: {generatedVideo.duration}s</div>
+                      <div>📐 Resolution: {generatedVideo.resolution}</div>
+                      <div>📦 Size: {(generatedVideo.size / 1024 / 1024).toFixed(2)} MB</div>
+                      <div>🆔 ID: {generatedVideo.id.substring(0, 12)}...</div>
+                    </div>
+                    
+                    <div className="flex gap-3">
+                      <button
+                        onClick={handleUploadToYouTube}
+                        disabled={isUploading}
+                        className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 disabled:bg-red-800 disabled:cursor-not-allowed rounded-lg text-white font-semibold flex items-center justify-center gap-2"
+                      >
+                        {isUploading ? (
+                          <>
+                            <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                            </svg>
+                            Uploading...
+                          </>
+                        ) : (
+                          <>📤 Upload to YouTube</>
+                        )}
+                      </button>
+                      <button
+                        onClick={handleDownload}
+                        className="px-4 py-3 bg-slate-700 hover:bg-slate-600 rounded-lg text-white font-semibold flex items-center gap-2"
+                      >
+                        💾 Download
+                      </button>
+                    </div>
+
+                    {uploadResult?.success && (
+                      <div className="mt-3 p-3 bg-green-900/30 border border-green-500/30 rounded-lg">
+                        <p className="text-green-400 font-semibold">✅ Uploaded to YouTube!</p>
+                        <a 
+                          href={uploadResult.url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-blue-400 hover:underline text-sm"
+                        >
+                          {uploadResult.url}
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </motion.div>
@@ -725,7 +917,7 @@ Like, subscribe, and check the description for more resources!
                         : 'bg-slate-800/50 border border-slate-700 text-slate-300 hover:border-green-500/50'
                     }`}
                   >
-                    {category.charAt(0).toUpperCase() + category.slice(1).replace('-', ' ')}
+                    {(category || 'all').charAt(0).toUpperCase() + (category || 'all').slice(1).replace('-', ' ')}
                   </button>
                 ))}
               </div>
@@ -759,7 +951,7 @@ Like, subscribe, and check the description for more resources!
                               style.quality === 'high' ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' :
                               'bg-gray-500/20 text-gray-300 border border-gray-500/30'
                             }`}>
-                              {style.quality.toUpperCase()}
+                              {(style.quality || 'standard').toUpperCase()}
                             </span>
                             <span className="text-xs text-slate-500">⏱️ {style.processingTime}</span>
                           </div>

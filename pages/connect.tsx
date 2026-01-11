@@ -13,9 +13,89 @@ interface ConnectedChannel {
   subscriberCount: number;
   voiceId?: string;
   description?: string;
+  youtubeLinked?: boolean; // NEW: Real YouTube OAuth connected
+  accessToken?: string;    // NEW: OAuth access token
+  refreshToken?: string;   // NEW: OAuth refresh token
 }
 
 export default function EasyChannelConnection() {
+  // State for YouTube OAuth
+  const [youtubeConnecting, setYoutubeConnecting] = useState(false);
+  const [youtubeConnected, setYoutubeConnected] = useState(false);
+
+  // Check for YouTube OAuth callback params on load
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const youtubeAuth = urlParams.get('youtube_auth');
+    const ytTokens = urlParams.get('tokens');
+    const ytChannelsParam = urlParams.get('yt_channels');
+
+    if (youtubeAuth === 'success' && ytTokens && ytChannelsParam) {
+      try {
+        const tokens = JSON.parse(atob(ytTokens));
+        const ytChannels = JSON.parse(atob(ytChannelsParam));
+
+        // Import channels from YouTube OAuth
+        const existing = getSafeChannels();
+        let imported = 0;
+
+        ytChannels.forEach((ytCh: any) => {
+          const channelId = ytCh.id;
+          const isDuplicate = existing.some((ch: ConnectedChannel) => ch.id === channelId);
+
+          if (!isDuplicate) {
+            const newChannel: ConnectedChannel = {
+              id: channelId,
+              name: ytCh.name || ytCh.title || 'My YouTube Channel',
+              description: ytCh.description || '',
+              thumbnailUrl: ytCh.thumbnailUrl || ytCh.thumbnail || `https://via.placeholder.com/100x100/667eea/ffffff?text=${(ytCh.name || ytCh.title || 'C').charAt(0)}`,
+              subscriberCount: ytCh.subscriberCount || 0,
+              youtubeLinked: true,
+              accessToken: tokens.accessToken || tokens.access_token,
+              refreshToken: tokens.refreshToken || tokens.refresh_token,
+              voiceId: 'dark-narrator-male'
+            };
+            existing.push(newChannel);
+            imported++;
+          }
+        });
+
+        if (imported > 0) {
+          setSafeChannels(existing);
+          setConnectedChannels(existing);
+          setSuccess(`🎉 YouTube Connected! ${imported} channel(s) imported automatically with UPLOAD permissions!`);
+          setYoutubeConnected(true);
+        } else if (ytChannels.length > 0) {
+          setSuccess('✅ YouTube linked! Your channels were already connected.');
+          setYoutubeConnected(true);
+        }
+
+        // Clean URL
+        window.history.replaceState({}, '', '/connect');
+      } catch (err) {
+        console.error('Error parsing YouTube OAuth data:', err);
+        setError('Failed to import YouTube channels. Please try again.');
+      }
+    } else if (urlParams.get('error')) {
+      setError('YouTube connection was cancelled or failed. Please try again.');
+      window.history.replaceState({}, '', '/connect');
+    }
+  }, []);
+
+  // Connect with real YouTube OAuth
+  const connectWithYouTube = async () => {
+    setYoutubeConnecting(true);
+    setError('');
+    
+    try {
+      // Redirect to YouTube OAuth authorization
+      window.location.href = '/api/auth/youtube/authorize';
+    } catch (err) {
+      setError('Failed to start YouTube connection. Please try again.');
+      setYoutubeConnecting(false);
+    }
+  };
+
   // Load existing channels from localStorage with backup protection
   useEffect(() => {
     const loadChannels = async () => {
@@ -288,6 +368,64 @@ export default function EasyChannelConnection() {
             </div>
           </div>
         </motion.div>
+
+        {/* YouTube OAuth - Coming Soon (Hidden for now) */}
+        {process.env.NEXT_PUBLIC_YOUTUBE_OAUTH_ENABLED === 'true' && (
+          <>
+            {/* 🚀 REAL YOUTUBE OAUTH CONNECTION - ONE-CLICK */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-gradient-to-br from-red-900/40 via-red-800/30 to-slate-900 p-6 sm:p-8 rounded-2xl border-2 border-red-500/40 shadow-2xl mb-8"
+            >
+              <div className="text-center mb-6">
+                <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-red-600 to-red-400 rounded-2xl mb-4 shadow-lg shadow-red-500/30">
+                  <svg className="w-12 h-12 text-white" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                  </svg>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+                  🔥 One-Click YouTube Connection
+                </h2>
+                <p className="text-slate-300 text-lg">
+                  Connect your real YouTube account for <span className="text-green-400 font-bold">automatic uploads</span>
+                </p>
+              </div>
+
+              <div className="max-w-xl mx-auto">
+                {youtubeConnected ? (
+                  <div className="bg-green-500/20 border-2 border-green-500 rounded-xl p-6 text-center">
+                    <div className="text-5xl mb-4">✅</div>
+                    <h3 className="text-xl font-bold text-green-300 mb-2">YouTube Connected!</h3>
+                    <p className="text-green-200">
+                      Your account is linked. Videos can now be uploaded directly to YouTube!
+                    </p>
+                  </div>
+                ) : (
+                  <button
+                    onClick={connectWithYouTube}
+                    disabled={youtubeConnecting}
+                    className="group relative w-full overflow-hidden bg-gradient-to-r from-red-600 via-red-500 to-red-600 hover:from-red-700 hover:via-red-600 hover:to-red-700 text-white font-bold px-8 py-6 rounded-2xl text-xl shadow-2xl shadow-red-500/30 hover:shadow-red-500/50 transform hover:scale-[1.02] transition-all duration-300 disabled:opacity-50"
+                  >
+                    <div className="relative flex items-center justify-center space-x-3">
+                      <svg className="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                      </svg>
+                      <span>Connect with YouTube</span>
+                      <span className="text-2xl">🚀</span>
+                    </div>
+                  </button>
+                )}
+              </div>
+            </motion.div>
+
+            <div className="flex items-center justify-center my-8">
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-slate-600 to-transparent"></div>
+              <span className="px-4 text-slate-500 font-medium">OR connect manually</span>
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-slate-600 to-transparent"></div>
+            </div>
+          </>
+        )}
 
         {/* Simple Connection Form */}
         <motion.div
@@ -680,14 +818,29 @@ export default function EasyChannelConnection() {
                         <div 
                           className={`w-16 h-16 rounded-full border-2 border-teal-500/50 bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white font-bold text-xl ${channel.thumbnailUrl ? 'hidden' : ''}`}
                         >
-                          {channel.name.charAt(0).toUpperCase()}
+                          {(channel.name || 'C').charAt(0).toUpperCase()}
                         </div>
                       </div>
                       <div className="flex-1">
-                        <h4 className="text-white font-bold text-lg">{channel.name}</h4>
+                        <div className="flex items-center gap-2">
+                          <h4 className="text-white font-bold text-lg">{channel.name}</h4>
+                          {channel.youtubeLinked && (
+                            <span className="text-xs bg-red-500 text-white px-2 py-0.5 rounded-full flex items-center gap-1">
+                              <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                              </svg>
+                              LINKED
+                            </span>
+                          )}
+                        </div>
                         <p className="text-slate-400 text-sm">
                           {channel.subscriberCount.toLocaleString()} subscribers
                         </p>
+                        {channel.youtubeLinked && (
+                          <p className="text-green-400 text-xs mt-1">
+                            ✅ Auto-upload enabled
+                          </p>
+                        )}
                         {channel.voiceId && (
                           <div className="flex items-center space-x-1 mt-1">
                             <span className="text-xs">🎙️</span>
@@ -730,6 +883,24 @@ export default function EasyChannelConnection() {
                 <span className="text-2xl">💰</span>
               </div>
             </motion.button>
+
+            {/* Helpful Info Box */}
+            <div className="mt-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-xl">
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">💡</span>
+                <div className="text-sm text-slate-300">
+                  <p className="font-bold text-blue-400 mb-1">How it works:</p>
+                  <p className="mb-2">
+                    Your channels are saved in this app. Videos are generated and ready for upload here.
+                  </p>
+                  <p>
+                    <strong>To upload videos to YouTube:</strong> Go to{' '}
+                    <a href="/my-videos" className="text-green-400 underline hover:text-green-300">My Videos</a>
+                    {' '}and click "Upload to YouTube" on any ready video. The app will guide you through the upload process.
+                  </p>
+                </div>
+              </div>
+            </div>
           </motion.div>
         )}
         </div>

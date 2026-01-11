@@ -53,22 +53,51 @@ export default function SmartContentGenerator() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [analysis, setAnalysis] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [uploadingVideoId, setUploadingVideoId] = useState<string | null>(null);
 
   useEffect(() => {
-    // Load connected channels from correct localStorage key
-    const loadedChannels = JSON.parse(localStorage.getItem('youtube_channels') || '[]');
-    setChannels(loadedChannels);
-    
-    if (loadedChannels.length > 0 && !selectedChannel) {
-      setSelectedChannel(loadedChannels[0].id);
+    try {
+      // Load connected channels from correct localStorage key
+      const loadedChannels = JSON.parse(localStorage.getItem('youtube_channels') || '[]');
+      // Validate channels data
+      const validChannels = loadedChannels.filter((ch: any) => ch && ch.id && ch.name);
+      setChannels(validChannels);
+      
+      if (validChannels.length > 0 && !selectedChannel) {
+        setSelectedChannel(validChannels[0].id);
+      }
+    } catch (error) {
+      console.error('Error loading channels:', error);
+      setChannels([]);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
   // Load videos when channel is selected
   useEffect(() => {
     if (selectedChannel) {
-      const channelVideos = JSON.parse(localStorage.getItem(`videos_${selectedChannel}`) || '[]');
-      setVideos(channelVideos);
+      try {
+        const channelVideos = JSON.parse(localStorage.getItem(`videos_${selectedChannel}`) || '[]');
+        // Validate and sanitize video data to prevent crashes
+        const validVideos = channelVideos.map((video: any) => ({
+          ...video,
+          id: video.id || `video-${Date.now()}-${Math.random()}`,
+          title: video.title || 'Untitled Video',
+          script: video.script || '',
+          category: video.category || 'General',
+          scheduledDate: video.scheduledDate || new Date().toISOString(),
+          estimatedViews: video.estimatedViews || 0,
+          estimatedWatchTime: video.estimatedWatchTime || 0,
+          priority: video.priority || 'medium',
+          status: video.status || 'ready'
+        }));
+        setVideos(validVideos);
+      } catch (error) {
+        console.error('Error loading videos:', error);
+        setVideos([]);
+      }
     }
   }, [selectedChannel]);
 
@@ -206,6 +235,22 @@ TikTok: @yourchannel
 #${niche} #YouTube #ContentCreation #Viral #2025`;
   };
 
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 py-12 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="text-6xl mb-6 animate-pulse">⏳</div>
+          <h2 className="text-3xl font-bold text-white mb-4">Loading Your Content...</h2>
+          <p className="text-slate-400">Please wait while we load your channels and videos</p>
+          <div className="mt-8 flex justify-center">
+            <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (channels.length === 0) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 py-12 px-4">
@@ -317,7 +362,7 @@ TikTok: @yourchannel
                               video.status === 'published' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
                               'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
                             }`}>
-                              {video.status.toUpperCase()}
+                              {(video.status || 'pending').toUpperCase()}
                             </span>
                             <span className={`px-2 py-1 rounded text-xs font-semibold ${
                               video.priority === 'critical' ? 'bg-red-500/20 text-red-400' :
@@ -325,7 +370,7 @@ TikTok: @yourchannel
                               video.priority === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
                               'bg-slate-500/20 text-slate-400'
                             }`}>
-                              {video.priority.toUpperCase()} PRIORITY
+                              {(video.priority || 'medium').toUpperCase()} PRIORITY
                             </span>
                             {video.approvedByCouncil && (
                               <span className="px-2 py-1 rounded text-xs font-bold bg-purple-500/20 text-purple-400 border border-purple-500/30">

@@ -536,7 +536,7 @@ function generateBody(story: Story, style: typeof SCRIPT_STYLES[keyof typeof SCR
   let body = '[MAIN STORY - 1:00-10:00]\n\n';
   
   story.plotPoints.forEach((point, i) => {
-    body += `ACT ${point.act} - ${point.type.toUpperCase()}\n`;
+    body += `ACT ${point.act} - ${(point.type || 'scene').toUpperCase()}\n`;
     body += `${point.description}\n\n`;
     body += `[Add ${point.duration} seconds of narration here covering the key events and details]\n\n`;
   });

@@ -209,7 +209,7 @@ export default function StrategicAdvisorDashboard() {
                   opp.urgency === 'medium' ? 'bg-yellow-600/20 text-yellow-400' :
                   'bg-green-600/20 text-green-400'
                 }`}>
-                  {opp.urgency.toUpperCase()}
+                  {(opp.urgency || 'medium').toUpperCase()}
                 </div>
               </div>
 
@@ -707,7 +707,7 @@ function ViralTrendsView() {
                       trend.urgency === 'high' ? 'bg-orange-600/20 text-orange-400' :
                       'bg-yellow-600/20 text-yellow-400'
                     }`}>
-                      {trend.urgency.toUpperCase()}
+                      {(trend.urgency || 'medium').toUpperCase()}
                     </span>
                   </div>
                   <div className="flex items-center gap-4 text-sm text-slate-400 mb-3">

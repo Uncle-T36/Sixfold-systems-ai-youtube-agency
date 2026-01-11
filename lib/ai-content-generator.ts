@@ -417,7 +417,7 @@ export function isAIConfigured(): boolean {
  */
 export function getCurrentAIProvider(): string {
   const config = getAIConfig();
-  return config.provider.toUpperCase();
+  return (config.provider || 'demo').toUpperCase();
 }
 
 /**

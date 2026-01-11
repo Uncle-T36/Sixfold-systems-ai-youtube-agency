@@ -266,7 +266,7 @@ export default function FeatureVerification() {
                           feature.status === 'exists' ? 'text-green-400' :
                           feature.status === 'missing' ? 'text-red-400' : 'text-yellow-400'
                         }`}>
-                          {feature.status.toUpperCase()}
+                          {(feature.status || 'unknown').toUpperCase()}
                         </span>
                       </div>
                     </div>

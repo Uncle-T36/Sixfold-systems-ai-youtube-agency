@@ -7,11 +7,18 @@
  * - Checks every hour for scheduled videos
  * - Auto-generates when due
  * - Persists across page refreshes
+ * - Integrates with Autonomous Council for trend-based generation
  * - Stops when monetization achieved
  */
 
 import { autoGenerateNextScheduledVideo, calculateMonetizationProgress, type VideoGenerationPlan } from './autonomousVideoSystem';
 import { getSafeChannels } from './dataProtection';
+import { 
+  getCouncilStatus, 
+  refreshAllChannelTrends, 
+  autoGenerateForAllChannels,
+  getChannelTrends
+} from './autonomousCouncil';
 
 let schedulerInterval: NodeJS.Timeout | null = null;
 let isSchedulerRunning = false;
@@ -32,10 +39,12 @@ export function startAutoScheduler() {
   // Check every hour for scheduled videos
   schedulerInterval = setInterval(async () => {
     await checkAndGenerateScheduledVideos();
+    await runAutonomousCouncilTasks();
   }, 60 * 60 * 1000); // 1 hour
 
   // Also check immediately on start
   checkAndGenerateScheduledVideos();
+  runAutonomousCouncilTasks();
 
   // Save scheduler state
   localStorage.setItem('scheduler_enabled', 'true');
@@ -111,6 +120,73 @@ async function checkAndGenerateScheduledVideos() {
 
   // Update last check time
   localStorage.setItem('scheduler_last_check', new Date().toISOString());
+}
+
+/**
+ * 🤖 RUN AUTONOMOUS COUNCIL TASKS
+ * Refreshes trends and auto-generates videos when council is active
+ * Also runs analytics and learning in background
+ */
+async function runAutonomousCouncilTasks() {
+  try {
+    const councilStatus = getCouncilStatus();
+    
+    if (!councilStatus.isActive) {
+      console.log('💤 Autonomous Council is paused - skipping');
+      return;
+    }
+
+    console.log('🤖 Running Autonomous Council tasks...');
+
+    // Refresh trends every hour
+    console.log('🔄 Refreshing channel trends...');
+    refreshAllChannelTrends();
+
+    // Auto-learn patterns from performance data
+    try {
+      const { autoLearnPatterns } = await import('./analytics');
+      autoLearnPatterns();
+      console.log('📊 Analytics learning updated');
+    } catch (e) {
+      console.log('Analytics learning skipped');
+    }
+
+    // Check each channel for auto-generation
+    const trends = getChannelTrends();
+    for (const channelTrend of trends) {
+      if (channelTrend.autoGenEnabled && channelTrend.trends.length > 0) {
+        console.log(`🎬 Auto-generating for ${channelTrend.channelName}...`);
+        
+        // Import and run generation
+        const { autoGenerateVideo } = await import('./autonomousCouncil');
+        autoGenerateVideo(channelTrend.channelId);
+        
+        // Track performance for the generated video
+        try {
+          const { trackVideoPerformance } = await import('./analytics');
+          const allVideos = JSON.parse(localStorage.getItem('all_generated_videos') || '[]');
+          const latestVideo = allVideos[allVideos.length - 1];
+          if (latestVideo) {
+            trackVideoPerformance({
+              id: latestVideo.id,
+              channelId: channelTrend.channelId,
+              title: latestVideo.title,
+              niche: channelTrend.niche,
+              hooks: []
+            });
+          }
+        } catch (e) {
+          console.log('Performance tracking skipped');
+        }
+        
+        showNotification(`🎬 Auto-generated video for ${channelTrend.channelName}`, 'success');
+      }
+    }
+
+    console.log('✅ Autonomous Council tasks complete');
+  } catch (error) {
+    console.error('❌ Error in Autonomous Council tasks:', error);
+  }
 }
 
 /**

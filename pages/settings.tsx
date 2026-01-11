@@ -296,10 +296,10 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      <AppNavigation title="Settings" />
+      <AppNavigation title="Settings" showBack={true} />
       
       {/* Add proper padding for sidebar */}
-      <div className="sm:pl-20 lg:pl-64 pt-4">
+      <div className="sm:pl-20 lg:pl-64 pt-20 sm:pt-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">

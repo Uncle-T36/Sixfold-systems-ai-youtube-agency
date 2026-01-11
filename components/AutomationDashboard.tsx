@@ -127,7 +127,7 @@ export default function AutomationDashboard() {
                   </div>
                 </div>
                 <div className={`font-bold ${getStatusColor(task.status)}`}>
-                  {task.status.toUpperCase()}
+                  {(task.status || 'pending').toUpperCase()}
                 </div>
               </div>
 
@@ -177,7 +177,7 @@ export default function AutomationDashboard() {
                     {selectedTask.channelName}
                   </h3>
                   <div className={`text-sm font-semibold ${getStatusColor(selectedTask.status)}`}>
-                    Status: {selectedTask.status.toUpperCase()}
+                    Status: {(selectedTask.status || 'pending').toUpperCase()}
                   </div>
                 </div>
                 <button

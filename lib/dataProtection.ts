@@ -13,7 +13,12 @@ const CRITICAL_KEYS = [
   'earnings_data',
   'autopilot_enabled',
   'user_preferences',
-  'generated_videos'
+  'generated_videos',
+  'all_generated_videos',
+  'video_queue',
+  'channel_trends',
+  'autonomous_council_status',
+  'scheduler_enabled'
 ];
 
 // =========================
@@ -62,6 +67,77 @@ export function backupAllData(): void {
  */
 export function restoreDataIfMissing(): boolean {
   let restored = false;
+  
+  // AGGRESSIVE CHECK: If youtube_channels is empty or "[]", try to restore
+  const currentChannels = localStorage.getItem('youtube_channels');
+  if (!currentChannels || currentChannels === '[]' || currentChannels === 'null') {
+    console.warn('⚠️ Channels appear empty, checking backups...');
+    
+    // Try real-time backup FIRST (most recent, same session)
+    const realtimeBackup = sessionStorage.getItem('channels_realtime_backup');
+    if (realtimeBackup && realtimeBackup !== '[]') {
+      localStorage.setItem('youtube_channels', realtimeBackup);
+      console.log('✅ Channels restored from real-time backup!');
+      restored = true;
+    }
+    
+    // Try session storage backup next
+    if (!restored) {
+      const sessionBackup = sessionStorage.getItem('data_backup');
+      if (sessionBackup) {
+        try {
+          const backup = JSON.parse(sessionBackup);
+          if (backup.data?.youtube_channels && backup.data.youtube_channels !== '[]') {
+            localStorage.setItem('youtube_channels', backup.data.youtube_channels);
+            console.log('✅ Channels restored from session backup!');
+            restored = true;
+          }
+        } catch (e) { console.error('Session restore failed:', e); }
+      }
+    }
+    
+    // Try last_backup if session didn't work
+    if (!restored) {
+      const lastBackup = localStorage.getItem('last_backup');
+      if (lastBackup) {
+        try {
+          const backup = JSON.parse(lastBackup);
+          if (backup.data?.youtube_channels && backup.data.youtube_channels !== '[]') {
+            localStorage.setItem('youtube_channels', backup.data.youtube_channels);
+            console.log('✅ Channels restored from last backup!');
+            restored = true;
+          }
+        } catch (e) { console.error('Last backup restore failed:', e); }
+      }
+    }
+    
+    // Try upgrade backup as last resort
+    if (!restored) {
+      // Inline list of upgrade backups
+      const upgradeBackups: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key?.startsWith('upgrade_backup_')) {
+          upgradeBackups.push(key.replace('upgrade_backup_', ''));
+        }
+      }
+      
+      for (const version of upgradeBackups.reverse()) {
+        const backupData = localStorage.getItem(`upgrade_backup_${version}`);
+        if (backupData) {
+          try {
+            const backup = JSON.parse(backupData);
+            if (backup.channels && backup.channels !== '[]') {
+              localStorage.setItem('youtube_channels', backup.channels);
+              console.log(`✅ Channels restored from upgrade backup v${version}!`);
+              restored = true;
+              break;
+            }
+          } catch (e) { console.error('Upgrade backup restore failed:', e); }
+        }
+      }
+    }
+  }
 
   CRITICAL_KEYS.forEach(key => {
     if (!localStorage.getItem(key)) {
@@ -414,9 +490,47 @@ export function initializeDataProtection(): void {
   // Setup auto-backup
   setupAutoBackup();
   
+  // 🔄 Setup real-time channel sync - BULLETPROOF BACKUP
+  setupChannelWatcher();
+  
   // Log data status
   const channels = JSON.parse(localStorage.getItem('youtube_channels') || '[]');
   console.log(`📊 Current data: ${channels.length} channels`);
+}
+
+/**
+ * 🔄 Watch for channel changes and backup immediately
+ */
+function setupChannelWatcher(): void {
+  // Backup channels to sessionStorage immediately on any change
+  const originalSetItem = localStorage.setItem.bind(localStorage);
+  
+  localStorage.setItem = function(key: string, value: string) {
+    originalSetItem(key, value);
+    
+    // Immediately backup channels whenever they're saved
+    if (key === 'youtube_channels' && value && value !== '[]') {
+      sessionStorage.setItem('channels_realtime_backup', value);
+      sessionStorage.setItem('channels_backup_time', new Date().toISOString());
+      console.log('💾 Channels backed up in real-time');
+    }
+  };
+  
+  // Also listen for storage events from other tabs
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'youtube_channels' && e.newValue && e.newValue !== '[]') {
+      sessionStorage.setItem('channels_realtime_backup', e.newValue);
+      console.log('🔄 Channels synced from another tab');
+    }
+  });
+  
+  // Backup current channels immediately
+  const currentChannels = localStorage.getItem('youtube_channels');
+  if (currentChannels && currentChannels !== '[]') {
+    sessionStorage.setItem('channels_realtime_backup', currentChannels);
+  }
+  
+  console.log('✅ Channel watcher initialized');
 }
 
 // =========================

@@ -22,7 +22,14 @@ export default function AppNavigation({ title, showBack = true, currentPage }: A
 
   const navItems = [
     { name: 'Home', path: '/', icon: '🏠' },
+    { name: '💵 Money Machine', path: '/money-machine', icon: '💵' },
+    { name: '🤖 AutoPilot', path: '/autopilot', icon: '🤖' },
+    { name: '⚡ Batch Gen', path: '/batch', icon: '⚡' },
+    { name: '📊 Analytics', path: '/analytics', icon: '📊' },
+    { name: '📅 Calendar', path: '/calendar', icon: '📅' },
     { name: 'Dashboard', path: '/dashboard', icon: '📊' },
+    { name: '🎬 My Videos', path: '/my-videos', icon: '🎬' },
+    { name: '🎭 AI Debate', path: '/debate', icon: '🎭' },
     { name: '💎 Top Niches', path: '/top-niches', icon: '💎' },
     { name: '👑 Imperial', path: '/imperial-council', icon: '👑' },
     { name: 'Council', path: '/council', icon: '🧠' },
@@ -30,6 +37,7 @@ export default function AppNavigation({ title, showBack = true, currentPage }: A
     { name: 'Strategy', path: '/strategy', icon: '💡' },
     { name: 'Series Creator', path: '/series', icon: '📺' },
     { name: 'Video Creator', path: '/video-creator', icon: '🎬' },
+    { name: '🎬 Long-Form (45+ min)', path: '/long-form', icon: '🎬' },
     { name: 'Connect', path: '/connect', icon: '🔌' },
     { name: 'Revenue', path: '/revenue', icon: '📈' },
     ...(isOwnerAuthenticated ? [{ name: 'Bank Setup', path: '/payment-setup', icon: '💳' }] : []),

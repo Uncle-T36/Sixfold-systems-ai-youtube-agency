@@ -186,7 +186,7 @@ export default function InfrastructureStatus() {
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-lg font-semibold text-white">⚖️ Load Balancer</h3>
             <span className={`text-sm font-medium ${getStatusColor(health.loadBalancer.status)}`}>
-              {health.loadBalancer.status.toUpperCase()}
+              {(health.loadBalancer.status || 'unknown').toUpperCase()}
             </span>
           </div>
           
@@ -318,7 +318,7 @@ export default function InfrastructureStatus() {
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-lg font-semibold text-white">📈 Auto Scaler</h3>
             <span className={`text-sm font-medium ${getStatusColor(health.autoScaler.status)}`}>
-              {health.autoScaler.status.toUpperCase()}
+              {(health.autoScaler.status || 'unknown').toUpperCase()}
             </span>
           </div>
           
@@ -379,7 +379,7 @@ export default function InfrastructureStatus() {
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-lg font-semibold text-white">🗄️ Database</h3>
             <span className={`text-sm font-medium ${getStatusColor(health.database.status)}`}>
-              {health.database.status.toUpperCase()}
+              {(health.database.status || 'unknown').toUpperCase()}
             </span>
           </div>
           
